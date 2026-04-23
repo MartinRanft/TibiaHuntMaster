@@ -209,7 +209,7 @@ jobs:
 
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: release-*
           merge-multiple: true
@@ -271,9 +271,62 @@ jobs:
           PY
 
       - name: Publish release assets
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: release-assets/*
           draft: false
           prerelease: false
           generate_release_notes: true
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build updater feed site
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p pages-site/stable
+          cp release-assets/latest.json pages-site/stable/latest.json
+
+          cat > pages-site/index.html <<'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>TibiaHuntMaster Release Feed</title>
+          </head>
+          <body>
+            <main>
+              <h1>TibiaHuntMaster Release Feed</h1>
+              <p>This site hosts updater metadata for TibiaHuntMaster.</p>
+              <ul>
+                <li><a href="./stable/latest.json">stable/latest.json</a></li>
+              </ul>
+            </main>
+          </body>
+          </html>
+          EOF
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: pages-site
+
+  deploy-feed:
+    name: Deploy updater feed to GitHub Pages
+    if: needs.guard.outputs.should_run == 'true'
+    needs: [guard, create-release]
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
