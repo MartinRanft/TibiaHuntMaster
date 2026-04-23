@@ -1,0 +1,71 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:components="using:TibiaHuntMaster.App.Components"
+             xmlns:loc="using:TibiaHuntMaster.App.Extensions"
+             x:Class="TibiaHuntMaster.App.Components.DateRangePicker"
+             x:DataType="components:DateRangePicker"
+             x:CompileBindings="False">
+
+    <UserControl.Styles>
+        <Style Selector="Button.DateRangeField">
+            <Setter Property="Background" Value="{DynamicResource BrushSurface}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BrushBorderLight}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
+            <Setter Property="Padding" Value="12,10" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+        </Style>
+
+        <Style Selector="Button.DateRangeField:pointerover">
+            <Setter Property="Background" Value="{DynamicResource BrushSurfaceHover}" />
+        </Style>
+    </UserControl.Styles>
+
+    <StackPanel Spacing="10">
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+            <Button Grid.Column="0"
+                    Name="FieldButton"
+                    Classes="DateRangeField"
+                    Click="FieldButton_Click">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="{loc:Localize History_DateRangeLabel}"
+                                   FontSize="11"
+                                   Foreground="{DynamicResource BrushTextTertiary}" />
+                        <TextBlock Name="DisplayTextBlock"
+                                   Text="{loc:Localize History_AllDates}"
+                                   FontSize="13"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource BrushTextPrimary}" />
+                    </StackPanel>
+
+                    <TextBlock Grid.Column="1"
+                               Text="📅"
+                               FontSize="16"
+                               VerticalAlignment="Center" />
+                </Grid>
+            </Button>
+
+            <Button Grid.Column="1"
+                    Name="ClearFieldButton"
+                    IsVisible="False"
+                    Background="Transparent"
+                    BorderBrush="{DynamicResource BrushBorderLight}"
+                    BorderThickness="1"
+                    CornerRadius="{StaticResource RadiusMedium}"
+                    Foreground="{DynamicResource BrushTextSecondary}"
+                    Padding="10,0"
+                    Click="ClearFieldButton_Click">
+                <TextBlock Text="✕" />
+            </Button>
+        </Grid>
+
+        <Border Name="SheetBorder"
+                IsVisible="False">
+            <components:DateRangeCalendar Name="Calendar"
+                                          StartDate="{Binding DraftStartDate, Mode=TwoWay}"
+                                          EndDate="{Binding DraftEndDate, Mode=TwoWay}" />
+        </Border>
+    </StackPanel>
+</UserControl>

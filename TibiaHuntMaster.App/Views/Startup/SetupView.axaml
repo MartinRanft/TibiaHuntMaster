@@ -1,0 +1,130 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TibiaHuntMaster.App.ViewModels.Startup"
+             xmlns:loc="using:TibiaHuntMaster.App.Extensions"
+             x:Class="TibiaHuntMaster.App.Views.Startup.SetupView"
+             x:DataType="vm:SetupViewModel">
+
+    <UserControl.Styles>
+        <!-- ANIMATION: Hintergrund langsam zoomen (Cinematic Effect) -->
+        <Style Selector="Image.CinematicBackground">
+            <Style.Animations>
+                <Animation Duration="0:0:20" IterationCount="Infinite" PlaybackDirection="Alternate">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="ScaleTransform.ScaleX" Value="1.0" />
+                        <Setter Property="ScaleTransform.ScaleY" Value="1.0" />
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="ScaleTransform.ScaleX" Value="1.15" />
+                        <Setter Property="ScaleTransform.ScaleY" Value="1.15" />
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+    </UserControl.Styles>
+
+    <Grid>
+        <!-- 1. HINTERGRUND BILD (Aus dem Fan Kit) -->
+        <!-- Stretch="UniformToFill" sorgt dafür, dass es immer den ganzen Screen füllt -->
+        <Image Source="/Assets/Backgrounds/FanKitIllu_OfflineScreen_NoChars_1920x1080.jpg"
+               Stretch="UniformToFill"
+               Classes="CinematicBackground"
+               RenderTransformOrigin="50%,50%">
+            <Image.RenderTransform>
+                <ScaleTransform />
+            </Image.RenderTransform>
+        </Image>
+
+        <!-- 2. DARK OVERLAY (Damit man den Text lesen kann) -->
+        <Rectangle Fill="Black" Opacity="0.85" />
+
+        <!-- 3. VORDERGRUND -->
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="30">
+
+            <!-- Dein App Logo -->
+            <Image Source="/Assets/logo.png" Width="120" Height="120" />
+
+            <!-- Titel -->
+            <StackPanel Spacing="5">
+                <TextBlock Text="TibiaHuntMaster"
+                           FontSize="32" FontWeight="Light" Foreground="{DynamicResource BrushTextPrimary}"
+                           HorizontalAlignment="Center" LetterSpacing="2" />
+                <TextBlock Text="{loc:Localize Setup_Initializing}"
+                           FontSize="12" Foreground="#D4AF37" FontWeight="Bold"
+                           HorizontalAlignment="Center" LetterSpacing="4" />
+            </StackPanel>
+
+            <Border Width="520"
+                    Padding="22"
+                    Background="#14000000"
+                    BorderBrush="#22D4AF37"
+                    BorderThickness="1"
+                    CornerRadius="14">
+                <StackPanel Spacing="14">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="{loc:Localize Setup_CurrentStepTitle}"
+                                   Foreground="#7f7f7f"
+                                   FontSize="11"
+                                   FontWeight="SemiBold"
+                                   LetterSpacing="2" />
+                        <TextBlock Text="{Binding CurrentStep}"
+                                   Foreground="{DynamicResource BrushTextPrimary}"
+                                   FontSize="20"
+                                   FontWeight="SemiBold"
+                                   TextWrapping="Wrap" />
+                        <TextBlock Text="{Binding StatusMessage}"
+                                   Foreground="#ccc"
+                                   FontSize="12"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+
+                    <ProgressBar Value="{Binding ProgressValue}"
+                                 Minimum="0"
+                                 Maximum="100"
+                                 Height="6"
+                                 Foreground="#D4AF37"
+                                 Background="#444"
+                                 IsIndeterminate="{Binding IsProgressIndeterminate}" />
+
+                    <TextBlock Text="{Binding HintMessage}"
+                               Foreground="#a8a8a8"
+                               FontSize="11"
+                               TextWrapping="Wrap" />
+
+                    <Border Padding="14"
+                            Background="#12000000"
+                            BorderBrush="#1FFFFFFF"
+                            BorderThickness="1"
+                            CornerRadius="10">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="{loc:Localize Setup_RecentActivityTitle}"
+                                       Foreground="#D4AF37"
+                                       FontSize="11"
+                                       FontWeight="Bold"
+                                       LetterSpacing="2" />
+
+                            <ItemsControl ItemsSource="{Binding RecentActivities}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}"
+                                                   Foreground="#c6c6c6"
+                                                   FontSize="11"
+                                                   TextWrapping="Wrap"
+                                                   Margin="0,0,0,4" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+
+        <!-- Optional: Copyright Hinweis unten -->
+        <TextBlock Text="Includes assets by CipSoft GmbH"
+                   FontSize="10" Foreground="#555"
+                   VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                   Margin="10" />
+    </Grid>
+</UserControl>

@@ -1,0 +1,269 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TibiaHuntMaster.App.ViewModels.Dashboard"
+             xmlns:loc="using:TibiaHuntMaster.App.Extensions"
+             x:Class="TibiaHuntMaster.App.Views.Dashboard.MinimapView"
+             x:DataType="vm:MinimapViewModel">
+
+    <Grid RowDefinitions="Auto, *" RowSpacing="12">
+
+        <!-- Header -->
+        <Border Grid.Row="0" Classes="Card" Padding="{StaticResource PaddingLG}">
+            <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto" RowSpacing="8" ColumnSpacing="12">
+
+                <TextBlock Grid.Row="0" Grid.Column="0"
+                           Text="{loc:Localize Nav_Minimap}"
+                           FontSize="{StaticResource FontSizeH2}"
+                           FontWeight="{StaticResource FontWeightBold}" />
+
+                <TextBlock Grid.Row="1" Grid.Column="0"
+                           Text="{Binding StatusText}"
+                           Foreground="{DynamicResource BrushTextSecondary}" />
+
+                <StackPanel Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
+                            Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <Button Command="{Binding ZUpCommand}" Content="▲" />
+                    <TextBlock Text="Z:" VerticalAlignment="Center" />
+                    <ComboBox Width="70"
+                              ItemsSource="{Binding AvailableZLevels}"
+                              SelectedItem="{Binding Z}" />
+                    <Button Command="{Binding ZDownCommand}" Content="▼" />
+                    <Button Command="{Binding ReloadCommand}" Content="⟳" />
+                </StackPanel>
+
+            </Grid>
+        </Border>
+
+        <!-- Map Card -->
+        <Border Grid.Row="1" Classes="Card" Padding="{StaticResource PaddingLG}">
+            <Grid RowDefinitions="Auto, Auto, *" RowSpacing="10">
+
+                <Grid Grid.Row="0" ColumnDefinitions="*, Auto" ColumnSpacing="12">
+                    <StackPanel Grid.Column="0" Spacing="4">
+                        <TextBlock Text="{Binding CursorCoordinatesText}"
+                                   FontWeight="{StaticResource FontWeightMedium}" />
+                        <TextBlock Text="{loc:Localize Minimap_ControlsHint}"
+                                   FontSize="{StaticResource FontSizeCaption}"
+                                   Foreground="{DynamicResource BrushTextSecondary}" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                        <CheckBox IsChecked="{Binding ShowMarkers}"
+                                  Content="Markers"
+                                  VerticalAlignment="Center" />
+                        <CheckBox IsChecked="{Binding ShowSpawns}"
+                                  Content="Spawns"
+                                  VerticalAlignment="Center" />
+                        <TextBox Width="240"
+                                 Text="{Binding JumpCoordinatesInput}"
+                                 PlaceholderText="x,y,z  (example: 129.195,128.16,7)" />
+                        <Button Command="{Binding JumpToCoordinatesCommand}" Content="Go" />
+                        <Button Command="{Binding ResetViewCommand}"
+                                Content="{loc:Localize Minimap_ResetView}"
+                                ToolTip.Tip="{loc:Localize Minimap_ResetViewTooltip}" />
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Row="1" ColumnDefinitions="Auto, *, Auto, Auto, Auto" ColumnSpacing="8">
+                    <TextBlock Grid.Column="0"
+                               Text="Spawn:"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource BrushTextSecondary}" />
+
+                    <AutoCompleteBox Grid.Column="1"
+                                     ItemsSource="{Binding SpawnNameSuggestions}"
+                                     Text="{Binding SpawnSearchInput}"
+                                     SelectedItem="{Binding SelectedSpawnSuggestion}"
+                                     FilterMode="Contains"
+                                     MinimumPrefixLength="1"
+                                     PlaceholderText="Type monster name (autocomplete)" />
+
+                    <Button Grid.Column="2"
+                            Command="{Binding ApplySpawnFilterCommand}"
+                            Content="Find" />
+
+                    <Button Grid.Column="3"
+                            Command="{Binding ClearSpawnFilterCommand}"
+                            Content="Clear"
+                            IsVisible="{Binding HasActiveSpawnFilter}" />
+
+                    <TextBlock Grid.Column="4"
+                               Text="{Binding SpawnFilterDisplayText}"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource BrushTextSecondary}" />
+                </Grid>
+
+                <!-- Viewport -->
+                <Border Grid.Row="2"
+                        x:Name="Viewport"
+                        Background="Transparent"
+                        MinHeight="320"
+                        ClipToBounds="True"
+                        BorderBrush="{DynamicResource BrushBorder}"
+                        BorderThickness="1"
+                        CornerRadius="{StaticResource RadiusMedium}"
+                        PointerPressed="Viewport_OnPointerPressed"
+                        PointerMoved="Viewport_OnPointerMoved"
+                        PointerReleased="Viewport_OnPointerReleased"
+                        PointerWheelChanged="Viewport_OnPointerWheelChanged">
+
+                    <Canvas Width="{Binding ViewportWidth}"
+                            Height="{Binding ViewportHeight}"
+                            ClipToBounds="True">
+                        <Grid Width="{Binding SectionWidth}"
+                              Height="{Binding SectionHeight}"
+                              RenderTransformOrigin="0,0">
+                            <Grid.RenderTransform>
+                                <TransformGroup>
+                                    <TranslateTransform X="{Binding RenderOffsetX}" Y="{Binding RenderOffsetY}" />
+                                    <ScaleTransform ScaleX="{Binding Zoom}" ScaleY="{Binding Zoom}" />
+                                    <TranslateTransform X="{Binding ZoomCompensationX}" Y="{Binding ZoomCompensationY}" />
+                                </TransformGroup>
+                            </Grid.RenderTransform>
+
+                            <!-- Tile layer -->
+                            <ItemsControl ItemsSource="{Binding Tiles}"
+                                          Width="{Binding SectionWidth}"
+                                          Height="{Binding SectionHeight}"
+                                          UseLayoutRounding="True"
+                                          RenderOptions.BitmapInterpolationMode="None">
+                                <ItemsControl.Styles>
+                                    <!-- Canvas positions the item container (ContentPresenter), not the template root -->
+                                    <Style Selector="ItemsControl > ContentPresenter">
+                                        <Setter Property="Canvas.Left" Value="{Binding X}" />
+                                        <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                                    </Style>
+                                </ItemsControl.Styles>
+
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <Canvas />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:MinimapTileViewModel">
+                                        <Image Width="257"
+                                               Height="257"
+                                               Source="{Binding Image}"
+                                               Stretch="Fill"
+                                               UseLayoutRounding="True"
+                                               RenderOptions.BitmapInterpolationMode="None" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <!-- Marker layer -->
+                            <ItemsControl ItemsSource="{Binding Markers}"
+                                          Width="{Binding SectionWidth}"
+                                          Height="{Binding SectionHeight}"
+                                          IsVisible="{Binding ShowMarkers}">
+                                <ItemsControl.Styles>
+                                    <Style Selector="ItemsControl > ContentPresenter">
+                                        <Setter Property="Canvas.Left" Value="{Binding X}" />
+                                        <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                                    </Style>
+                                </ItemsControl.Styles>
+
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <Canvas />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:MinimapMarkerViewModel">
+                                        <Border Width="{Binding DataContext.MarkerScreenPixelSize, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                Height="{Binding DataContext.MarkerScreenPixelSize, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                Background="#B0000000"
+                                                BorderBrush="#D0FFFFFF"
+                                                BorderThickness="1"
+                                                CornerRadius="7"
+                                                RenderTransformOrigin="0,0"
+                                                ToolTip.Tip="{Binding Tooltip}">
+                                            <Border.RenderTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform
+                                                        ScaleX="{Binding DataContext.MarkerScale, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                        ScaleY="{Binding DataContext.MarkerScale, RelativeSource={RelativeSource AncestorType=ItemsControl}}" />
+                                                    <TranslateTransform
+                                                        X="{Binding DataContext.MarkerTranslationWorld, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                        Y="{Binding DataContext.MarkerTranslationWorld, RelativeSource={RelativeSource AncestorType=ItemsControl}}" />
+                                                </TransformGroup>
+                                            </Border.RenderTransform>
+                                            <TextBlock Text="{Binding Glyph}"
+                                                       Foreground="{Binding Foreground}"
+                                                       FontSize="9"
+                                                       FontWeight="{StaticResource FontWeightBold}"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"
+                                                       TextAlignment="Center" />
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <!-- Monster spawn layer -->
+                            <ItemsControl ItemsSource="{Binding SpawnMarkers}"
+                                          Width="{Binding SectionWidth}"
+                                          Height="{Binding SectionHeight}"
+                                          IsVisible="{Binding ShowSpawns}">
+                                <ItemsControl.Styles>
+                                    <Style Selector="ItemsControl > ContentPresenter">
+                                        <Setter Property="Canvas.Left" Value="{Binding X}" />
+                                        <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                                    </Style>
+                                </ItemsControl.Styles>
+
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <Canvas />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:MinimapMarkerViewModel">
+                                        <Border Width="{Binding DataContext.SpawnMarkerScreenPixelSize, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                Height="{Binding DataContext.SpawnMarkerScreenPixelSize, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                Background="#90000000"
+                                                BorderBrush="#FFE08A00"
+                                                BorderThickness="1"
+                                                CornerRadius="7"
+                                                RenderTransformOrigin="0,0"
+                                                ToolTip.Tip="{Binding Tooltip}">
+                                            <Border.RenderTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform
+                                                        ScaleX="{Binding DataContext.MarkerScale, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                        ScaleY="{Binding DataContext.MarkerScale, RelativeSource={RelativeSource AncestorType=ItemsControl}}" />
+                                                    <TranslateTransform
+                                                        X="{Binding DataContext.SpawnMarkerTranslationWorld, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                        Y="{Binding DataContext.SpawnMarkerTranslationWorld, RelativeSource={RelativeSource AncestorType=ItemsControl}}" />
+                                                </TransformGroup>
+                                            </Border.RenderTransform>
+                                            <Grid>
+                                                <Image Source="{Binding Image}"
+                                                       Stretch="Uniform"
+                                                       IsVisible="{Binding HasImage}" />
+                                                <TextBlock Text="{Binding Glyph}"
+                                                           Foreground="{Binding Foreground}"
+                                                           FontSize="9"
+                                                           FontWeight="{StaticResource FontWeightBold}"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"
+                                                           TextAlignment="Center"
+                                                           IsVisible="{Binding ShowGlyphFallback}" />
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Grid>
+                    </Canvas>
+                </Border>
+
+            </Grid>
+        </Border>
+
+    </Grid>
+</UserControl>

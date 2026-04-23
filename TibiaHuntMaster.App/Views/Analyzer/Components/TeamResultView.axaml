@@ -1,0 +1,216 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TibiaHuntMaster.App.ViewModels.Analyzer"
+             xmlns:loc="using:TibiaHuntMaster.App.Extensions"
+             xmlns:converters="clr-namespace:TibiaHuntMaster.App.Converters"
+             x:Class="TibiaHuntMaster.App.Views.Analyzer.Components.TeamResultView"
+             x:DataType="vm:HuntAnalyzerViewModel">
+
+    <UserControl.Resources>
+        <converters:TibiaCurrencyConverter x:Key="TibiaCurrencyConverter" />
+        <converters:CurrentUserColorConverter x:Key="CurrentUserColorConverter" />
+    </UserControl.Resources>
+
+    <UserControl.Styles>
+        <Style Selector="Border.TransferCard">
+            <Setter Property="Background" Value="{DynamicResource BrushSurfaceElevated}" />
+            <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
+            <Setter Property="Padding" Value="{StaticResource PaddingCard}" />
+            <Setter Property="Margin" Value="0,0,0,12" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+        <Style Selector="Border.TransferCard:pointerover">
+            <Setter Property="BorderBrush" Value="{DynamicResource BrushBorderHover}" />
+            <Setter Property="Background" Value="{DynamicResource BrushSurfaceHover}" />
+        </Style>
+    </UserControl.Styles>
+
+    <!-- TEAM UI -->
+    <Grid IsVisible="{Binding IsTeamHunt}" RowDefinitions="Auto, Auto, *">
+
+        <!-- 1. Header (Profit & Meta) -->
+        <Grid ColumnDefinitions="Auto, *, Auto" Margin="0,0,0,20">
+            <StackPanel Grid.Column="0">
+                <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingMD}" Margin="0,0,0,5">
+                    <Button Command="{Binding GoBackCommand}" IsVisible="{Binding IsHistoryMode}"
+                            Classes="BackButton">
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <TextBlock Text="⬅" /><TextBlock Text="{loc:Localize Common_Back}" />
+                        </StackPanel>
+                    </Button>
+                    <TextBlock Text="{loc:Localize Analyzer_SummaryHeaderPartyProfit}" Classes="Label"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+
+                <!-- XP Display -->
+                <StackPanel
+                    IsVisible="{Binding CurrentTeamSession.XpGain, Converter={x:Static ObjectConverters.IsNotNull}}">
+                    <TextBlock Text="{loc:Localize Analyzer_SummaryHeaderTotalXp}" Classes="Label" />
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <TextBlock
+                            Text="{Binding CurrentTeamSession.XpPerHour, Converter={StaticResource TibiaCurrencyConverter}, StringFormat='{}{0}/h'}"
+                            FontSize="16" Foreground="{DynamicResource BrushInfo}" FontWeight="Bold" />
+                        <TextBlock
+                            Text="{Binding CurrentTeamSession.XpGain, Converter={StaticResource TibiaCurrencyConverter}, StringFormat='({0})'}"
+                            FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <Separator Background="{DynamicResource BrushBorder}" Height="1" Margin="0,5" />
+                </StackPanel>
+
+                <TextBlock Text="{Binding CurrentTeamSession.TotalBalance, StringFormat='{}{0:N0} gp'}"
+                           FontSize="32" FontWeight="Bold" Foreground="{DynamicResource BrushSuccess}" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <TextBlock Text="{Binding CurrentTeamSession.TotalLoot, StringFormat='Loot: {0:N0}'}"
+                           Foreground="{DynamicResource BrushTextSecondary}" />
+                <TextBlock Text="{Binding CurrentTeamSession.TotalSupplies, StringFormat='Waste: {0:N0}'}"
+                           Foreground="{DynamicResource BrushError}" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" HorizontalAlignment="Right">
+                <Button Content="{loc:Localize Analyzer_OpenSummaryDialog}"
+                        Command="{Binding OpenSummaryDialogCommand}"
+                        Margin="0,0,0,12" />
+                <Button Content="{loc:Localize Analyzer_NewAnalysis}" Command="{Binding ResetCommand}" />
+            </StackPanel>
+        </Grid>
+
+        <!-- 2. NOTES TEAM -->
+        <Border Grid.Row="1" Classes="Section">
+            <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
+                <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Spacing="{StaticResource SpacingMD}">
+                    <TextBlock Text="{loc:Localize Analyzer_NotesTitle}" FontWeight="Bold" Foreground="{DynamicResource BrushAccentGold}" />
+                    <Button Command="{Binding ToggleEditNotesCommand}" Content="{loc:Localize Common_Edit}" Background="Transparent"
+                            FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" />
+                </StackPanel>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding CurrentTeamSession.Notes}"
+                           IsVisible="{Binding !IsEditingNotes}" Foreground="{DynamicResource BrushTextSecondary}"
+                           TextWrapping="Wrap"
+                           Margin="0,12,0,0" />
+                <TextBox Grid.Row="1" Grid.Column="0" Text="{Binding CurrentSessionNotes, Mode=TwoWay}"
+                         AcceptsReturn="True" TextWrapping="Wrap" IsVisible="{Binding IsEditingNotes}"
+                         Height="80" VerticalContentAlignment="Top" Margin="0,12,0,0" />
+                <Button Grid.Row="1" Grid.Column="1" Command="{Binding SaveNotesCommand}" Content="{loc:Localize Common_Save}"
+                        IsVisible="{Binding IsEditingNotes}" HorizontalAlignment="Right"
+                        VerticalAlignment="Top" Margin="12,12,0,0" />
+            </Grid>
+        </Border>
+
+        <!-- 3. MEMBER & TRANSFERS -->
+        <Grid Grid.Row="2" ColumnDefinitions="*, 20, 360">
+            <!-- LEFT: MEMBER TABLE -->
+            <Border Grid.Column="0" Background="{DynamicResource BrushSurface}"
+                    CornerRadius="{StaticResource RadiusLarge}" BorderBrush="{DynamicResource BrushBorder}"
+                    BorderThickness="1">
+                <DataGrid ItemsSource="{Binding CurrentTeamSession.Members}"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          GridLinesVisibility="Horizontal"
+                          Background="Transparent"
+                          HeadersVisibility="Column"
+                          x:CompileBindings="False"
+                          RowBackground="Transparent">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Member" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center"
+                                               Margin="12,0,0,0">
+                                        <TextBlock.Foreground>
+                                            <MultiBinding
+                                                Converter="{StaticResource CurrentUserColorConverter}">
+                                                <Binding Path="Name" />
+                                                <Binding Path="$parent[UserControl].DataContext.ActiveCharacterName" />
+                                            </MultiBinding>
+                                        </TextBlock.Foreground>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTextColumn Header="Balance" Binding="{Binding Balance, StringFormat='N0'}"
+                                            Width="Auto" FontWeight="Bold">
+                            <DataGridTextColumn.Foreground>
+                                <MultiBinding Converter="{StaticResource CurrentUserColorConverter}">
+                                    <Binding Path="Name" />
+                                    <Binding Path="$parent[UserControl].DataContext.ActiveCharacterName" />
+                                </MultiBinding>
+                            </DataGridTextColumn.Foreground>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="Damage" Binding="{Binding Damage, StringFormat='N0'}"
+                                            Width="Auto" Foreground="{DynamicResource BrushTextSecondary}" />
+                        <DataGridTextColumn Header="Healing" Binding="{Binding Healing, StringFormat='N0'}"
+                                            Width="Auto" Foreground="{DynamicResource BrushTextSecondary}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+
+            <!-- RIGHT: TRANSFERS -->
+            <Border Grid.Column="2" Background="{DynamicResource BrushSurfaceElevated}"
+                    CornerRadius="{StaticResource RadiusLarge}" Padding="20">
+                <Grid RowDefinitions="Auto, *">
+                    <StackPanel Margin="0,0,0,16">
+                        <TextBlock Text="Bank Transfers" FontWeight="Bold"
+                                   Foreground="{DynamicResource BrushAccentGold}" FontSize="18" />
+                        <TextBlock Text="Who needs to pay whom to split evenly." FontSize="11"
+                                   Foreground="{DynamicResource BrushTextTertiary}" />
+                    </StackPanel>
+                    <ScrollViewer Grid.Row="1">
+                        <ItemsControl ItemsSource="{Binding Transfers}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:CompileBindings="False">
+                                    <Border Classes="TransferCard">
+                                        <Grid ColumnDefinitions="*, Auto">
+                                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                <WrapPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                                    <TextBlock Text="{Binding FromName}"
+                                                               Foreground="{DynamicResource BrushError}"
+                                                               FontWeight="Bold" />
+                                                    <TextBlock Text=" ➔ "
+                                                               Foreground="{DynamicResource BrushTextDisabled}"
+                                                               Margin="5,0" />
+                                                    <TextBlock Text="{Binding ToName}"
+                                                               Foreground="{DynamicResource BrushSuccess}"
+                                                               FontWeight="Bold" />
+                                                </WrapPanel>
+                                                <TextBlock
+                                                    Text="{Binding Amount, Converter={StaticResource TibiaCurrencyConverter}}"
+                                                    FontSize="18" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" />
+                                            </StackPanel>
+                                            <Button Grid.Column="1"
+                                                    Command="{Binding $parent[UserControl].DataContext.CopyTransferCommand}"
+                                                    CommandParameter="{Binding CommandText}"
+                                                    Background="{DynamicResource BrushBorder}"
+                                                    BorderBrush="{DynamicResource BrushBorderHover}" BorderThickness="1"
+                                                    Padding="12,5"
+                                                    CornerRadius="{StaticResource RadiusSmall}"
+                                                    ToolTip.Tip="Copy transfer command to clipboard"
+                                                    VerticalAlignment="Center">
+                                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                                    <TextBlock Text="📋" FontSize="14" />
+                                                    <TextBlock Text="Copy" FontSize="12"
+                                                               VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </Button>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                    <StackPanel Grid.Row="1" IsVisible="{Binding !Transfers.Count}" VerticalAlignment="Center"
+                                HorizontalAlignment="Center" Opacity="0.5">
+                        <TextBlock Text="✅" FontSize="32" HorizontalAlignment="Center" Margin="0,0,0,12" />
+                        <TextBlock Text="Perfect Split" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"
+                                   HorizontalAlignment="Center" />
+                        <TextBlock Text="No transfers needed." Foreground="{DynamicResource BrushTextTertiary}"
+                                   FontSize="12" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

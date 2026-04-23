@@ -1,0 +1,341 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TibiaHuntMaster.App.ViewModels.Dashboard"
+             xmlns:loc="using:TibiaHuntMaster.App.Extensions"
+             xmlns:conv="using:TibiaHuntMaster.App.Converters"
+             xmlns:behaviors="using:TibiaHuntMaster.App.Behaviors"
+             x:Class="TibiaHuntMaster.App.Views.Dashboard.EconomyView"
+             x:DataType="vm:EconomyViewModel">
+
+    <UserControl.Resources>
+        <conv:BalanceColorConverter x:Key="BalanceColorConverter" />
+        <conv:TibiaCurrencyConverter x:Key="TibiaCurrencyConverter" />
+    </UserControl.Resources>
+
+    <Grid RowDefinitions="Auto, Auto, *">
+        <Border Background="{DynamicResource BrushSurfaceElevated}" CornerRadius="8,8,0,0" Padding="20"
+                BorderThickness="0,0,0,1">
+            <Grid ColumnDefinitions="*, Auto">
+                <StackPanel Spacing="4">
+                    <TextBlock Text="{loc:Localize Economy_Title}" FontSize="22" FontWeight="SemiBold"
+                               Foreground="{DynamicResource BrushTextPrimary}" />
+                    <TextBlock Text="{loc:Localize Economy_Subtitle}" FontSize="13"
+                               Foreground="{DynamicResource BrushTextSecondary}" />
+                </StackPanel>
+
+                <ComboBox Grid.Column="1" Width="160"
+                          ItemsSource="{Binding EconomyPeriodOptions}"
+                          SelectedIndex="{Binding SelectedEconomyPeriodIndex}" />
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1" ColumnDefinitions="*, 1, *, 1, *, 1, *">
+            <Border Grid.Column="0" Background="{DynamicResource BrushSurfaceElevated}" Padding="18"
+                    BorderThickness="0,0,0,1">
+                <StackPanel>
+                    <TextBlock Text="{loc:Localize Progress_SessionsInPeriod}" FontSize="11" FontWeight="Bold"
+                               Foreground="{DynamicResource BrushTextTertiary}" Margin="0,0,0,5" />
+                    <TextBlock Text="{Binding InsightSessionCount}" FontSize="26" FontWeight="SemiBold"
+                               Foreground="{DynamicResource BrushTextPrimary}" />
+                </StackPanel>
+            </Border>
+            <Rectangle Grid.Column="1" Fill="{DynamicResource BrushBorder}" />
+            <Border Grid.Column="2" Background="{DynamicResource BrushSurfaceElevated}" Padding="18"
+                    BorderThickness="0,0,0,1">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="{loc:Localize Overview_AvgBalancePerHunt}" FontSize="11" FontWeight="Bold"
+                               Foreground="{DynamicResource BrushTextTertiary}" />
+                    <TextBlock Text="{Binding InsightAverageBalancePerHunt, Converter={StaticResource TibiaCurrencyConverter}}"
+                               FontSize="26" FontWeight="SemiBold"
+                               Foreground="{Binding InsightAverageBalancePerHunt, Converter={StaticResource BalanceColorConverter}}" />
+                    <TextBlock Text="{Binding InsightBalanceTrendText}" FontSize="11"
+                               Foreground="{DynamicResource BrushTextSecondary}" />
+                </StackPanel>
+            </Border>
+            <Rectangle Grid.Column="3" Fill="{DynamicResource BrushBorder}" />
+            <Border Grid.Column="4" Background="{DynamicResource BrushSurfaceElevated}" Padding="18"
+                    BorderThickness="0,0,0,1">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="{loc:Localize Progress_DepotValueCurrent}" FontSize="11" FontWeight="Bold"
+                               Foreground="{DynamicResource BrushTextTertiary}" />
+                    <TextBlock Text="{Binding DepotOpenValue, Converter={StaticResource TibiaCurrencyConverter}}"
+                               FontSize="26" FontWeight="SemiBold"
+                               Foreground="{DynamicResource BrushAccentGold}" />
+                    <TextBlock Text="{Binding DepotSummaryText}" FontSize="11"
+                               Foreground="{DynamicResource BrushTextSecondary}" />
+                </StackPanel>
+            </Border>
+            <Rectangle Grid.Column="5" Fill="{DynamicResource BrushBorder}" />
+            <Border Grid.Column="6" Background="{DynamicResource BrushSurfaceElevated}" Padding="18"
+                    BorderThickness="0,0,0,1">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="{loc:Localize Progress_DepotRealizedTitle}" FontSize="11" FontWeight="Bold"
+                               Foreground="{DynamicResource BrushTextTertiary}" />
+                    <TextBlock Text="{Binding DepotRealizedValueInPeriod, Converter={StaticResource TibiaCurrencyConverter}}"
+                               FontSize="26" FontWeight="SemiBold"
+                               Foreground="{DynamicResource BrushInfo}" />
+                    <TextBlock Text="{Binding DepotRealizedSummaryText}" FontSize="11"
+                               Foreground="{DynamicResource BrushTextSecondary}" />
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="2" ColumnDefinitions="2*, 20, *" Margin="0,20,0,0">
+            <Border Grid.Column="0" Background="{DynamicResource BrushSurfaceElevated}" CornerRadius="0,0,0,8"
+                    Padding="20">
+                <StackPanel Spacing="16">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="{loc:Localize Progress_DepotValueTitle}" FontSize="18" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource BrushTextPrimary}" />
+                        <TextBlock Text="{loc:Localize Progress_DepotValueSubtitle}" FontSize="12"
+                                   Foreground="{DynamicResource BrushTextSecondary}" />
+                    </StackPanel>
+
+                    <TextBlock Text="{loc:Localize Progress_NoDepotTimeline}"
+                               Foreground="{DynamicResource BrushTextSecondary}"
+                               IsVisible="{Binding !HasDepotTimeline}" />
+
+                    <Border IsVisible="{Binding HasDepotTimeline}"
+                            Background="{DynamicResource BrushSurface}" CornerRadius="10" Padding="14"
+                            BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1">
+                        <StackPanel Spacing="12">
+                            <Grid ColumnDefinitions="Auto, *, Auto">
+                                <TextBlock Text="{Binding DepotChartMinLabel}" FontSize="11"
+                                           Foreground="{DynamicResource BrushTextSecondary}" />
+                                <TextBlock Grid.Column="2" Text="{Binding DepotChartMaxLabel}" FontSize="11"
+                                           Foreground="{DynamicResource BrushTextSecondary}" />
+                            </Grid>
+
+                            <Viewbox Stretch="Uniform">
+                                <Canvas Width="{Binding DepotChartWidth}" Height="{Binding DepotChartHeight}">
+                                    <Rectangle Width="{Binding DepotChartWidth}" Height="{Binding DepotChartHeight}"
+                                               RadiusX="12" RadiusY="12"
+                                               Fill="#12000000"
+                                               Stroke="#25FFFFFF" StrokeThickness="1" />
+                                    <Line StartPoint="24,45" EndPoint="656,45" Stroke="#18FFFFFF" StrokeThickness="1" />
+                                    <Line StartPoint="24,90" EndPoint="656,90" Stroke="#14FFFFFF" StrokeThickness="1" />
+                                    <Line StartPoint="24,135" EndPoint="656,135" Stroke="#18FFFFFF" StrokeThickness="1" />
+
+                                    <Path Data="{Binding DepotChartPathData}" Stroke="{DynamicResource BrushAccentGold}"
+                                          StrokeThickness="3" />
+
+                                    <ItemsControl ItemsSource="{Binding DepotChartPoints}"
+                                                  Width="{Binding DepotChartWidth}"
+                                                  Height="{Binding DepotChartHeight}">
+                                        <ItemsControl.Styles>
+                                            <Style Selector="ItemsControl > ContentPresenter">
+                                                <Setter Property="Canvas.Left" Value="{Binding X}" />
+                                                <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                                            </Style>
+                                        </ItemsControl.Styles>
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <Canvas />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="vm:DepotChartPointItem">
+                                                <Border Width="12" Height="12" CornerRadius="6"
+                                                        Background="{DynamicResource BrushAccentGold}"
+                                                        BorderBrush="{DynamicResource BrushSurfaceElevated}"
+                                                        BorderThickness="2"
+                                                        ToolTip.Tip="{Binding Tooltip}" />
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Canvas>
+                            </Viewbox>
+
+                            <ItemsControl ItemsSource="{Binding DepotTimelineItems}"
+                                          IsVisible="{Binding HasDepotTimeline}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:DepotTimelineChipItem">
+                                        <Border Background="{DynamicResource BrushBackground}" BorderBrush="{DynamicResource BrushBorder}"
+                                                BorderThickness="1" CornerRadius="999" Padding="10,6" Margin="0,0,8,8">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <TextBlock Text="{Binding DateText}" FontSize="11"
+                                                           Foreground="{DynamicResource BrushTextSecondary}" />
+                                                <TextBlock Text="{Binding ValueText}" FontSize="11" FontWeight="Bold"
+                                                           Foreground="{DynamicResource BrushAccentGold}" />
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="2" Background="{DynamicResource BrushSurfaceElevated}" CornerRadius="0,0,8,0"
+                    Padding="20">
+                <StackPanel Spacing="20">
+                    <Border Background="{DynamicResource BrushSurface}" CornerRadius="10" Padding="14"
+                            BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1">
+                        <StackPanel Spacing="14">
+                            <StackPanel Spacing="10">
+                                <TextBlock Text="{loc:Localize Progress_DepotLastSaleTitle}" FontWeight="Bold" FontSize="11"
+                                           Foreground="{DynamicResource BrushTextTertiary}" />
+                                <TextBlock Text="{Binding DepotLastSaleText}" FontSize="13" FontWeight="SemiBold"
+                                           TextWrapping="Wrap"
+                                           Foreground="{DynamicResource BrushTextPrimary}" />
+                            </StackPanel>
+
+                            <StackPanel Spacing="10">
+                                <TextBlock Text="{loc:Localize Progress_SellRhythmTitle}" FontWeight="Bold" FontSize="11"
+                                           Foreground="{DynamicResource BrushTextTertiary}" />
+                                <TextBlock Text="{Binding DepotSellRhythmText}" FontSize="13" FontWeight="SemiBold"
+                                           TextWrapping="Wrap"
+                                           Foreground="{DynamicResource BrushTextPrimary}" />
+                            </StackPanel>
+
+                            <StackPanel Spacing="10">
+                                <Button Content="{loc:Localize Progress_MarkDepotSoldNow}"
+                                        Command="{Binding MarkDepotSoldNowCommand}"
+                                        Classes="Primary"
+                                        HorizontalAlignment="Stretch"
+                                        Padding="16,10" />
+                                <Button Content="{loc:Localize Progress_RecordManualSale}"
+                                        Command="{Binding OpenDepotSaleDialogCommand}"
+                                        Background="Transparent"
+                                        BorderBrush="{DynamicResource BrushBorderLight}"
+                                        BorderThickness="1"
+                                        HorizontalAlignment="Stretch"
+                                        Padding="16,10" />
+                            </StackPanel>
+
+                            <TextBlock Text="{Binding DepotActionStatusText}"
+                                       FontSize="11"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource BrushTextSecondary}"
+                                       IsVisible="{Binding DepotActionStatusText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="{DynamicResource BrushSurface}" CornerRadius="10" Padding="14"
+                            BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="{loc:Localize Progress_DepotRecentSalesTitle}" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource BrushTextPrimary}" />
+                            <TextBlock Text="{loc:Localize Progress_NoDepotSalesYet}"
+                                       Foreground="{DynamicResource BrushTextSecondary}"
+                                       IsVisible="{Binding !HasRecentDepotSales}" />
+                            <ItemsControl ItemsSource="{Binding RecentDepotSales}"
+                                          IsVisible="{Binding HasRecentDepotSales}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:DepotSaleChipItem">
+                                        <Border Background="{DynamicResource BrushBackground}" BorderBrush="{DynamicResource BrushBorder}"
+                                                BorderThickness="1" CornerRadius="999" Padding="10,6" Margin="0,0,8,8">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <TextBlock Text="{Binding DateText}" FontSize="11"
+                                                           Foreground="{DynamicResource BrushTextSecondary}" />
+                                                <TextBlock Text="{Binding ValueText}" FontSize="11" FontWeight="Bold"
+                                                           Foreground="{DynamicResource BrushInfo}" />
+                                                <Button Content="×"
+                                                        Width="22"
+                                                        Height="22"
+                                                        Padding="0"
+                                                        Command="{Binding $parent[UserControl].DataContext.DeleteDepotSaleCommand}"
+                                                        CommandParameter="{Binding}"
+                                                        ToolTip.Tip="{loc:Localize Common_Delete}"
+                                                        Background="Transparent"
+                                                        BorderThickness="0"
+                                                        Foreground="{DynamicResource BrushTextSecondary}" />
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Grid Grid.RowSpan="3"
+              Background="{DynamicResource BrushOverlay}"
+              IsVisible="{Binding IsDepotSaleDialogOpen}">
+            <Border Width="420"
+                    MaxWidth="420"
+                    Padding="18"
+                    Background="{DynamicResource BrushSurfaceElevated}"
+                    BorderBrush="{DynamicResource BrushBorderLight}"
+                    BorderThickness="1"
+                    CornerRadius="12"
+                    BoxShadow="0 12 40 0 #55000000"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center">
+                <StackPanel Spacing="14">
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="{loc:Localize Progress_ManualSaleTitle}"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   Foreground="{DynamicResource BrushTextPrimary}" />
+                        <TextBlock Text="{loc:Localize Progress_ManualSaleHint}"
+                                   FontSize="12"
+                                   TextWrapping="Wrap"
+                                   Foreground="{DynamicResource BrushTextSecondary}" />
+                    </StackPanel>
+
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="{loc:Localize Progress_ManualSaleAmount}"
+                                   FontSize="12"
+                                   Foreground="{DynamicResource BrushTextTertiary}" />
+                        <TextBox Text="{Binding ManualDepotSaleAmountInput}"
+                                 PlaceholderText="{loc:Localize Progress_ManualSaleAmountPlaceholder}"
+                                 behaviors:NumericTextBoxBehavior.DigitsOnly="True" />
+                    </StackPanel>
+
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="{loc:Localize Progress_ManualSaleDate}"
+                                   FontSize="12"
+                                   Foreground="{DynamicResource BrushTextTertiary}" />
+                        <DatePicker SelectedDate="{Binding ManualDepotSaleDate}" />
+                    </StackPanel>
+
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="{loc:Localize Progress_ManualSaleTime}"
+                                   FontSize="12"
+                                   Foreground="{DynamicResource BrushTextTertiary}" />
+                        <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="8">
+                            <ComboBox ItemsSource="{Binding ManualDepotSaleHours}"
+                                      SelectedItem="{Binding SelectedManualDepotSaleHour}" />
+                            <TextBlock Grid.Column="1" Text=":" VerticalAlignment="Center"
+                                       Foreground="{DynamicResource BrushTextSecondary}" />
+                            <ComboBox Grid.Column="2"
+                                      ItemsSource="{Binding ManualDepotSaleMinutes}"
+                                      SelectedItem="{Binding SelectedManualDepotSaleMinute}" />
+                        </Grid>
+                    </StackPanel>
+
+                    <TextBlock Text="{Binding DepotDialogValidationError}"
+                               FontSize="11"
+                               TextWrapping="Wrap"
+                               Foreground="{DynamicResource BrushDanger}"
+                               IsVisible="{Binding DepotDialogValidationError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                Spacing="10">
+                        <Button Content="{loc:Localize Common_Cancel}"
+                                Command="{Binding CloseDepotSaleDialogCommand}"
+                                Background="Transparent" />
+                        <Button Content="{loc:Localize Common_Save}"
+                                Command="{Binding SaveDepotSaleCommand}"
+                                Classes="Primary" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

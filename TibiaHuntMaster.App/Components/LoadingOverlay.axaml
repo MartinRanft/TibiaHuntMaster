@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="TibiaHuntMaster.App.Components.LoadingOverlay">
+
+    <!-- Loading Overlay Component -->
+    <Grid Background="{StaticResource BrushOverlay}" Classes="FadeIn">
+        <Border Background="{StaticResource BrushSurfaceElevated}"
+                CornerRadius="{StaticResource RadiusLarge}"
+                Padding="{StaticResource PaddingXL}"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                BoxShadow="0 4 12 2 #40000000">
+            <StackPanel Spacing="{StaticResource SpacingLG}" HorizontalAlignment="Center">
+                <!-- Loading Spinner -->
+                <ProgressBar IsIndeterminate="True"
+                             Width="100"
+                             Height="4"
+                             Foreground="{StaticResource BrushAccentGold}"
+                             Background="{StaticResource BrushBorder}" />
+
+                <!-- Loading Text -->
+                <TextBlock Text="Loading..."
+                           FontSize="{StaticResource FontSizeBody}"
+                           Foreground="{StaticResource BrushTextSecondary}"
+                           HorizontalAlignment="Center" />
+            </StackPanel>
+        </Border>
+    </Grid>
+
+</UserControl>

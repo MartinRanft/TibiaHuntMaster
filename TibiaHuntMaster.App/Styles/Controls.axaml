@@ -1,0 +1,453 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ============================================ -->
+    <!-- GLOBAL STYLES -->
+    <!-- ============================================ -->
+
+    <!-- Default TextBlock Style -->
+    <Style Selector="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <!-- Default CheckBox Style -->
+    <Style Selector="CheckBox">
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}" />
+    </Style>
+
+    <!-- CheckBox Border -->
+    <Style Selector="CheckBox /template/ Border#NormalRectangle">
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}" />
+        <Setter Property="BorderThickness" Value="2" />
+    </Style>
+
+    <!-- Default Button Hover - prevent white background -->
+    <Style Selector="Button:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceHover}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <!-- Default TabItem Style -->
+    <Style Selector="TabItem">
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <!-- Selected TabItem Style -->
+    <Style Selector="TabItem:selected">
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <!-- TabItem Header Text -->
+    <Style Selector="TabItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <!-- TabItem Hover -->
+    <Style Selector="TabItem:pointerover">
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <Style Selector="TabItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <!-- Default RadioButton Style -->
+    <Style Selector="RadioButton">
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <!-- Default TextBox Style -->
+    <Style Selector="TextBox">
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}" />
+    </Style>
+
+    <!-- TextBox Watermark (Placeholder) -->
+    <Style Selector="TextBox /template/ TextBlock#PART_Watermark">
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextTertiary}" />
+    </Style>
+
+    <!-- AutoCompleteBox Watermark -->
+    <Style Selector="AutoCompleteBox /template/ TextBox#PART_TextBox /template/ TextBlock#PART_Watermark">
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}" />
+    </Style>
+
+    <!-- ============================================ -->
+    <!-- CARD STYLES -->
+    <!-- ============================================ -->
+
+    <!-- Base Card Style -->
+    <Style Selector="Border.Card">
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceElevated}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
+        <Setter Property="Padding" Value="{StaticResource PaddingCard}" />
+    </Style>
+
+    <Style Selector="Border.Card:pointerover">
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushBorderHover}" />
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceHover}" />
+    </Style>
+
+    <!-- Elevated Card (higher z-index feel) -->
+    <Style Selector="Border.CardElevated">
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceElevated}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushBorderLight}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
+        <Setter Property="Padding" Value="{StaticResource PaddingLG}" />
+    </Style>
+
+    <!-- Clickable Card -->
+    <Style Selector="Border.CardClickable">
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceElevated}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
+        <Setter Property="Padding" Value="{StaticResource PaddingCard}" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+
+    <Style Selector="Border.CardClickable:pointerover">
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushBorderHover}" />
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceHover}" />
+    </Style>
+
+    <!-- ============================================ -->
+    <!-- BUTTON STYLES -->
+    <!-- ep============================================ -->
+
+    <!-- Icon Button (Transparent) -->
+    <Style Selector="Button.IconButton">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="{StaticResource PaddingButton}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+
+    <Style Selector="Button.IconButton:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <!-- Back Button -->
+    <Style Selector="Button.BackButton">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushBorderLight}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{StaticResource RadiusSmall}" />
+        <Setter Property="Padding" Value="{StaticResource PaddingButton}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="Button.BackButton:pointerover /template/ ContentPresenter">
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushBorderHover}" />
+    </Style>
+
+    <!-- Primary Button (Gold Accent) -->
+    <Style Selector="Button.Primary">
+        <Setter Property="Background" Value="{DynamicResource BrushAccentGold}" />
+        <Setter Property="Foreground" Value="Black" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
+        <Setter Property="Padding" Value="{StaticResource PaddingButtonLarge}" />
+        <Setter Property="FontWeight" Value="{StaticResource FontWeightBold}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+
+    <Style Selector="Button.Primary:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#E5C04A" />
+        <Setter Property="Foreground" Value="Black" />
+    </Style>
+
+    <Style Selector="Button.Primary:disabled /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource BrushBorder}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextDisabled}" />
+    </Style>
+
+    <!-- Success Button (Green) -->
+    <Style Selector="Button.Success">
+        <Setter Property="Background" Value="{DynamicResource BrushSuccess}" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
+        <Setter Property="Padding" Value="{StaticResource PaddingButton}" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+
+    <Style Selector="Button.Success:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#5DB761" />
+    </Style>
+
+    <!-- Info Button (Blue) -->
+    <Style Selector="Button.Info">
+        <Setter Property="Background" Value="{DynamicResource BrushInfo}" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
+        <Setter Property="Padding" Value="{StaticResource PaddingButton}" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+
+    <!-- ============================================ -->
+    <!-- LISTBOX STYLES -->
+    <!-- ============================================ -->
+
+    <!-- Navigation List (Sidebar Menu) -->
+    <Style Selector="ListBox.NavigationList ListBoxItem">
+        <Setter Property="Padding" Value="{StaticResource PaddingButtonLarge}" />
+        <Setter Property="Margin" Value="10,2" />
+        <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <Style Selector="ListBox.NavigationList ListBoxItem:selected /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceElevated}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <Style Selector="ListBox.NavigationList ListBoxItem:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceHover}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <!-- Data List (History, Places) -->
+    <Style Selector="ListBox.DataList">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <Style Selector="ListBox.DataList ListBoxItem">
+        <Setter Property="Padding" Value="{StaticResource PaddingMD}" />
+        <Setter Property="Margin" Value="0,1" />
+        <Setter Property="CornerRadius" Value="{StaticResource RadiusSmall}" />
+    </Style>
+
+    <Style Selector="ListBox.DataList ListBoxItem:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceHover}" />
+    </Style>
+
+    <!-- ============================================ -->
+    <!-- TEXTBLOCK STYLES -->
+    <!-- ============================================ -->
+
+    <!-- Heading 1 -->
+    <Style Selector="TextBlock.H1">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeHeading1}" />
+        <Setter Property="FontWeight" Value="{StaticResource FontWeightLight}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <!-- Heading 2 -->
+    <Style Selector="TextBlock.H2">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeHeading2}" />
+        <Setter Property="FontWeight" Value="{StaticResource FontWeightLight}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <!-- Heading 3 -->
+    <Style Selector="TextBlock.H3">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeHeading3}" />
+        <Setter Property="FontWeight" Value="{StaticResource FontWeightNormal}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <!-- Label (Small Bold) -->
+    <Style Selector="TextBlock.Label">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeLabel}" />
+        <Setter Property="FontWeight" Value="{StaticResource FontWeightBold}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextTertiary}" />
+        <Setter Property="LetterSpacing" Value="1" />
+    </Style>
+
+    <!-- Caption (Small Text) -->
+    <Style Selector="TextBlock.Caption">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeCaption}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextTertiary}" />
+    </Style>
+
+    <!-- Secondary Text -->
+    <Style Selector="TextBlock.Secondary">
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}" />
+    </Style>
+
+    <!-- Muted Text -->
+    <Style Selector="TextBlock.Muted">
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextMuted}" />
+    </Style>
+
+    <!-- ============================================ -->
+    <!-- TEXTBOX STYLES -->
+    <!-- ============================================ -->
+
+    <!-- ============================================ -->
+    <!-- COMBOBOX / DROPDOWN STYLES -->
+    <!-- ============================================ -->
+
+    <Style Selector="ComboBox">
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceElevated}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}" />
+    </Style>
+
+    <Style Selector="ComboBox:pointerover">
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceHover}" />
+    </Style>
+
+    <Style Selector="ComboBox /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <Style Selector="ComboBoxItem">
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceElevated}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <Style Selector="ComboBoxItem /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceElevated}" />
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <Style Selector="ComboBoxItem:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceHover}" />
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <Style Selector="ComboBoxItem:selected /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceHover}" />
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <Style Selector="ComboBox /template/ Popup#PART_Popup ListBox">
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceElevated}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}" />
+    </Style>
+
+    <Style Selector="AutoCompleteBox /template/ Popup#PART_Popup ListBox">
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceElevated}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}" />
+    </Style>
+
+    <Style Selector="AutoCompleteBox /template/ Popup#PART_Popup ListBoxItem">
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <Style Selector="AutoCompleteBox /template/ Popup#PART_Popup ListBoxItem /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceElevated}" />
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <Style Selector="AutoCompleteBox /template/ Popup#PART_Popup ListBoxItem:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceHover}" />
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <!-- Base TextBox Enhancement -->
+    <Style Selector="TextBox">
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}" />
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceElevated}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+        <Setter Property="CornerRadius" Value="{StaticResource RadiusLarge}" />
+        <Setter Property="Padding" Value="{StaticResource PaddingLG}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource BrushTextPrimary}" />
+        <Setter Property="SelectionBrush" Value="{DynamicResource BrushAccentBlue}" />
+        <Setter Property="SelectionForegroundBrush" Value="White" />
+    </Style>
+
+    <Style Selector="TextBox:focus">
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushAccentBlue}" />
+    </Style>
+
+    <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushAccentBlue}" />
+    </Style>
+
+    <!-- Watermark/Placeholder text color -->
+    <Style Selector="TextBox /template/ TextBlock#PART_Watermark">
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextTertiary}" />
+    </Style>
+
+    <!-- Monospace TextBox (for code/logs) -->
+    <Style Selector="TextBox.Monospace">
+        <Setter Property="FontFamily" Value="Consolas, Courier New, Monospace" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
+    </Style>
+
+    <!-- ============================================ -->
+    <!-- BORDER STYLES -->
+    <!-- ============================================ -->
+
+    <!-- Section Container -->
+    <Style Selector="Border.Section">
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceElevated}" />
+        <Setter Property="CornerRadius" Value="{StaticResource RadiusLarge}" />
+        <Setter Property="Padding" Value="{StaticResource PaddingLG}" />
+        <Setter Property="Margin" Value="0,0,0,20" />
+    </Style>
+
+    <!-- Divider -->
+    <Style Selector="Border.Divider">
+        <Setter Property="Height" Value="1" />
+        <Setter Property="Background" Value="{DynamicResource BrushBorder}" />
+    </Style>
+
+    <!-- Notification Badge -->
+    <Style Selector="Border.Badge">
+        <Setter Property="Background" Value="{DynamicResource BrushBorder}" />
+        <Setter Property="CornerRadius" Value="{StaticResource RadiusSmall}" />
+        <Setter Property="Padding" Value="8,2" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <!-- ============================================ -->
+    <!-- LOADING OVERLAY -->
+    <!-- ============================================ -->
+
+    <Style Selector="Border.LoadingOverlay">
+        <Setter Property="Background" Value="{DynamicResource BrushOverlay}" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+    </Style>
+
+    <!-- ============================================ -->
+    <!-- CHECKBOX STYLES -->
+    <!-- ============================================ -->
+
+    <Style Selector="CheckBox">
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}" />
+    </Style>
+
+    <Style Selector="CheckBox:checked">
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <!-- ============================================ -->
+    <!-- SCROLL VIEWER STYLES -->
+    <!-- ============================================ -->
+
+    <Style Selector="ScrollViewer">
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+    </Style>
+
+    <!-- ============================================ -->
+    <!-- TOOLTIP STYLES -->
+    <!-- ============================================ -->
+
+    <Style Selector="ToolTip">
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceElevated}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <Style Selector="ToolTip TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+</Styles>

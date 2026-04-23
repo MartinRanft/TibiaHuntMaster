@@ -1,0 +1,156 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TibiaHuntMaster.App.ViewModels.Analyzer"
+             xmlns:loc="using:TibiaHuntMaster.App.Extensions"
+             xmlns:converters="clr-namespace:TibiaHuntMaster.App.Converters"
+             x:Class="TibiaHuntMaster.App.Views.Analyzer.Components.InputView"
+             x:DataType="vm:HuntAnalyzerViewModel">
+
+    <UserControl.Resources>
+        <converters:NullableIntConverter x:Key="NullableIntConverter" />
+    </UserControl.Resources>
+
+    <Grid RowDefinitions="Auto, *, Auto, Auto">
+        <!-- Header -->
+        <Grid ColumnDefinitions="*, Auto">
+            <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingMD}">
+                <Button Command="{Binding GoBackCommand}"
+                        IsVisible="{Binding IsHistoryMode}"
+                        Classes="BackButton">
+                    <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingSM}">
+                        <TextBlock Text="⬅" FontWeight="Bold" />
+                        <TextBlock Text="{loc:Localize Common_Back}" />
+                    </StackPanel>
+                </Button>
+                <StackPanel>
+                    <TextBlock Text="{loc:Localize Analyzer_Title}"
+                               Classes="H2" />
+                    <TextBlock Text="{loc:Localize Analyzer_Subtitle}"
+                               Classes="Secondary"
+                               Margin="0,5,0,0" />
+                </StackPanel>
+            </StackPanel>
+            <Button Grid.Column="1"
+                    Content="{loc:Localize Common_PasteFromClipboard}"
+                    Command="{Binding PasteFromClipboardCommand}"
+                    IsVisible="False" />
+        </Grid>
+
+        <!-- Input TextBox -->
+        <TextBox Grid.Row="1"
+                 Text="{Binding InputText}"
+                 PlaceholderText="{loc:Localize Analyzer_PasteHere}"
+                 AcceptsReturn="True"
+                 TextWrapping="Wrap"
+                 Margin="0,20"
+                 Classes="Monospace" />
+
+        <!-- Active Events -->
+        <StackPanel Grid.Row="2"
+                    Spacing="{StaticResource SpacingMD}"
+                    Margin="0,0,0,20">
+            <TextBlock Text="{loc:Localize Analyzer_ActiveEvents}"
+                       Classes="Label" />
+            <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingXL}">
+                <CheckBox IsChecked="{Binding IsDoubleXp}" Content="{loc:Localize Analyzer_DoubleXP}" />
+                <CheckBox IsChecked="{Binding IsDoubleLoot}" Content="{loc:Localize Analyzer_DoubleLoot}" />
+                <CheckBox IsChecked="{Binding IsRapidRespawn}" Content="{loc:Localize Analyzer_RapidRespawn}" />
+            </StackPanel>
+
+            <Border Classes="Section"
+                    Padding="16"
+                    Margin="0,4,0,0">
+                <Grid RowDefinitions="Auto,Auto"
+                      RowSpacing="12">
+                    <StackPanel>
+                        <TextBlock Text="{loc:Localize Analyzer_XpModifiersTitle}"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource BrushAccentGold}" />
+                        <TextBlock Text="{loc:Localize Analyzer_XpModifiersHint}"
+                                   Margin="0,4,0,0"
+                                   FontSize="12"
+                                   TextWrapping="Wrap"
+                                   Foreground="{DynamicResource BrushTextSecondary}" />
+                    </StackPanel>
+
+                    <Grid Grid.Row="1"
+                          ColumnDefinitions="*,*,*"
+                          ColumnSpacing="12"
+                          RowDefinitions="Auto,Auto"
+                          RowSpacing="12">
+                        <StackPanel Grid.Column="0"
+                                    Spacing="6">
+                            <TextBlock Text="{loc:Localize Analyzer_XpBoostPercentLabel}"
+                                       FontSize="11"
+                                       Foreground="{DynamicResource BrushTextTertiary}" />
+                            <TextBox Text="{Binding XpBoostPercent, Converter={StaticResource NullableIntConverter}}"
+                                     PlaceholderText="{loc:Localize Analyzer_XpBoostPercentWatermark}" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1"
+                                    Spacing="6">
+                            <TextBlock Text="{loc:Localize Analyzer_XpBoostMinutesLabel}"
+                                       FontSize="11"
+                                       Foreground="{DynamicResource BrushTextTertiary}" />
+                            <TextBox Text="{Binding XpBoostActiveMinutes, Converter={StaticResource NullableIntConverter}}"
+                                     PlaceholderText="{loc:Localize Analyzer_XpBoostMinutesWatermark}" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2"
+                                    Spacing="6">
+                            <TextBlock Text="{loc:Localize Analyzer_CustomXpRateLabel}"
+                                       FontSize="11"
+                                       Foreground="{DynamicResource BrushTextTertiary}" />
+                            <TextBox Text="{Binding CustomXpRatePercent, Converter={StaticResource NullableIntConverter}}"
+                                     PlaceholderText="{loc:Localize Analyzer_CustomXpRateWatermark}" />
+                        </StackPanel>
+
+                        <TextBlock Grid.Row="1"
+                                   Grid.ColumnSpan="3"
+                                   Text="{loc:Localize Analyzer_CustomXpRateHint}"
+                                   FontSize="11"
+                                   TextWrapping="Wrap"
+                                   Foreground="{DynamicResource BrushTextSecondary}" />
+                    </Grid>
+                </Grid>
+            </Border>
+        </StackPanel>
+
+        <!-- Actions -->
+        <StackPanel Grid.Row="3" Spacing="{StaticResource SpacingMD}">
+            <!-- Error Message -->
+            <TextBlock Text="{Binding ErrorMessage}"
+                       Foreground="{DynamicResource BrushError}"
+                       HorizontalAlignment="Center"
+                       IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+            <!-- Analyze Button -->
+            <Button Command="{Binding AnalyzeAndSaveCommand}"
+                    HorizontalAlignment="Stretch"
+                    Height="50"
+                    Classes="Primary">
+                <TextBlock Text="{loc:Localize Analyzer_AnalyzeLog}" FontSize="16" />
+            </Button>
+        </StackPanel>
+
+        <!-- Notification Toast -->
+        <Border Grid.Row="3"
+                VerticalAlignment="Bottom"
+                HorizontalAlignment="Center"
+                Margin="0,0,0,70"
+                Background="{DynamicResource BrushSurface}"
+                BorderBrush="{DynamicResource BrushSuccess}"
+                BorderThickness="1"
+                CornerRadius="20"
+                Padding="20,10"
+                IsVisible="{Binding IsNotificationVisible}">
+            <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingMD}">
+                <TextBlock Text="📋" VerticalAlignment="Center" />
+                <TextBlock Text="{Binding NotificationMessage}"
+                           Foreground="{DynamicResource BrushSuccess}"
+                           FontWeight="Bold" />
+            </StackPanel>
+        </Border>
+    </Grid>
+
+</UserControl>

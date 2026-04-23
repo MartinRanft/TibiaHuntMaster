@@ -1,0 +1,239 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TibiaHuntMaster.App.ViewModels.Dashboard"
+             xmlns:loc="using:TibiaHuntMaster.App.Extensions"
+             x:Class="TibiaHuntMaster.App.Views.Dashboard.HuntingPlacesView"
+             x:DataType="vm:HuntingPlacesViewModel">
+
+    <Grid RowDefinitions="Auto, Auto, *" Margin="30">
+
+        <!-- ROW 0: HEADER -->
+        <Grid Grid.Row="0" Margin="0,0,0,20">
+            <StackPanel>
+                <TextBlock Text="{loc:Localize HuntingPlaces_Title}" Classes="H1" />
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <TextBlock Text="{Binding StatusMessage}" Foreground="{DynamicResource BrushTextDisabled}" />
+                    <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsLoading}" Width="100" Height="2"
+                                 VerticalAlignment="Center" />
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+
+        <!-- ROW 1: FILTERS -->
+        <Border Grid.Row="1" Background="{DynamicResource BrushSurfaceElevated}" CornerRadius="8" Padding="15"
+                Margin="0,0,0,15" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1">
+            <StackPanel Spacing="12">
+                <Grid ColumnDefinitions="Auto, 10, Auto, 10, Auto, 10, Auto, 10, Auto">
+
+                    <!-- Vocation Filter -->
+                    <StackPanel Grid.Column="0" Spacing="5">
+                        <TextBlock Text="{loc:Localize HuntingPlaces_Vocation}" FontSize="11" Foreground="{DynamicResource BrushTextTertiary}" />
+                        <ComboBox ItemsSource="{Binding VocationFilterOptions}"
+                                  SelectedIndex="{Binding SelectedVocationFilterIndex}"
+                                  Width="150" />
+                    </StackPanel>
+
+                    <!-- Min Level -->
+                    <StackPanel Grid.Column="2" Spacing="5">
+                        <TextBlock Text="{loc:Localize HuntingPlaces_MinLevel}" FontSize="11"
+                                   Foreground="{DynamicResource BrushTextTertiary}" />
+                        <NumericUpDown Value="{Binding MinLevel}" Minimum="0" Maximum="1000" Width="120" Increment="10"
+                                       FormatString="0" />
+                    </StackPanel>
+
+                    <!-- Max Level -->
+                    <StackPanel Grid.Column="4" Spacing="5">
+                        <TextBlock Text="{loc:Localize HuntingPlaces_MaxLevel}" FontSize="11"
+                                   Foreground="{DynamicResource BrushTextTertiary}" />
+                        <NumericUpDown Value="{Binding MaxLevel}" Minimum="0" Maximum="1000" Width="120" Increment="10"
+                                       FormatString="0" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="6" Spacing="5">
+                        <TextBlock Text="Session Filter" FontSize="11"
+                                   Foreground="{DynamicResource BrushTextTertiary}" />
+                        <CheckBox Content="Only hunted places"
+                                  IsChecked="{Binding OnlyHuntedPlaces}"
+                                  IsEnabled="{Binding HasCharacterContext}" />
+                    </StackPanel>
+                </Grid>
+
+                <Border Background="{DynamicResource BrushSurface}"
+                        BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1"
+                        CornerRadius="6" Padding="10" IsVisible="{Binding HasAggregatedStats}">
+                    <StackPanel Orientation="Horizontal" Spacing="18" VerticalAlignment="Center">
+                        <TextBlock Text="Filtered Local Stats" FontSize="12" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource BrushTextSecondary}" />
+                        <TextBlock Text="Sessions" FontSize="11" Foreground="{DynamicResource BrushTextTertiary}" />
+                        <TextBlock Text="{Binding AggregatedSessionCount}" FontSize="12" FontWeight="SemiBold" />
+                        <TextBlock Text="XP/h" FontSize="11" Foreground="{DynamicResource BrushTextTertiary}" />
+                        <TextBlock Text="{Binding AggregatedXpPerHour}" FontSize="12" FontWeight="SemiBold" />
+                        <TextBlock Text="Loot/h" FontSize="11" Foreground="{DynamicResource BrushTextTertiary}" />
+                        <TextBlock Text="{Binding AggregatedLootPerHour}" FontSize="12" FontWeight="SemiBold" />
+                        <TextBlock Text="Balance/h" FontSize="11" Foreground="{DynamicResource BrushTextTertiary}" />
+                        <TextBlock Text="{Binding AggregatedBalancePerHour}" FontSize="12" FontWeight="SemiBold" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Border>
+
+        <!-- ROW 2: LIST -->
+        <Border Grid.Row="2" Background="{DynamicResource BrushSurface}" CornerRadius="8"
+                BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1">
+            <Grid>
+                <ListBox ItemsSource="{Binding Items}"
+                         Background="Transparent"
+                         Margin="10"
+                         BorderThickness="0">
+                    <ListBox.Styles>
+                        <Style Selector="ListBoxItem">
+                            <Setter Property="Padding" Value="0" />
+                            <Setter Property="Margin" Value="0,0,0,10" />
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="BorderThickness" Value="0" />
+                        </Style>
+                        <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+                            <Setter Property="Background" Value="Transparent" />
+                        </Style>
+                        <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+                            <Setter Property="Background" Value="{DynamicResource BrushSurfaceHover}" />
+                        </Style>
+                    </ListBox.Styles>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="vm:HuntingPlaceItemViewModel">
+                            <Border Background="{DynamicResource BrushSurfaceElevated}"
+                                    CornerRadius="{StaticResource RadiusMedium}" Padding="15" Margin="0,0,0,10"
+                                    BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1">
+                                <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto">
+
+                                    <!-- Row 0: Name -->
+                                    <TextBlock Grid.Row="0" Text="{Binding Name}"
+                                               FontSize="16" FontWeight="Bold"
+                                               Foreground="{DynamicResource BrushAccentGold}"
+                                               Margin="0,0,0,5" />
+
+                                    <!-- Row 1: Location, City, Coordinates & Map Jump -->
+                                    <Grid Grid.Row="1" ColumnDefinitions="*, Auto" Margin="0,0,0,10">
+                                        <StackPanel Spacing="4" Margin="0,0,10,0">
+                                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                                <TextBlock Text="📍" FontSize="12" VerticalAlignment="Center" />
+                                                <TextBlock Text="{Binding Location}"
+                                                           Foreground="{DynamicResource BrushTextSecondary}" FontSize="12"
+                                                           TextWrapping="Wrap"
+                                                           VerticalAlignment="Center" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                                <TextBlock Text="🏛️" FontSize="12" VerticalAlignment="Center" />
+                                                <TextBlock Text="{Binding City}"
+                                                           Foreground="{DynamicResource BrushTextSecondary}" FontSize="12"
+                                                           VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </StackPanel>
+
+                                        <Button Grid.Column="1"
+                                                Command="{Binding $parent[UserControl].DataContext.ShowOnMinimapCommand}"
+                                                CommandParameter="{Binding}"
+                                                ToolTip.Tip="{Binding DebugMapTooltip}"
+                                                VerticalAlignment="Top"
+                                                Background="{DynamicResource BrushSurface}"
+                                                BorderBrush="{DynamicResource BrushBorderLight}"
+                                                BorderThickness="1"
+                                                CornerRadius="6"
+                                                Padding="10,6">
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <TextBlock Text="🗺️" VerticalAlignment="Center" />
+                                                <TextBlock Text="{loc:Localize HuntingPlaces_ShowOnMap}"
+                                                           VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                    </Grid>
+
+                                    <!-- Row 2: Levels -->
+                                    <Border Grid.Row="2" Background="{DynamicResource BrushSurface}" CornerRadius="4"
+                                            Padding="10" Margin="0,0,0,10">
+                                        <StackPanel Spacing="5">
+                                            <TextBlock Text="{loc:Localize HuntingPlaces_RecommendedLevels}" FontSize="11"
+                                                       Foreground="{DynamicResource BrushTextDisabled}" FontWeight="Bold" />
+                                            <TextBlock Text="{Binding LevelDisplay}"
+                                                       Foreground="{DynamicResource BrushTextPrimary}" FontSize="12" />
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Row 3: Stats -->
+                                    <Grid Grid.Row="3" ColumnDefinitions="*, *">
+
+                                        <!-- Experience -->
+                                        <Border Grid.Column="0" Background="{DynamicResource BrushSurfaceElevated}"
+                                                BorderBrush="{DynamicResource BrushInfo}" BorderThickness="1"
+                                                CornerRadius="4" Padding="10" Margin="0,0,5,0">
+                                            <StackPanel Spacing="3">
+                                                <TextBlock Text="{loc:Localize HuntingPlaces_Experience}" FontSize="10"
+                                                           Foreground="{DynamicResource BrushInfo}" FontWeight="Bold" />
+                                                <TextBlock Text="{Binding ExpDisplay}"
+                                                           Foreground="{DynamicResource BrushTextPrimary}" FontSize="13"
+                                                           FontWeight="Bold" />
+                                            </StackPanel>
+                                        </Border>
+
+                                        <!-- Loot -->
+                                        <Border Grid.Column="1" Background="{DynamicResource BrushSurfaceElevated}"
+                                                BorderBrush="{DynamicResource BrushSuccess}" BorderThickness="1"
+                                                CornerRadius="4" Padding="10" Margin="5,0,0,0">
+                                            <StackPanel Spacing="3">
+                                                <TextBlock Text="{loc:Localize HuntingPlaces_LootValue}" FontSize="10"
+                                                           Foreground="{DynamicResource BrushSuccess}" FontWeight="Bold" />
+                                                <TextBlock Text="{Binding LootDisplay}"
+                                                           Foreground="{DynamicResource BrushTextPrimary}" FontSize="13"
+                                                           FontWeight="Bold" />
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+
+                                    <!-- Row 4: Local Session Averages -->
+                                    <Border Grid.Row="4" Background="{DynamicResource BrushSurface}" CornerRadius="4"
+                                            Padding="10" Margin="0,10,0,0" IsVisible="{Binding HasLocalStats}">
+                                        <Grid ColumnDefinitions="Auto, Auto, Auto, Auto" ColumnSpacing="16">
+                                            <StackPanel Grid.Column="0" Spacing="2">
+                                                <TextBlock Text="Sessions" FontSize="10" Foreground="{DynamicResource BrushTextDisabled}" />
+                                                <TextBlock Text="{Binding LocalSessionCount}" FontSize="12" FontWeight="SemiBold" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1" Spacing="2">
+                                                <TextBlock Text="XP/h" FontSize="10" Foreground="{DynamicResource BrushInfo}" />
+                                                <TextBlock Text="{Binding LocalXpPerHourDisplay}" FontSize="12" FontWeight="SemiBold" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2" Spacing="2">
+                                                <TextBlock Text="Loot/h" FontSize="10" Foreground="{DynamicResource BrushSuccess}" />
+                                                <TextBlock Text="{Binding LocalLootPerHourDisplay}" FontSize="12" FontWeight="SemiBold" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="3" Spacing="2">
+                                                <TextBlock Text="Balance/h" FontSize="10" Foreground="{DynamicResource BrushWarning}" />
+                                                <TextBlock Text="{Binding LocalBalancePerHourDisplay}" FontSize="12" FontWeight="SemiBold" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <!-- Empty State -->
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="15"
+                            IsVisible="{Binding !Items.Count}">
+                    <TextBlock Text="🗺️" FontSize="48" HorizontalAlignment="Center" Opacity="0.3" />
+                    <TextBlock Text="{loc:Localize HuntingPlaces_NoResults}"
+                               FontSize="18" FontWeight="SemiBold"
+                               Foreground="{DynamicResource BrushTextSecondary}"
+                               HorizontalAlignment="Center" />
+                    <TextBlock Text="{loc:Localize HuntingPlaces_AdjustFilters}"
+                               FontSize="14"
+                               Foreground="{DynamicResource BrushTextMuted}"
+                               HorizontalAlignment="Center"
+                               TextAlignment="Center"
+                               MaxWidth="300"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

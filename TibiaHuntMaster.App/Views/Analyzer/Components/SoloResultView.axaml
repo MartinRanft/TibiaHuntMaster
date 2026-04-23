@@ -1,0 +1,470 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TibiaHuntMaster.App.ViewModels.Analyzer"
+             xmlns:loc="using:TibiaHuntMaster.App.Extensions"
+             xmlns:converters="clr-namespace:TibiaHuntMaster.App.Converters"
+             xmlns:analysis="using:TibiaHuntMaster.Infrastructure.Services.Analysis"
+             xmlns:behaviors="using:TibiaHuntMaster.App.Behaviors"
+             xmlns:hunts="clr-namespace:TibiaHuntMaster.Infrastructure.Data.Entities.Hunts;assembly=TibiaHuntMaster.Infrastructure"
+             x:Class="TibiaHuntMaster.App.Views.Analyzer.Components.SoloResultView"
+             x:DataType="vm:HuntAnalyzerViewModel">
+
+    <UserControl.Resources>
+        <converters:BalanceColorConverter x:Key="BalanceColorConverter" />
+        <converters:TibiaCurrencyConverter x:Key="TibiaCurrencyConverter" />
+        <converters:NullableIntConverter x:Key="NullableIntConverter" />
+    </UserControl.Resources>
+
+    <!-- SOLO UI -->
+    <Grid RowDefinitions="Auto, Auto, Auto, *" Classes="FadeIn">
+
+        <!-- HEADER STATS -->
+        <Grid ColumnDefinitions="*,*,*" Margin="0,0,0,20">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingMD}" Margin="0,0,0,5">
+                    <Button Command="{Binding GoBackCommand}" IsVisible="{Binding IsHistoryMode}"
+                            Classes="BackButton">
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <TextBlock Text="⬅" FontWeight="Bold" /><TextBlock Text="{loc:Localize Common_Back}" />
+                        </StackPanel>
+                    </Button>
+                    <TextBlock Text="{loc:Localize Analyzer_SummaryHeaderEffectiveXp}" Classes="Label"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+                <TextBlock Text="{Binding EffectiveXpPerHour, StringFormat='{}{0:N0}/h'}" FontSize="24"
+                           Foreground="{DynamicResource BrushAccentGold}" />
+                <TextBlock Text="{Binding CurrentSession.XpGain, StringFormat='Total: {0:N0}'}" FontSize="12"
+                           Foreground="{DynamicResource BrushTextSecondary}" />
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <TextBlock Text="{loc:Localize Analyzer_SummaryHeaderRealBalance}" Classes="Label"
+                           Margin="0,0,0,5" />
+                <TextBlock Text="{Binding EffectiveBalance, StringFormat='{}{0:N0} gp'}" FontSize="24"
+                           Foreground="{Binding EffectiveBalance, Converter={StaticResource BalanceColorConverter}}" />
+            </StackPanel>
+            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="{StaticResource SpacingMD}"
+                        HorizontalAlignment="Right">
+                <Button Content="{loc:Localize Analyzer_OpenSummaryDialog}"
+                        Command="{Binding OpenSummaryDialogCommand}"
+                        Foreground="{DynamicResource BrushTextPrimary}" />
+                <Button Content="{loc:Localize Analyzer_SaveChanges}" Command="{Binding SaveChangesCommand}"
+                        Classes="Success"
+                        Foreground="{DynamicResource BrushTextPrimary}" IsVisible="{Binding HasUnsavedChanges}" />
+                <Button Content="{loc:Localize Analyzer_SaveGroup}" Command="{Binding SaveMergeCommand}"
+                        Classes="Info"
+                        IsVisible="{Binding IsMergeResult}" />
+                <Button Content="{loc:Localize Analyzer_NewAnalysis}" Command="{Binding ResetCommand}"
+                        Foreground="{DynamicResource BrushTextPrimary}" />
+            </StackPanel>
+        </Grid>
+
+        <Border Grid.Row="1"
+                Classes="Section"
+                IsVisible="{Binding HasVerificationIssues}"
+                BorderBrush="{DynamicResource BrushWarning}"
+                BorderThickness="1">
+            <StackPanel Spacing="10">
+                <TextBlock Text="{loc:Localize Analyzer_VerificationTitle}"
+                           FontWeight="Bold"
+                           Foreground="{DynamicResource BrushWarning}" />
+                <TextBlock Text="{loc:Localize Analyzer_VerificationHint}"
+                           Foreground="{DynamicResource BrushTextSecondary}"
+                           TextWrapping="Wrap" />
+
+                <TextBlock Text="{Binding LootVerificationText}"
+                           IsVisible="{Binding HasVisibleLootVerificationIssue}"
+                           Foreground="{DynamicResource BrushTextPrimary}"
+                           TextWrapping="Wrap" />
+                <TextBlock Text="{Binding RawXpVerificationText}"
+                           IsVisible="{Binding HasRawXpVerification}"
+                           Foreground="{DynamicResource BrushTextPrimary}"
+                           TextWrapping="Wrap" />
+                <TextBlock Text="{Binding XpVerificationText}"
+                           IsVisible="{Binding HasVisibleXpVerificationIssue}"
+                           Foreground="{DynamicResource BrushTextPrimary}"
+                           TextWrapping="Wrap" />
+
+                <TextBlock Text="{loc:Localize Analyzer_VerificationSuppliesUnavailable}"
+                           Foreground="{DynamicResource BrushTextSecondary}"
+                           TextWrapping="Wrap" />
+                <TextBlock Text="{loc:Localize Analyzer_VerificationBalanceUnavailable}"
+                           Foreground="{DynamicResource BrushTextSecondary}"
+                           TextWrapping="Wrap" />
+
+                <TextBlock Text="{Binding UnmatchedLootItemsText}"
+                           IsVisible="{Binding HasUnmatchedLootItems}"
+                           Foreground="{DynamicResource BrushWarning}"
+                           TextWrapping="Wrap" />
+                <TextBlock Text="{Binding UnmatchedCreaturesText}"
+                           IsVisible="{Binding HasUnmatchedCreatures}"
+                           Foreground="{DynamicResource BrushWarning}"
+                           TextWrapping="Wrap" />
+
+                <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingMD}">
+                    <Button Content="{loc:Localize Analyzer_VerificationApplyLoot}"
+                            Command="{Binding ApplyLootCorrectionCommand}"
+                            IsVisible="{Binding CanApplyLootVerificationCorrection}"
+                            Foreground="{DynamicResource BrushTextPrimary}" />
+                    <Button Content="{loc:Localize Analyzer_VerificationIgnoreLoot}"
+                            Command="{Binding IgnoreLootVerificationWarningCommand}"
+                            IsVisible="{Binding CanIgnoreLootVerificationWarning}"
+                            Foreground="{DynamicResource BrushTextPrimary}" />
+                    <Button Content="{loc:Localize Analyzer_VerificationApplyXp}"
+                            Command="{Binding ApplyXpCorrectionCommand}"
+                            IsVisible="{Binding CanApplyXpVerificationCorrection}"
+                            Foreground="{DynamicResource BrushTextPrimary}" />
+                    <Button Content="{loc:Localize Analyzer_VerificationIgnoreXp}"
+                            Command="{Binding IgnoreXpVerificationWarningCommand}"
+                            IsVisible="{Binding CanIgnoreXpVerificationWarning}"
+                            Foreground="{DynamicResource BrushTextPrimary}" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- NOTIZEN SOLO -->
+        <Border Grid.Row="2" Classes="Section">
+            <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto, Auto">
+                <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Spacing="{StaticResource SpacingMD}">
+                    <TextBlock Text="{loc:Localize Analyzer_NotesTitle}" FontWeight="Bold" Foreground="{DynamicResource BrushAccentGold}" />
+                    <Button Command="{Binding ToggleEditNotesCommand}" Content="{loc:Localize Common_Edit}" Background="Transparent"
+                            FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" />
+                </StackPanel>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding CurrentSession.Notes}"
+                           IsVisible="{Binding !IsEditingNotes}" Foreground="{DynamicResource BrushTextSecondary}"
+                           TextWrapping="Wrap"
+                           Margin="0,12,0,0" />
+                <TextBox Grid.Row="1" Grid.Column="0" Text="{Binding CurrentSessionNotes, Mode=TwoWay}"
+                         AcceptsReturn="True" TextWrapping="Wrap" IsVisible="{Binding IsEditingNotes}"
+                         Height="80" VerticalContentAlignment="Top" Margin="0,12,0,0" />
+                <Button Grid.Row="1" Grid.Column="1" Command="{Binding SaveNotesCommand}" Content="{loc:Localize Common_Save}"
+                        IsVisible="{Binding IsEditingNotes}" HorizontalAlignment="Right"
+                        VerticalAlignment="Top" Margin="12,12,0,0" />
+
+                <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Margin="0,14,0,0" Spacing="6"
+                            IsVisible="{Binding HasHuntingPlaceEditor}">
+                    <TextBlock Text="{loc:Localize Analyzer_HuntingPlaceTitle}" FontWeight="SemiBold"
+                               Foreground="{DynamicResource BrushTextSecondary}" />
+                    <Grid ColumnDefinitions="*, Auto, Auto" ColumnSpacing="10">
+                        <AutoCompleteBox Grid.Column="0"
+                                         ItemsSource="{Binding FilteredHuntingPlaceSuggestions}"
+                                         Text="{Binding HuntingPlaceSearchText}"
+                                         SelectedItem="{Binding SelectedHuntingPlaceSuggestion}"
+                                         PlaceholderText="{loc:Localize Analyzer_HuntingPlaceWatermark}"
+                                         FilterMode="Contains" />
+                        <Button Grid.Column="1"
+                                Command="{Binding ClearHuntingPlaceSearchCommand}"
+                                Content="{loc:Localize Analyzer_ClearHuntingPlace}"
+                                IsVisible="{Binding HasHuntingPlaceSearchText}"
+                                Foreground="{DynamicResource BrushTextPrimary}" />
+                        <Button Grid.Column="2"
+                                Command="{Binding SaveHuntingPlaceCommand}"
+                                Content="{loc:Localize Analyzer_SaveHuntingPlace}"
+                                Foreground="{DynamicResource BrushTextPrimary}" />
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- TABS -->
+        <TabControl Grid.Row="3" Margin="0,0,0,0">
+            <TabItem Header="Smart Loot" FontSize="16" FontWeight="SemiBold">
+                <Grid ColumnDefinitions="320, *" Margin="0,20,0,0">
+                    <Border Grid.Column="0" Background="{DynamicResource BrushSurface}"
+                            BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1"
+                            CornerRadius="{StaticResource RadiusMedium}">
+                        <ListBox ItemsSource="{Binding LootGroups}" SelectedItem="{Binding SelectedLootGroup}"
+                                 Background="Transparent" Padding="0">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate DataType="analysis:LootGroup">
+                                    <Grid ColumnDefinitions="*, Auto">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Vendor}" FontWeight="Bold"
+                                                       Foreground="{DynamicResource BrushTextPrimary}" />
+                                            <TextBlock Text="{Binding Items.Count, StringFormat='{}{0} Items'}"
+                                                       FontSize="12" Foreground="{DynamicResource BrushTextTertiary}" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock
+                                                Text="{Binding TotalGold, Converter={StaticResource TibiaCurrencyConverter}}"
+                                                Foreground="{DynamicResource BrushAccentGold}" FontWeight="Bold"
+                                                HorizontalAlignment="Right" />
+                                            <TextBlock Text="{Binding TotalWeight, StringFormat='{}{0:N0} oz'}"
+                                                       FontSize="11" Foreground="{DynamicResource BrushTextDisabled}"
+                                                       HorizontalAlignment="Right" />
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Border>
+                    <Border Grid.Column="1" Margin="20,0,0,0"
+                            Background="{DynamicResource BrushSurfaceElevated}"
+                            CornerRadius="{StaticResource RadiusLarge}"
+                            Padding="25" DataContext="{Binding SelectedLootGroup}">
+                        <Grid RowDefinitions="Auto, *" x:DataType="analysis:LootGroup">
+                            <StackPanel Margin="0,0,0,20">
+                                <TextBlock Text="SELL TO" Classes="Label" />
+                                <TextBlock Text="{Binding Vendor, FallbackValue='Select a Vendor'}"
+                                           FontSize="28" Foreground="{DynamicResource BrushAccentGold}"
+                                           FontWeight="Light" />
+                            </StackPanel>
+                            <ScrollViewer Grid.Row="1">
+                                <ItemsControl ItemsSource="{Binding Items}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="analysis:LootItemView">
+                                            <Border BorderBrush="{DynamicResource BrushBorder}"
+                                                    BorderThickness="0,0,0,1" Padding="5,12">
+                                                <Grid ColumnDefinitions="70, *, 140">
+                                                    <Border Background="{DynamicResource BrushBorder}"
+                                                            CornerRadius="{StaticResource RadiusSmall}"
+                                                            Padding="8,4"
+                                                            VerticalAlignment="Center">
+                                                        <TextBlock
+                                                            Text="{Binding Amount, StringFormat='{}{0}x'}"
+                                                            Foreground="{DynamicResource BrushTextPrimary}"
+                                                            FontWeight="Bold" FontSize="12" />
+                                                    </Border>
+                                                    <TextBlock Grid.Column="1" Text="{Binding Name}"
+                                                               VerticalAlignment="Center" Margin="15,0"
+                                                               Foreground="{DynamicResource BrushTextPrimary}"
+                                                               TextWrapping="Wrap"
+                                                               FontSize="15" />
+                                                    <StackPanel Grid.Column="2" Orientation="Horizontal"
+                                                                HorizontalAlignment="Right"
+                                                                VerticalAlignment="Center">
+                                                        <TextBlock
+                                                            Text="{Binding TotalValue, StringFormat='{}{0:N0}'}"
+                                                            Foreground="{DynamicResource BrushAccentGold}"
+                                                            FontWeight="Bold"
+                                                            FontSize="14" />
+                                                        <TextBlock Text="gp" FontSize="12"
+                                                                   Foreground="{DynamicResource BrushTextDisabled}"
+                                                                   VerticalAlignment="Bottom" Margin="5,0,0,2" />
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Monsters" FontSize="16" FontWeight="SemiBold">
+                <ScrollViewer Margin="0,20,0,0">
+                    <ItemsControl ItemsSource="{Binding KilledMonsters}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="hunts:HuntMonsterEntry">
+                                <Border Background="{DynamicResource BrushSurfaceElevated}"
+                                        CornerRadius="{StaticResource RadiusMedium}"
+                                        Padding="15" Margin="0,0,15,15"
+                                        Width="240">
+                                    <Grid ColumnDefinitions="Auto, *">
+                                        <TextBlock Text="{Binding Amount, StringFormat='{}{0}x'}" FontSize="24"
+                                                   FontWeight="Light" Foreground="{DynamicResource BrushAccentGold}"
+                                                   VerticalAlignment="Center" Margin="0,0,15,0" />
+                                        <TextBlock Grid.Column="1" Text="{Binding MonsterName}"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="{DynamicResource BrushTextPrimary}"
+                                                   FontWeight="Bold" FontSize="14" TextWrapping="Wrap" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Supplies" FontSize="16" FontWeight="SemiBold">
+                <Grid ColumnDefinitions="*, 20, 340" Margin="0,20,0,0">
+                    <ScrollViewer Grid.Column="0" Padding="0,0,12,0">
+                        <StackPanel Spacing="{StaticResource SpacingMD}">
+                            <Border Background="{DynamicResource BrushSurfaceElevated}"
+                                    CornerRadius="{StaticResource RadiusMedium}"
+                                    Padding="15">
+                                <Grid ColumnDefinitions="*, Auto">
+                                    <TextBlock Text="Base Supplies (from Log)" FontWeight="Bold"
+                                               Foreground="{DynamicResource BrushTextPrimary}" />
+                                    <TextBlock
+                                        Text="{Binding CurrentSession.Supplies, StringFormat='-{0:N0} gp'}"
+                                        Foreground="{DynamicResource BrushError}" FontWeight="Bold" Grid.Column="1" />
+                                </Grid>
+                            </Border>
+                            <Border Background="{DynamicResource BrushSurfaceElevated}"
+                                    CornerRadius="{StaticResource RadiusMedium}"
+                                    Padding="15"
+                                    IsVisible="{Binding SessionImbuementCost, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                <Grid ColumnDefinitions="*, Auto">
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <TextBlock Text="✨" VerticalAlignment="Center" />
+                                        <TextBlock Text="Imbuement Cost" FontWeight="Bold"
+                                                   Foreground="{DynamicResource BrushAccentGold}" />
+                                        <TextBlock Text="(Calculated)" FontSize="10"
+                                                   Foreground="{DynamicResource BrushTextDisabled}"
+                                                   VerticalAlignment="Center" />
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding SessionImbuementCost, StringFormat='-{0:N0} gp'}"
+                                               Foreground="{DynamicResource BrushAccentOrange}" FontWeight="Bold"
+                                               Grid.Column="1" />
+                                </Grid>
+                            </Border>
+                            <ItemsControl ItemsSource="{Binding Adjustments}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:CompileBindings="False">
+                                        <Border Background="{DynamicResource BrushSurfaceElevated}"
+                                                CornerRadius="{StaticResource RadiusMedium}"
+                                                Padding="15"
+                                                Margin="0,0,0,5" BorderBrush="{DynamicResource BrushBorder}"
+                                                BorderThickness="1">
+                                            <Grid ColumnDefinitions="*, Auto, Auto">
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding Name}"
+                                                               Foreground="{DynamicResource BrushTextSecondary}" />
+                                                    <TextBlock Text="{Binding Type}" FontSize="10"
+                                                               Foreground="{DynamicResource BrushTextDisabled}" />
+                                                </StackPanel>
+                                                <TextBlock Grid.Column="1"
+                                                           Text="{Binding Value, StringFormat='{}{0:N0}'}"
+                                                           VerticalAlignment="Center" Margin="0,0,15,0"
+                                                           FontWeight="Bold"
+                                                           Foreground="{Binding Type, Converter={StaticResource BalanceColorConverter}}" />
+                                                <Button Grid.Column="2" Content="X"
+                                                        Command="{Binding $parent[UserControl].DataContext.DeleteAdjustmentCommand}"
+                                                        CommandParameter="{Binding}" Background="Transparent"
+                                                        Foreground="{DynamicResource BrushTextDisabled}" />
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <Border BorderBrush="{DynamicResource BrushBorderLight}" BorderThickness="0,1,0,0"
+                                    Padding="0,15,0,0"
+                                    Margin="0,12,0,0">
+                                <Grid ColumnDefinitions="*, Auto">
+                                    <TextBlock Text="EFFECTIVE SUPPLIES" FontWeight="Bold"
+                                               Foreground="{DynamicResource BrushTextTertiary}" />
+                                    <TextBlock Text="{Binding EffectiveSupplies, StringFormat='-{0:N0} gp'}"
+                                               Foreground="{DynamicResource BrushError}" FontSize="18" FontWeight="Bold"
+                                               Grid.Column="1" />
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                    <ScrollViewer Grid.Column="2" Padding="0,0,5,0">
+                        <StackPanel Spacing="{StaticResource SpacingXL}">
+                            <Border Background="{DynamicResource BrushSurfaceElevated}"
+                                    CornerRadius="{StaticResource RadiusLarge}"
+                                    Padding="20">
+                                <StackPanel Spacing="12">
+                                    <TextBlock Text="✨ Imbuements" FontWeight="Bold"
+                                               Foreground="{DynamicResource BrushAccentGold}" />
+                                    <TextBlock Text="Configure active imbuements to calculate hourly cost."
+                                               FontSize="12" Foreground="{DynamicResource BrushTextSecondary}"
+                                               TextWrapping="Wrap" />
+                                    <Button Command="{Binding OpenImbuementConfigCommand}" Content="Configure"
+                                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                            Foreground="{DynamicResource BrushTextPrimary}" />
+                                </StackPanel>
+                            </Border>
+                            <Border Background="{DynamicResource BrushSurfaceElevated}"
+                                    CornerRadius="{StaticResource RadiusLarge}"
+                                    Padding="20">
+                                <StackPanel Spacing="12">
+                                    <TextBlock Text="🕑 Break Calculator" FontWeight="Bold"
+                                               Foreground="{DynamicResource BrushAccentGold}" />
+                                    <TextBlock Text="Subtract pause time to correct XP/h." FontSize="12"
+                                               Foreground="{DynamicResource BrushTextTertiary}" TextWrapping="Wrap" />
+                                    <Grid ColumnDefinitions="*, Auto">
+                                        <TextBox behaviors:NumericTextBoxBehavior.DigitsOnly="True"
+                                                 Text="{Binding PauseMinutes, Converter={StaticResource NullableIntConverter}}"
+                                                 PlaceholderText="0" Margin="0,0,12,0" />
+                                        <TextBlock Text="min" VerticalAlignment="Center"
+                                                   Foreground="{DynamicResource BrushTextSecondary}"
+                                                   Grid.Column="1" />
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                            <Border Background="{DynamicResource BrushSurfaceElevated}"
+                                    CornerRadius="{StaticResource RadiusLarge}"
+                                    Padding="15" BorderBrush="{DynamicResource BrushBorder}"
+                                    BorderThickness="1">
+                                <StackPanel Spacing="{StaticResource SpacingMD}">
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <TextBlock Text="📝 Add Extra Cost" FontWeight="Bold"
+                                                   Foreground="{DynamicResource BrushAccentGold}" />
+                                        <ToolTip.Tip>
+                                            <TextBlock
+                                                Text="Add costs NOT tracked by Tibia. WARNING: Rings/Amulets are usually tracked automatically!"
+                                                MaxWidth="300" TextWrapping="Wrap" />
+                                        </ToolTip.Tip>
+                                        <TextBlock Text="🛈" Foreground="{DynamicResource BrushTextSecondary}"
+                                                   Cursor="Help" />
+                                    </StackPanel>
+                                    <AutoCompleteBox ItemsSource="{Binding AllItemNames}"
+                                                     Text="{Binding CalcItemName}"
+                                                     PlaceholderText="Search Item (e.g. Prismatic Ring)"
+                                                     FilterMode="Contains" />
+                                    <StackPanel Orientation="Horizontal" Spacing="15">
+                                        <RadioButton Content="Time Based"
+                                                     IsChecked="{Binding IsTimeBasedCalculation}"
+                                                     GroupName="CalcMode" />
+                                        <RadioButton Content="Flat Price"
+                                                     IsChecked="{Binding !IsTimeBasedCalculation}"
+                                                     GroupName="CalcMode" />
+                                    </StackPanel>
+                                    <Grid ColumnDefinitions="*, 10, *">
+                                        <StackPanel Grid.Column="0" Spacing="5">
+                                            <TextBlock Text="Market Price" FontSize="10"
+                                                       Foreground="{DynamicResource BrushTextTertiary}" />
+                                            <TextBox behaviors:NumericTextBoxBehavior.DigitsOnly="True"
+                                                     Text="{Binding CalcMarketPrice, Converter={StaticResource NullableIntConverter}}"
+                                                     PlaceholderText="Total GP" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2" Spacing="5"
+                                                    IsVisible="{Binding IsTimeBasedCalculation}">
+                                            <TextBlock Text="Full Duration (min)" FontSize="10"
+                                                       Foreground="{DynamicResource BrushTextTertiary}" />
+                                            <TextBox behaviors:NumericTextBoxBehavior.DigitsOnly="True"
+                                                     Text="{Binding CalcMaxDurationMinutes, Converter={StaticResource NullableIntConverter}}"
+                                                     PlaceholderText="e.g. 60" />
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="*, 10, Auto"
+                                          IsVisible="{Binding IsTimeBasedCalculation}">
+                                        <StackPanel Grid.Column="0" Spacing="5">
+                                            <TextBlock Text="Time Used (min)" FontSize="10"
+                                                       Foreground="{DynamicResource BrushTextTertiary}" />
+                                            <TextBox behaviors:NumericTextBoxBehavior.DigitsOnly="True"
+                                                     Text="{Binding CalcUsedMinutes, Converter={StaticResource NullableIntConverter}}"
+                                                     PlaceholderText="Minutes" />
+                                        </StackPanel>
+                                        <Button Grid.Column="2"
+                                                Command="{Binding UseSessionDurationForCalcCommand}"
+                                                VerticalAlignment="Bottom"
+                                                ToolTip.Tip="Use current session duration">
+                                            <TextBlock Text="⏱ Session" FontSize="11" />
+                                        </Button>
+                                    </Grid>
+                                    <TextBlock
+                                        Text="⚠ Tibia Analyzer usually tracks charges! Only add if missing."
+                                        FontSize="10" Foreground="{DynamicResource BrushAccentOrange}"
+                                        TextWrapping="Wrap"
+                                        IsVisible="{Binding IsTimeBasedCalculation}" />
+                                    <Button Command="{Binding AddSmartSupplyCommand}" Content="Add Cost"
+                                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                            Background="{DynamicResource BrushBorder}"
+                                            BorderBrush="{DynamicResource BrushBorderHover}" BorderThickness="1" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

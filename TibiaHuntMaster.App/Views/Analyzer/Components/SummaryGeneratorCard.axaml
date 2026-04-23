@@ -1,0 +1,85 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TibiaHuntMaster.App.ViewModels.Analyzer"
+             xmlns:loc="using:TibiaHuntMaster.App.Extensions"
+             x:Class="TibiaHuntMaster.App.Views.Analyzer.Components.SummaryGeneratorCard"
+             x:DataType="vm:HuntAnalyzerViewModel">
+
+    <Border Classes="Section"
+            IsVisible="{Binding HasSummarySource}">
+        <Grid RowDefinitions="Auto,Auto,Auto"
+              RowSpacing="14">
+            <StackPanel>
+                <TextBlock Text="{loc:Localize Analyzer_SummarySectionTitle}"
+                           FontWeight="Bold"
+                           Foreground="{DynamicResource BrushAccentGold}" />
+                <TextBlock Text="{loc:Localize Analyzer_SummarySectionHint}"
+                           Margin="0,4,0,0"
+                           FontSize="12"
+                           Foreground="{DynamicResource BrushTextSecondary}"
+                           TextWrapping="Wrap" />
+            </StackPanel>
+
+            <Grid Grid.Row="1"
+                  ColumnDefinitions="*,*"
+                  ColumnSpacing="12"
+                  RowDefinitions="Auto,Auto,Auto"
+                  RowSpacing="12">
+                <StackPanel Grid.Column="0"
+                            Grid.Row="0"
+                            Spacing="6">
+                    <TextBlock Text="{loc:Localize Analyzer_SummaryFormatLabel}"
+                               FontSize="11"
+                               Foreground="{DynamicResource BrushTextTertiary}" />
+                    <ComboBox ItemsSource="{Binding SummaryFormatOptions}"
+                              SelectedItem="{Binding SelectedSummaryFormatOption}" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="1"
+                            Grid.Row="0"
+                            Spacing="6">
+                    <TextBlock Text="{loc:Localize Analyzer_SummaryPresetLabel}"
+                               FontSize="11"
+                               Foreground="{DynamicResource BrushTextTertiary}" />
+                    <ComboBox ItemsSource="{Binding SummaryTemplateOptions}"
+                              SelectedItem="{Binding SelectedSummaryTemplateOption}" />
+                </StackPanel>
+
+                <CheckBox Grid.Column="0"
+                          Grid.Row="1"
+                          IsChecked="{Binding NormalizeSummaryToQuarterHour}"
+                          Content="{loc:Localize Analyzer_SummaryNormalize15Minutes}"
+                          VerticalAlignment="Center" />
+
+                <CheckBox Grid.Column="1"
+                          Grid.Row="1"
+                          IsChecked="{Binding ShowRawXpInSummary}"
+                          Content="{loc:Localize Analyzer_SummaryShowRawXp}"
+                          VerticalAlignment="Center" />
+
+                <Button Grid.Column="1"
+                        Grid.Row="2"
+                        Padding="16,10"
+                        Command="{Binding ExecuteSummaryActionCommand}"
+                        Content="{Binding SummaryActionLabel}"
+                        Classes="Primary"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center" />
+            </Grid>
+
+            <StackPanel Grid.Row="2"
+                        Spacing="6">
+                <TextBlock Text="{loc:Localize Analyzer_SummaryPreviewLabel}"
+                           FontSize="11"
+                           Foreground="{DynamicResource BrushTextTertiary}" />
+                <TextBox Text="{Binding SummaryPreviewText}"
+                         IsReadOnly="True"
+                         AcceptsReturn="True"
+                         TextWrapping="Wrap"
+                         MinHeight="150"
+                         MaxHeight="240"
+                         Classes="Monospace" />
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

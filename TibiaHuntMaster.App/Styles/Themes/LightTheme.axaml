@@ -1,0 +1,82 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ============================================ -->
+    <!-- LIGHT THEME - TibiaHuntMaster Design System -->
+    <!-- ============================================ -->
+
+    <!-- Background Colors -->
+    <Color x:Key="ColorBackground">#FFFFFF</Color>
+    <Color x:Key="ColorSurface">#E8E8E8</Color>
+    <Color x:Key="ColorSurfaceElevated">#D8D8D8</Color>
+    <Color x:Key="ColorSurfaceHover">#AEAEAE</Color>
+
+    <!-- Border Colors -->
+    <Color x:Key="ColorBorder">#666666</Color>
+    <Color x:Key="ColorBorderHover">#333333</Color>
+    <Color x:Key="ColorBorderLight">#999999</Color>
+
+    <!-- Text Colors -->
+    <Color x:Key="ColorTextPrimary">#000000</Color>
+    <Color x:Key="ColorTextSecondary">#2A2A2A</Color>
+    <Color x:Key="ColorTextTertiary">#555555</Color>
+    <Color x:Key="ColorTextDisabled">#777777</Color>
+    <Color x:Key="ColorTextMuted">#888888</Color>
+
+    <!-- Accent Colors (Theme Independent - darker for light theme) -->
+    <Color x:Key="ColorAccentGold">#8B6F0F</Color>
+    <Color x:Key="ColorAccentBlue">#1565C0</Color>
+    <Color x:Key="ColorAccentGreen">#2E7D32</Color>
+    <Color x:Key="ColorAccentRed">#C62828</Color>
+    <Color x:Key="ColorAccentPurple">#7B1FA2</Color>
+    <Color x:Key="ColorAccentOrange">#E65100</Color>
+
+    <!-- Semantic Colors -->
+    <Color x:Key="ColorSuccess">#1B5E20</Color>
+    <Color x:Key="ColorWarning">#E65100</Color>
+    <Color x:Key="ColorError">#B71C1C</Color>
+    <Color x:Key="ColorInfo">#0D47A1</Color>
+
+    <!-- Transparency Colors -->
+    <Color x:Key="ColorOverlay">#80FFFFFF</Color>
+
+    <!-- ============================================ -->
+    <!-- SOLID COLOR BRUSHES -->
+    <!-- ============================================ -->
+
+    <!-- Background Brushes -->
+    <SolidColorBrush x:Key="BrushBackground" Color="{StaticResource ColorBackground}" />
+    <SolidColorBrush x:Key="BrushSurface" Color="{StaticResource ColorSurface}" />
+    <SolidColorBrush x:Key="BrushSurfaceElevated" Color="{StaticResource ColorSurfaceElevated}" />
+    <SolidColorBrush x:Key="BrushSurfaceHover" Color="{StaticResource ColorSurfaceHover}" />
+
+    <!-- Border Brushes -->
+    <SolidColorBrush x:Key="BrushBorder" Color="{StaticResource ColorBorder}" />
+    <SolidColorBrush x:Key="BrushBorderHover" Color="{StaticResource ColorBorderHover}" />
+    <SolidColorBrush x:Key="BrushBorderLight" Color="{StaticResource ColorBorderLight}" />
+
+    <!-- Text Brushes -->
+    <SolidColorBrush x:Key="BrushTextPrimary" Color="{StaticResource ColorTextPrimary}" />
+    <SolidColorBrush x:Key="BrushTextSecondary" Color="{StaticResource ColorTextSecondary}" />
+    <SolidColorBrush x:Key="BrushTextTertiary" Color="{StaticResource ColorTextTertiary}" />
+    <SolidColorBrush x:Key="BrushTextDisabled" Color="{StaticResource ColorTextDisabled}" />
+    <SolidColorBrush x:Key="BrushTextMuted" Color="{StaticResource ColorTextMuted}" />
+
+    <!-- Accent Brushes -->
+    <SolidColorBrush x:Key="BrushAccentGold" Color="{StaticResource ColorAccentGold}" />
+    <SolidColorBrush x:Key="BrushAccentBlue" Color="{StaticResource ColorAccentBlue}" />
+    <SolidColorBrush x:Key="BrushAccentGreen" Color="{StaticResource ColorAccentGreen}" />
+    <SolidColorBrush x:Key="BrushAccentRed" Color="{StaticResource ColorAccentRed}" />
+    <SolidColorBrush x:Key="BrushAccentPurple" Color="{StaticResource ColorAccentPurple}" />
+    <SolidColorBrush x:Key="BrushAccentOrange" Color="{StaticResource ColorAccentOrange}" />
+
+    <!-- Semantic Brushes -->
+    <SolidColorBrush x:Key="BrushSuccess" Color="{StaticResource ColorSuccess}" />
+    <SolidColorBrush x:Key="BrushWarning" Color="{StaticResource ColorWarning}" />
+    <SolidColorBrush x:Key="BrushError" Color="{StaticResource ColorError}" />
+    <SolidColorBrush x:Key="BrushInfo" Color="{StaticResource ColorInfo}" />
+
+    <!-- Transparency Brushes -->
+    <SolidColorBrush x:Key="BrushOverlay" Color="{StaticResource ColorOverlay}" />
+
+</ResourceDictionary>

@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TibiaHuntMaster.App", "TibiaHuntMaster.App\TibiaHuntMaster.App.csproj", "{BE0B47D9-ED00-459C-9FF8-342287E7A83B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TibiaHuntMaster.Core", "TibiaHuntMaster.Core\TibiaHuntMaster.Core.csproj", "{D3898D3C-616B-4ED9-96E9-FE89942B2CDA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TibiaHuntMaster.Infrastructure", "TibiaHuntMaster.Infrastructure\TibiaHuntMaster.Infrastructure.csproj", "{904C3F68-7076-4F08-B175-C555CF2AC8A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TibiaHuntMaster.Tests", "TibiaHuntMaster.Tests\TibiaHuntMaster.Tests.csproj", "{9BAF62BD-47CA-431F-BCF5-BEDAC9388DC1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BE0B47D9-ED00-459C-9FF8-342287E7A83B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE0B47D9-ED00-459C-9FF8-342287E7A83B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE0B47D9-ED00-459C-9FF8-342287E7A83B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE0B47D9-ED00-459C-9FF8-342287E7A83B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3898D3C-616B-4ED9-96E9-FE89942B2CDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3898D3C-616B-4ED9-96E9-FE89942B2CDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3898D3C-616B-4ED9-96E9-FE89942B2CDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3898D3C-616B-4ED9-96E9-FE89942B2CDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{904C3F68-7076-4F08-B175-C555CF2AC8A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{904C3F68-7076-4F08-B175-C555CF2AC8A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{904C3F68-7076-4F08-B175-C555CF2AC8A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{904C3F68-7076-4F08-B175-C555CF2AC8A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BAF62BD-47CA-431F-BCF5-BEDAC9388DC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BAF62BD-47CA-431F-BCF5-BEDAC9388DC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BAF62BD-47CA-431F-BCF5-BEDAC9388DC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BAF62BD-47CA-431F-BCF5-BEDAC9388DC1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

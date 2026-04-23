@@ -1,0 +1,221 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TibiaHuntMaster.App.ViewModels.Selection"
+             xmlns:conv="using:TibiaHuntMaster.App.Converters"
+             xmlns:loc="using:TibiaHuntMaster.App.Extensions"
+             x:Class="TibiaHuntMaster.App.Views.Selection.CharacterSelectionView"
+             x:DataType="vm:CharacterSelectionViewModel">
+
+    <UserControl.Resources>
+        <conv:VocationToImageConverter x:Key="VocConverter" />
+    </UserControl.Resources>
+
+    <UserControl.Styles>
+        <!-- Force Dark Theme colors for Character Selection -->
+        <Style Selector="TextBlock">
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <Style Selector="Button">
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <Style Selector="Button /template/ ContentPresenter">
+            <Setter Property="TextBlock.Foreground" Value="White" />
+        </Style>
+        <Style Selector="ListBoxItem TextBlock">
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid>
+        <!-- HINTERGRUND -->
+        <Image Source="/Assets/Backgrounds/FanKitIllu_OfflineScreen_NoChars_1920x1080.jpg" Stretch="UniformToFill"
+               Opacity="0.4" />
+        <Border>
+            <Border.Background>
+                <RadialGradientBrush GradientOrigin="50%,50%" Center="50%,50%" RadiusX="100%" RadiusY="100%">
+                    <GradientStop Color="#cc121212" Offset="0" />
+                    <GradientStop Color="#FF121212" Offset="1" />
+                </RadialGradientBrush>
+            </Border.Background>
+        </Border>
+
+        <Grid ColumnDefinitions="300, *">
+
+            <!-- LINKS: LISTE -->
+            <Border Grid.Column="0" Background="#aa1e1e1e" BorderBrush="#333" BorderThickness="0,0,1,0">
+                <Grid RowDefinitions="Auto, *, Auto">
+
+                    <StackPanel Margin="20">
+                        <TextBlock Text="{loc:Localize CharSelection_Title}" Foreground="#888" FontWeight="Bold" LetterSpacing="1"
+                                   FontSize="12" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="5" Margin="20,0,0,10"
+                                IsVisible="{Binding IsUpdatingInBackground}">
+                        <ProgressBar IsIndeterminate="True" Width="80" Height="2" VerticalAlignment="Center"
+                                     Foreground="#D4AF37" />
+                        <TextBlock Text="{loc:Localize CharSelection_Syncing}" FontSize="10" Foreground="#666" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <ListBox Grid.Row="1"
+                             ItemsSource="{Binding Characters}"
+                             SelectedItem="{Binding SelectedCharacter}"
+                             Background="Transparent"
+                             Margin="10,0">
+                        <ListBox.Styles>
+                            <Style Selector="ListBoxItem">
+                                <Setter Property="Padding" Value="8" />
+                                <Setter Property="CornerRadius" Value="4" />
+                                <Setter Property="Margin" Value="0,2" />
+                            </Style>
+                        </ListBox.Styles>
+
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="Auto, *">
+                                    <!-- Icon kleiner (32px) -->
+                                    <Border Width="32" Height="32" CornerRadius="16" ClipToBounds="True"
+                                            Background="#333" VerticalAlignment="Top" Margin="0,2,0,0">
+                                        <Image Source="{Binding Vocation, Converter={StaticResource VocConverter}}"
+                                               Stretch="UniformToFill" />
+                                    </Border>
+
+                                    <!-- Text: Wrap statt Abschneiden -->
+                                    <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Name}"
+                                                   FontWeight="SemiBold" Foreground="White" FontSize="14"
+                                                   TextWrapping="Wrap" /> <!-- Hier Wrap erlaubt -->
+                                        <TextBlock Text="{Binding Level, StringFormat='Lvl {0}'}" FontSize="11"
+                                                   Foreground="#aaa" />
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <!-- Add Button (Dezent) -->
+                    <Button Grid.Row="2" Command="{Binding OpenAddDialogCommand}"
+                            HorizontalAlignment="Stretch" Margin="15"
+                            Height="40"
+                            Background="Transparent"
+                            BorderBrush="#444" BorderThickness="1"
+                            CornerRadius="4"
+                            Foreground="#ccc">
+                        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                            <TextBlock Text="+" FontWeight="Bold" />
+                            <TextBlock Text="{loc:Localize CharSelection_AddCharacter}" FontSize="13" />
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <!-- RECHTS: DETAIL -->
+            <Grid Grid.Column="1">
+
+                <!-- 1. Das Bild (Hintergrund-Ebene) -->
+                <!-- Weiter nach rechts geschoben und Opacity runter -->
+                <Image Source="{Binding SelectedCharacter.Vocation, Converter={StaticResource VocConverter}}"
+                       Height="600" Opacity="0.6"
+                       HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                       Margin="0,0,-50,-50"
+                       IsVisible="{Binding SelectedCharacter, Converter={x:Static ObjectConverters.IsNotNull}}">
+                    <!-- Maskierung nach links (weicher Übergang) -->
+                    <Image.OpacityMask>
+                        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                            <GradientStop Color="Transparent" Offset="0" />
+                            <GradientStop Color="Black" Offset="0.4" />
+                        </LinearGradientBrush>
+                    </Image.OpacityMask>
+                </Image>
+
+                <!-- 2. Der Text (Vordergrund-Ebene) -->
+                <Grid RowDefinitions="*, Auto" Margin="60"
+                      IsVisible="{Binding SelectedCharacter, Converter={x:Static ObjectConverters.IsNotNull}}">
+
+                    <StackPanel Spacing="10" VerticalAlignment="Center" HorizontalAlignment="Left" MaxWidth="500">
+                        <!-- Name: Viewbox sorgt für Skalierung, aber MaxWidth verhindert Kollision -->
+                        <Viewbox Stretch="Uniform" HorizontalAlignment="Left">
+                            <TextBlock Text="{Binding SelectedCharacter.Name}"
+                                       FontSize="48" FontWeight="Light" Foreground="White" />
+                        </Viewbox>
+
+                        <StackPanel Orientation="Horizontal" Spacing="15">
+                            <TextBlock Text="{Binding SelectedCharacter.Vocation}" FontSize="20" Foreground="#D4AF37"
+                                       FontWeight="SemiBold" />
+                            <Border Background="#333" CornerRadius="4" Padding="8,2" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding SelectedCharacter.Level, StringFormat='Lvl {0}'}"
+                                           Foreground="#fff" FontWeight="Bold" FontSize="12" />
+                            </Border>
+                        </StackPanel>
+
+                        <TextBlock Text="{Binding SelectedCharacter.World}" FontSize="16" Foreground="#888"
+                                   Margin="0,5,0,0" />
+
+                        <Grid ColumnDefinitions="Auto, 20, Auto" Margin="0,30,0,0">
+                            <StackPanel>
+                                <TextBlock Text="{loc:Localize CharSelection_Guild}" FontSize="10" Foreground="#555" FontWeight="Bold"
+                                           LetterSpacing="1" />
+                                <TextBlock Text="{Binding SelectedCharacter.GuildName}" FontSize="14"
+                                           Foreground="White" TextWrapping="Wrap" MaxWidth="200" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="{loc:Localize CharSelection_Residence}" FontSize="10" Foreground="#555" FontWeight="Bold"
+                                           LetterSpacing="1" />
+                                <TextBlock Text="{Binding SelectedCharacter.Residence}" FontSize="14"
+                                           Foreground="White" />
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+
+                    <!-- Button unten rechts -->
+                    <Button Grid.Row="1"
+                            Command="{Binding ConfirmSelectionCommand}"
+                            HorizontalAlignment="Right"
+                            Content="{loc:Localize CharSelection_EnterDashboard}"
+                            FontSize="16" FontWeight="Bold"
+                            Padding="30,12"
+                            CornerRadius="6"
+                            Background="#D4AF37" Foreground="#121212" />
+                </Grid>
+
+                <!-- Empty State -->
+                <TextBlock Text="{loc:Localize CharSelection_SelectCharacter}"
+                           VerticalAlignment="Center" HorizontalAlignment="Center"
+                           Foreground="#333" FontSize="24" FontWeight="Bold"
+                           IsVisible="{Binding SelectedCharacter, Converter={x:Static ObjectConverters.IsNull}}" />
+            </Grid>
+        </Grid>
+
+        <!-- OVERLAY: ADD DIALOG (unverändert gut) -->
+        <Grid Background="#CC000000" IsVisible="{Binding IsAddDialogOpen}">
+            <Border Background="#252526" BorderBrush="#444" BorderThickness="1"
+                    CornerRadius="8" Width="400" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="25">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="20" Color="Black" Opacity="0.8" />
+                </Border.Effect>
+                <StackPanel Spacing="20">
+                    <TextBlock Text="{loc:Localize CharSelection_ImportCharacter}" FontSize="18" FontWeight="Bold" Foreground="White" />
+                    <TextBox Text="{Binding NewCharacterName}"
+                             PlaceholderText="{loc:Localize CharSelection_NamePlaceholder}"
+                             Height="60"
+                             FontSize="18"
+                             VerticalContentAlignment="Center">
+                        <TextBox.KeyBindings>
+                            <KeyBinding Gesture="Enter" Command="{Binding ImportCharacterCommand}" />
+                        </TextBox.KeyBindings>
+                    </TextBox>
+                    <TextBlock Text="{Binding ErrorMessage}" Foreground="#ff5555" FontSize="12"
+                               IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+                        <Button Content="{loc:Localize Common_Cancel}" Command="{Binding CloseAddDialogCommand}" Background="Transparent"
+                                Foreground="#aaa" />
+                        <Button Content="{loc:Localize CharSelection_Import}" Command="{Binding ImportCharacterCommand}" Background="#D4AF37"
+                                Foreground="Black" FontWeight="Bold" />
+                    </StackPanel>
+                    <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsLoading}" Height="2"
+                                 Background="Transparent" Foreground="#D4AF37" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

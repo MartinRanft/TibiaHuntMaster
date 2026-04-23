@@ -1,0 +1,420 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TibiaHuntMaster.App.ViewModels.Dashboard"
+             xmlns:conv="using:TibiaHuntMaster.App.Converters"
+             xmlns:components="using:TibiaHuntMaster.App.Components"
+             xmlns:loc="using:TibiaHuntMaster.App.Extensions"
+             x:Class="TibiaHuntMaster.App.Views.Dashboard.HistoryView"
+             x:DataType="vm:HistoryViewModel">
+
+    <UserControl.Resources>
+        <conv:TibiaCurrencyConverter x:Key="TibiaCurrencyConverter" />
+        <conv:BalanceColorConverter x:Key="BalanceColorConverter" />
+
+        <DataTemplate x:Key="SessionRowTemplate" DataType="vm:HistoryItemViewModel">
+            <Grid ColumnDefinitions="40, 140, 100, *, 120, 140" Background="Transparent" Classes="FadeIn">
+                <CheckBox IsChecked="{Binding IsSelected}"
+                          VerticalAlignment="Center" Margin="5,0,0,0" />
+
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding DateDisplay}"
+                               Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" FontSize="13"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                    <TextBlock Text="{loc:Localize History_Duration}" FontSize="10" Foreground="{DynamicResource BrushTextMuted}" />
+                    <TextBlock Text="{Binding DurationDisplay}" Foreground="{DynamicResource BrushTextSecondary}" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                    <Border CornerRadius="4" Padding="6,2" Background="{DynamicResource BrushWarning}"
+                            IsVisible="{Binding ShowMedal}"
+                            ToolTip.Tip="{Binding GoalName, StringFormat='Completed Goal: {0}'}">
+                        <TextBlock Text="🏅" FontSize="12" />
+                    </Border>
+
+                    <Border CornerRadius="4" Padding="8,2" BorderThickness="1" BorderBrush="{Binding TypeColor}"
+                            Background="{Binding TypeBackground}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="{Binding TypeIcon}" FontSize="12" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding TypeLabel}"
+                                       Foreground="{Binding TypeColor}"
+                                       FontSize="10" FontWeight="Bold"
+                                       VerticalAlignment="Center" LetterSpacing="1" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,20,0">
+                    <TextBlock
+                        Text="{Binding Session.XpPerHour, Converter={StaticResource TibiaCurrencyConverter}, FallbackValue='0'}"
+                        Foreground="{DynamicResource BrushInfo}" FontWeight="Bold" HorizontalAlignment="Right" />
+                    <TextBlock Text="{loc:Localize History_XpPerHour}" FontSize="10" Foreground="{DynamicResource BrushBorderLight}"
+                               HorizontalAlignment="Right" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="5" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0">
+                    <TextBlock Text="{Binding BalanceDisplay, Converter={StaticResource TibiaCurrencyConverter}}"
+                               Foreground="{Binding BalanceDisplay, Converter={StaticResource BalanceColorConverter}}"
+                               FontSize="16" FontWeight="Bold" HorizontalAlignment="Right" />
+                    <TextBlock Text="{loc:Localize History_Profit}" FontSize="10" Foreground="{DynamicResource BrushBorderLight}"
+                               HorizontalAlignment="Right" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid RowDefinitions="Auto, Auto, Auto, *, Auto, Auto" Margin="20" x:Name="MainContent"
+              IsHitTestVisible="{Binding !IsDateRangeDialogOpen}">
+
+            <Grid Grid.Row="0" Margin="0,0,0,10">
+                <StackPanel>
+                    <TextBlock Text="{loc:Localize History_Title}" Classes="H1" />
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBlock Text="{Binding StatusMessage}" Foreground="{DynamicResource BrushTextDisabled}" />
+                        <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsLoading}" Width="100" Height="2"
+                                     VerticalAlignment="Center" />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+
+            <Border Grid.Row="1"
+                    Margin="0,0,0,10"
+                    Background="{DynamicResource BrushSurfaceElevated}"
+                    BorderBrush="{DynamicResource BrushBorder}"
+                    BorderThickness="1"
+                    CornerRadius="{StaticResource RadiusMedium}"
+                    Padding="10">
+                <Grid ColumnDefinitions="180,12,230,12,*" RowDefinitions="Auto">
+                    <Border Grid.Column="0"
+                            Background="{DynamicResource BrushSurface}"
+                            BorderBrush="{DynamicResource BrushBorder}"
+                            BorderThickness="1"
+                            CornerRadius="{StaticResource RadiusMedium}"
+                            Padding="10">
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="{loc:Localize History_TypeFilterLabel}"
+                                       FontSize="11"
+                                       FontWeight="Medium"
+                                       Foreground="{DynamicResource BrushTextTertiary}" />
+                            <ComboBox ItemsSource="{Binding TypeFilterOptions}"
+                                      SelectedIndex="{Binding SelectedTypeFilterIndex}"
+                                      HorizontalAlignment="Stretch" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="2"
+                            Background="{DynamicResource BrushSurface}"
+                            BorderBrush="{DynamicResource BrushBorder}"
+                            BorderThickness="1"
+                            CornerRadius="{StaticResource RadiusMedium}"
+                            Padding="10">
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="{loc:Localize History_FilterByGoal}"
+                                       FontSize="11"
+                                       FontWeight="Medium"
+                                       Foreground="{DynamicResource BrushTextTertiary}" />
+                            <ComboBox ItemsSource="{Binding AvailableGoals}"
+                                      SelectedItem="{Binding SelectedGoalFilter}"
+                                      HorizontalAlignment="Stretch">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Title}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="4"
+                            Background="{DynamicResource BrushSurface}"
+                            BorderBrush="{DynamicResource BrushBorder}"
+                            BorderThickness="1"
+                            CornerRadius="{StaticResource RadiusMedium}"
+                            Padding="10">
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="{loc:Localize History_DateRangeLabel}"
+                                       FontSize="11"
+                                       FontWeight="Medium"
+                                       Foreground="{DynamicResource BrushTextTertiary}" />
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                <Button Grid.Column="0"
+                                        Command="{Binding OpenDateRangeDialogCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        Background="{DynamicResource BrushSurfaceElevated}"
+                                        BorderBrush="{DynamicResource BrushBorderLight}"
+                                        BorderThickness="1"
+                                        CornerRadius="{StaticResource RadiusMedium}"
+                                        Padding="12,10">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                        <TextBlock Text="📅" VerticalAlignment="Center" />
+                                        <TextBlock Grid.Column="1"
+                                                   Text="{Binding DateRangeFilterDisplay}"
+                                                   VerticalAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   Foreground="{DynamicResource BrushTextPrimary}" />
+                                    </Grid>
+                                </Button>
+
+                                <Button Grid.Column="1"
+                                        Command="{Binding ClearDateFiltersCommand}"
+                                        IsVisible="{Binding HasDateRangeFilter}"
+                                        Background="Transparent"
+                                        BorderBrush="{DynamicResource BrushBorderLight}"
+                                        BorderThickness="1"
+                                        CornerRadius="{StaticResource RadiusMedium}"
+                                        Padding="12,10"
+                                        ToolTip.Tip="{loc:Localize History_ClearDateFilters}">
+                                    <TextBlock Text="✕" VerticalAlignment="Center" />
+                                </Button>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="2" Margin="0,0,0,10" Background="{DynamicResource BrushSurfaceElevated}"
+                    CornerRadius="{StaticResource RadiusMedium}" Padding="9"
+                    BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1"
+                    IsVisible="{Binding IsGoalFilterActive}">
+                <Grid ColumnDefinitions="Auto, *, Auto">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Text="🎯" VerticalAlignment="Center" FontSize="16" />
+                        <TextBlock Text="{Binding SelectedGoalFilter.Title}" FontWeight="Bold"
+                                   Foreground="{DynamicResource BrushAccentGold}" VerticalAlignment="Center" FontSize="14" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="20" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding GoalDateInfo}" Foreground="{DynamicResource BrushTextTertiary}"
+                                   FontSize="12" VerticalAlignment="Center" />
+                        <Border Background="{DynamicResource BrushBorder}" CornerRadius="4" Padding="8,2">
+                            <TextBlock Text="{Binding GoalStatusInfo}" FontSize="11"
+                                       Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" />
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="3" Background="{DynamicResource BrushSurface}" CornerRadius="8"
+                    BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1"
+                    ClipToBounds="True">
+                <Grid>
+                    <ListBox ItemsSource="{Binding Items}" Background="Transparent" SelectionMode="Multiple">
+                        <ListBox.Styles>
+                            <Style Selector="ListBoxItem">
+                                <Setter Property="Padding" Value="6,2" />
+                                <Setter Property="Margin" Value="0,1" />
+                                <Setter Property="CornerRadius" Value="4" />
+                            </Style>
+                            <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+                                <Setter Property="Background" Value="{DynamicResource BrushSurfaceHover}" />
+                            </Style>
+                        </ListBox.Styles>
+
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="vm:HistoryItemViewModel">
+                                <Panel>
+                                    <Expander IsVisible="{Binding IsGroup}"
+                                              IsExpanded="{Binding IsExpanded}"
+                                              HorizontalAlignment="Stretch"
+                                              Background="{DynamicResource BrushSurfaceElevated}"
+                                              CornerRadius="4"
+                                              Margin="0,2">
+                                        <Expander.Header>
+                                            <Grid ColumnDefinitions="40, *, Auto, 140">
+                                                <CheckBox IsChecked="{Binding IsSelected}" VerticalAlignment="Center" />
+
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
+                                                    <TextBlock Text="{Binding GroupNameDisplay}"
+                                                               FontWeight="Bold" Foreground="{DynamicResource BrushAccentGold}" />
+                                                    <TextBlock Text="{Binding DateDisplay}" FontSize="11"
+                                                               Foreground="{DynamicResource BrushTextTertiary}" />
+                                                </StackPanel>
+
+                                                <Border Grid.Column="2" Background="{DynamicResource BrushBorder}"
+                                                        CornerRadius="4" Padding="6,2" VerticalAlignment="Center"
+                                                        Margin="0,0,20,0">
+                                                    <TextBlock Text="{loc:Localize History_Group}" FontSize="10"
+                                                               Foreground="{DynamicResource BrushTextSecondary}"
+                                                               FontWeight="Bold" />
+                                                </Border>
+
+                                                <StackPanel Grid.Column="3" HorizontalAlignment="Right"
+                                                            VerticalAlignment="Center" Margin="0,0,10,0">
+                                                    <TextBlock
+                                                        Text="{Binding BalanceDisplay, Converter={StaticResource TibiaCurrencyConverter}}"
+                                                        Foreground="{Binding BalanceDisplay, Converter={StaticResource BalanceColorConverter}}"
+                                                        FontWeight="Bold" HorizontalAlignment="Right" />
+                                                    <TextBlock Text="{loc:Localize History_TotalProfit}" FontSize="10"
+                                                               Foreground="{DynamicResource BrushTextMuted}"
+                                                               HorizontalAlignment="Right" />
+                                                </StackPanel>
+                                            </Grid>
+                                        </Expander.Header>
+
+                                        <ItemsControl ItemsSource="{Binding Children}"
+                                                      ItemTemplate="{StaticResource SessionRowTemplate}"
+                                                      Margin="20,0,0,0" />
+                                    </Expander>
+
+                                    <ContentControl Content="{Binding}"
+                                                    ContentTemplate="{StaticResource SessionRowTemplate}"
+                                                    IsVisible="{Binding !IsGroup}" />
+                                </Panel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <components:EmptyState Message="{loc:Localize History_NoHunts}"
+                                           Icon="📜"
+                                           IsVisible="{Binding !HasPagination}" />
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="4"
+                    Margin="0,10,0,0"
+                    Padding="9"
+                    Background="{DynamicResource BrushSurfaceElevated}"
+                    CornerRadius="8"
+                    BorderBrush="{DynamicResource BrushBorder}"
+                    BorderThickness="1"
+                    IsVisible="{Binding HasPagination}">
+                <Grid ColumnDefinitions="Auto, *, Auto">
+                    <Button Command="{Binding PreviousPageCommand}"
+                            IsEnabled="{Binding CanGoToPreviousPage}"
+                            Background="Transparent"
+                            BorderBrush="{DynamicResource BrushBorderLight}"
+                            BorderThickness="1"
+                            CornerRadius="{StaticResource RadiusMedium}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="◀" VerticalAlignment="Center" />
+                            <TextBlock Text="{loc:Localize History_PreviousPage}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding PaginationSummary}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource BrushTextSecondary}"
+                               FontWeight="{StaticResource FontWeightMedium}" />
+
+                    <Button Grid.Column="2"
+                            Command="{Binding NextPageCommand}"
+                            IsEnabled="{Binding CanGoToNextPage}"
+                            Background="Transparent"
+                            BorderBrush="{DynamicResource BrushBorderLight}"
+                            BorderThickness="1"
+                            CornerRadius="{StaticResource RadiusMedium}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="{loc:Localize History_NextPage}" VerticalAlignment="Center" />
+                            <TextBlock Text="▶" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="5" Margin="0,12,0,0" Padding="10" Background="{DynamicResource BrushSurfaceElevated}"
+                    CornerRadius="8"
+                    IsVisible="{Binding HasSelection}">
+                <Grid ColumnDefinitions="Auto, *, Auto">
+                    <StackPanel Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
+                        <TextBlock Text="{loc:Localize History_SelectedSessions}" Foreground="{DynamicResource BrushTextTertiary}"
+                                   VerticalAlignment="Center" />
+                        <Button Command="{Binding DeleteSelectedCommand}" Content="{loc:Localize History_Delete}"
+                                Background="Transparent" Foreground="{DynamicResource BrushError}"
+                                BorderBrush="#552222" BorderThickness="1" CornerRadius="4" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10">
+                        <Button Command="{Binding DemergeSelectedCommand}"
+                                IsVisible="{Binding IsDemergeVisible}"
+                                Background="Transparent" Foreground="{DynamicResource BrushTextSecondary}"
+                                BorderBrush="{DynamicResource BrushBorderLight}" BorderThickness="1"
+                                CornerRadius="{StaticResource RadiusMedium}" Padding="15,10">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <TextBlock Text="🔓" VerticalAlignment="Center" />
+                                <TextBlock Text="{loc:Localize History_Ungroup}" FontWeight="Bold" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+
+                        <Button Command="{Binding MergeAndAnalyzeCommand}"
+                                Classes="Primary"
+                                CornerRadius="{StaticResource RadiusMedium}" Padding="20,10">
+                            <Grid ColumnDefinitions="Auto, Auto">
+                                <TextBlock Text="📊" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="Black" />
+                                <TextBlock Grid.Column="1" Text="{loc:Localize History_AnalyzeMerge}" FontWeight="Bold"
+                                           VerticalAlignment="Center" Foreground="Black" />
+                            </Grid>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Grid IsVisible="{Binding IsDateRangeDialogOpen}"
+              Background="{DynamicResource BrushOverlay}"
+              PointerPressed="OverlayBackdrop_PointerPressed"
+              Classes="FadeIn">
+
+            <Border Width="420"
+                    x:Name="DialogCard"
+                    MaxWidth="420"
+                    Padding="18"
+                    Background="{DynamicResource BrushSurfaceElevated}"
+                    BorderBrush="{DynamicResource BrushBorderLight}"
+                    BorderThickness="1"
+                    CornerRadius="12"
+                    BoxShadow="0 12 40 0 #55000000"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Classes="FadeIn SlideInTop">
+                <StackPanel Spacing="14">
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="{loc:Localize History_DateDialogTitle}"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   Foreground="{DynamicResource BrushTextPrimary}" />
+                        <TextBlock Text="{loc:Localize History_DateDialogHint}"
+                                   TextWrapping="Wrap"
+                                   FontSize="12"
+                                   Foreground="{DynamicResource BrushTextSecondary}" />
+                    </StackPanel>
+
+                    <Border Background="{DynamicResource BrushSurface}"
+                            BorderBrush="{DynamicResource BrushBorder}"
+                            BorderThickness="1"
+                            CornerRadius="{StaticResource RadiusMedium}"
+                            Padding="10,8">
+                        <TextBlock Text="{Binding DraftDateRangeFilterDisplay}"
+                                   FontWeight="Medium"
+                                   Foreground="{DynamicResource BrushTextPrimary}" />
+                    </Border>
+
+                    <components:DateRangeCalendar StartDate="{Binding DraftFromDateFilter, Mode=TwoWay}"
+                                                  EndDate="{Binding DraftToDateFilter, Mode=TwoWay}" />
+
+                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+                        <Button Grid.Column="1"
+                                Command="{Binding CancelDateRangeDialogCommand}"
+                                Background="Transparent"
+                                BorderBrush="{DynamicResource BrushBorderLight}"
+                                BorderThickness="1"
+                                CornerRadius="{StaticResource RadiusMedium}"
+                                Padding="16,10"
+                                Content="{loc:Localize Common_Cancel}" />
+
+                        <Button Grid.Column="2"
+                                Command="{Binding ConfirmDateRangeDialogCommand}"
+                                Classes="Primary"
+                                CornerRadius="{StaticResource RadiusMedium}"
+                                Padding="18,10"
+                                Content="{loc:Localize History_ApplyDateRange}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

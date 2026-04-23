@@ -1,0 +1,44 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:components="using:TibiaHuntMaster.App.Components"
+             x:Class="TibiaHuntMaster.App.Components.ErrorMessage"
+             x:Name="Root"
+             x:DataType="components:ErrorMessage"
+             x:CompileBindings="False">
+
+    <!-- Error Message Component -->
+    <Border Background="{StaticResource BrushSurfaceElevated}"
+            BorderBrush="{StaticResource BrushError}"
+            BorderThickness="1"
+            CornerRadius="{StaticResource RadiusMedium}"
+            Padding="{StaticResource PaddingMD}"
+            Margin="{StaticResource PaddingMD}"
+            Classes="FadeIn SlideInTop">
+
+        <Grid ColumnDefinitions="Auto, *">
+            <!-- Error Icon -->
+            <TextBlock Grid.Column="0"
+                       Text="⚠"
+                       FontSize="20"
+                       Foreground="{StaticResource BrushError}"
+                       VerticalAlignment="Center"
+                       Margin="0,0,12,0" />
+
+            <!-- Error Message -->
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <TextBlock Text="{Binding Title, ElementName=Root}"
+                           FontSize="{StaticResource FontSizeBody}"
+                           FontWeight="{StaticResource FontWeightBold}"
+                           Foreground="{StaticResource BrushError}"
+                           Margin="0,0,0,4" />
+
+                <TextBlock Text="{Binding Message, ElementName=Root}"
+                           FontSize="{StaticResource FontSizeBody}"
+                           Foreground="{StaticResource BrushTextSecondary}"
+                           TextWrapping="Wrap" />
+            </StackPanel>
+        </Grid>
+
+    </Border>
+
+</UserControl>

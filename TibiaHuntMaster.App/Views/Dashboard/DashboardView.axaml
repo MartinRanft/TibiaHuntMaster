@@ -1,0 +1,704 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TibiaHuntMaster.App.ViewModels.Dashboard"
+             xmlns:loc="using:TibiaHuntMaster.App.Extensions"
+             x:Class="TibiaHuntMaster.App.Views.Dashboard.DashboardView"
+             x:DataType="vm:DashboardViewModel">
+    <UserControl.Styles>
+        <Style Selector="Border.NavGroupCard">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
+            <Setter Property="Padding" Value="6" />
+        </Style>
+
+        <Style Selector="Border.NavGroupCard.expanded">
+            <Setter Property="Background" Value="#14FFFFFF" />
+        </Style>
+
+        <Style Selector="Button.NavMenuButton">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="12,10" />
+            <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+        </Style>
+
+        <Style Selector="Button.NavMenuButton:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource BrushSurfaceHover}" />
+        </Style>
+
+        <Style Selector="Button.NavMenuButton.navSelected /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource BrushSurfaceElevated}" />
+        </Style>
+
+        <Style Selector="Button.NavSubMenuButton">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="10,8" />
+            <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}" />
+        </Style>
+
+        <Style Selector="Button.NavSubMenuButton:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource BrushSurfaceHover}" />
+        </Style>
+
+        <Style Selector="Button.NavSubMenuButton.navSelected /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource BrushSurfaceElevated}" />
+            <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+        </Style>
+
+        <Style Selector="Border.OverviewSubNav">
+            <Setter Property="MaxHeight" Value="0" />
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+
+        <Style Selector="Border.OverviewSubNav.expanded">
+            <Setter Property="MaxHeight" Value="220" />
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+
+        <Style Selector="Button.HeaderCharacterButton">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+
+        <Style Selector="Button.HeaderCharacterButton:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource BrushSurfaceHover}" />
+        </Style>
+
+        <Style Selector="Button.SettingsDialogTab">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BrushBorderLight}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
+            <Setter Property="Padding" Value="12,8" />
+            <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}" />
+        </Style>
+
+        <Style Selector="Button.SettingsDialogTab.selected">
+            <Setter Property="Background" Value="{DynamicResource BrushSurfaceElevated}" />
+            <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+        </Style>
+
+        <Style Selector="Button.CharacterChoice">
+            <Setter Property="Background" Value="{DynamicResource BrushSurface}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
+            <Setter Property="Padding" Value="10,8" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+
+        <Style Selector="Button.CharacterChoice:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource BrushSurfaceHover}" />
+        </Style>
+
+        <Style Selector="Button.CharacterChoice.current /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource BrushSurfaceElevated}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BrushAccentGold}" />
+        </Style>
+    </UserControl.Styles>
+    <Grid>
+        <SplitView IsPaneOpen="{Binding IsNavigationPaneOpen}"
+                   DisplayMode="CompactInline"
+                   OpenPaneLength="240"
+                   CompactPaneLength="76"
+                   Background="{DynamicResource BrushBackground}"
+                   PaneBackground="{DynamicResource BrushSurface}">
+
+            <SplitView.Pane>
+                <Grid RowDefinitions="Auto, *, Auto">
+                    <Border Grid.Row="0"
+                            Padding="{StaticResource PaddingXL}"
+                            BorderBrush="{DynamicResource BrushBorder}"
+                            BorderThickness="0,0,0,1">
+                        <StackPanel Spacing="{StaticResource SpacingLG}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource SpacingMD}">
+                                <Button Classes="HeaderCharacterButton"
+                                        Command="{Binding OpenCharacterSwitcherCommand}"
+                                        ToolTip.Tip="{Binding SwitchCharacterTitle}">
+                                    <Grid>
+                                        <Grid ColumnDefinitions="Auto,*,Auto"
+                                              ColumnSpacing="{StaticResource SpacingLG}"
+                                              IsVisible="{Binding IsNavigationPaneOpen}">
+                                            <Border Width="40"
+                                                    Height="40"
+                                                    CornerRadius="20"
+                                                    Background="{DynamicResource BrushBorder}"
+                                                    ClipToBounds="True">
+                                                <TextBlock Text="{Binding ActiveCharacter.Name[0]}"
+                                                           VerticalAlignment="Center"
+                                                           HorizontalAlignment="Center"
+                                                           FontWeight="{StaticResource FontWeightBold}"
+                                                           Foreground="{DynamicResource BrushAccentGold}" />
+                                            </Border>
+                                            <StackPanel Grid.Column="1" Spacing="1" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding ActiveCharacter.Name}"
+                                                           FontWeight="{StaticResource FontWeightBold}"
+                                                           Foreground="{DynamicResource BrushTextPrimary}" />
+                                                <TextBlock Text="{Binding ActiveCharacter.Level, StringFormat='Lvl {0}'}"
+                                                           FontSize="{StaticResource FontSizeLabel}"
+                                                           Foreground="{DynamicResource BrushTextTertiary}" />
+                                            </StackPanel>
+                                            <TextBlock Grid.Column="2"
+                                                       Text="▾"
+                                                       Foreground="{DynamicResource BrushTextTertiary}"
+                                                       VerticalAlignment="Center" />
+                                        </Grid>
+
+                                        <Border Width="40"
+                                                Height="40"
+                                                HorizontalAlignment="Center"
+                                                IsVisible="{Binding IsNavigationPaneCollapsed}"
+                                                CornerRadius="20"
+                                                Background="{DynamicResource BrushBorder}"
+                                                ClipToBounds="True">
+                                            <TextBlock Text="{Binding ActiveCharacter.Name[0]}"
+                                                       VerticalAlignment="Center"
+                                                       HorizontalAlignment="Center"
+                                                       FontWeight="{StaticResource FontWeightBold}"
+                                                       Foreground="{DynamicResource BrushAccentGold}" />
+                                        </Border>
+                                    </Grid>
+                                </Button>
+
+                                <Button Grid.Column="1"
+                                        Command="{Binding ToggleNavigationPaneCommand}"
+                                        Background="Transparent"
+                                        BorderBrush="{DynamicResource BrushBorderLight}"
+                                        BorderThickness="1"
+                                        CornerRadius="{StaticResource RadiusMedium}"
+                                        Padding="8,6"
+                                        ToolTip.Tip="{Binding NavigationPaneToggleToolTip}">
+                                    <TextBlock Text="{Binding NavigationPaneToggleGlyph}" VerticalAlignment="Center" />
+                                </Button>
+                            </Grid>
+
+                        </StackPanel>
+                    </Border>
+
+                    <ScrollViewer Grid.Row="1" Margin="0,20" HorizontalScrollBarVisibility="Disabled">
+                        <StackPanel Spacing="6">
+                            <Border Classes="NavGroupCard" Classes.expanded="{Binding IsOverviewSectionExpanded}" Margin="10,2">
+                                <StackPanel Spacing="4">
+                                    <Button Classes="NavMenuButton" Classes.navSelected="{Binding OverviewNavigationItem.IsSelected}"
+                                            Command="{Binding SelectNavigationItemCommand}"
+                                            CommandParameter="{Binding OverviewNavigationItem}"
+                                            ToolTip.Tip="{Binding OverviewNavigationItem.Title}">
+                                        <Grid>
+                                            <Grid ColumnDefinitions="Auto, *, Auto" ColumnSpacing="{StaticResource SpacingLG}"
+                                                  IsVisible="{Binding IsNavigationPaneOpen}">
+                                                <TextBlock Text="{Binding OverviewNavigationItem.Icon}" FontSize="20" VerticalAlignment="Center" />
+                                                <StackPanel Grid.Column="1" Spacing="1" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding OverviewNavigationItem.Title}"
+                                                               FontSize="{StaticResource FontSizeBody}"
+                                                               FontWeight="{StaticResource FontWeightMedium}" />
+                                                    <TextBlock Text="{Binding OverviewNavigationItem.Description}"
+                                                               FontSize="11"
+                                                               TextWrapping="Wrap"
+                                                               Foreground="{DynamicResource BrushTextTertiary}" />
+                                                </StackPanel>
+                                                <TextBlock Grid.Column="2"
+                                                           Text="{Binding OverviewSectionGlyph}"
+                                                           FontSize="14"
+                                                           Foreground="{DynamicResource BrushTextTertiary}"
+                                                           VerticalAlignment="Center" />
+                                            </Grid>
+                                            <TextBlock Text="{Binding OverviewNavigationItem.Icon}"
+                                                       IsVisible="{Binding IsNavigationPaneCollapsed}"
+                                                       FontSize="20"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center" />
+                                        </Grid>
+                                    </Button>
+
+                                    <Border Classes="OverviewSubNav"
+                                            Classes.expanded="{Binding IsOverviewSectionExpanded}"
+                                            IsVisible="{Binding IsNavigationPaneOpen}"
+                                            IsHitTestVisible="{Binding IsOverviewSectionExpanded}"
+                                            ClipToBounds="True"
+                                            Margin="4,0,0,0">
+                                        <Border.Transitions>
+                                            <Transitions>
+                                                <DoubleTransition Property="MaxHeight" Duration="0:0:0.18" />
+                                                <DoubleTransition Property="Opacity" Duration="0:0:0.18" />
+                                            </Transitions>
+                                        </Border.Transitions>
+                                        <Grid ColumnDefinitions="14,*" Margin="8,2,0,2">
+                                            <Border Width="2"
+                                                    Grid.Column="0"
+                                                    Background="{DynamicResource BrushBorder}"
+                                                    CornerRadius="2"
+                                                    HorizontalAlignment="Center"
+                                                    Margin="0,2,0,2" />
+                                            <StackPanel Grid.Column="1" Spacing="4">
+                                                <Button Classes="NavSubMenuButton"
+                                                        Classes.navSelected="{Binding ProgressNavigationItem.IsSelected}"
+                                                        Command="{Binding SelectNavigationItemCommand}"
+                                                        CommandParameter="{Binding ProgressNavigationItem}"
+                                                        ToolTip.Tip="{Binding ProgressNavigationItem.Title}">
+                                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{StaticResource SpacingLG}">
+                                                        <TextBlock Text="{Binding ProgressNavigationItem.Icon}" FontSize="18" VerticalAlignment="Center" />
+                                                        <StackPanel Grid.Column="1" Spacing="1">
+                                                            <TextBlock Text="{Binding ProgressNavigationItem.Title}"
+                                                                       FontSize="{StaticResource FontSizeBody}"
+                                                                       FontWeight="{StaticResource FontWeightMedium}" />
+                                                            <TextBlock Text="{Binding ProgressNavigationItem.Description}"
+                                                                       FontSize="11"
+                                                                       TextWrapping="Wrap"
+                                                                       Foreground="{DynamicResource BrushTextTertiary}" />
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </Button>
+
+                                                <Button Classes="NavSubMenuButton"
+                                                        Classes.navSelected="{Binding EconomyNavigationItem.IsSelected}"
+                                                        Command="{Binding SelectNavigationItemCommand}"
+                                                        CommandParameter="{Binding EconomyNavigationItem}"
+                                                        ToolTip.Tip="{Binding EconomyNavigationItem.Title}">
+                                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{StaticResource SpacingLG}">
+                                                        <TextBlock Text="{Binding EconomyNavigationItem.Icon}" FontSize="18" VerticalAlignment="Center" />
+                                                        <StackPanel Grid.Column="1" Spacing="1">
+                                                            <TextBlock Text="{Binding EconomyNavigationItem.Title}"
+                                                                       FontSize="{StaticResource FontSizeBody}"
+                                                                       FontWeight="{StaticResource FontWeightMedium}" />
+                                                            <TextBlock Text="{Binding EconomyNavigationItem.Description}"
+                                                                       FontSize="11"
+                                                                       TextWrapping="Wrap"
+                                                                       Foreground="{DynamicResource BrushTextTertiary}" />
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </Button>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+
+                            <ItemsControl ItemsSource="{Binding MenuItems}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:NavigationItem">
+                                        <Button Classes="NavMenuButton"
+                                                Classes.navSelected="{Binding IsSelected}"
+                                                Command="{Binding $parent[UserControl].DataContext.SelectNavigationItemCommand}"
+                                                CommandParameter="{Binding}"
+                                                ToolTip.Tip="{Binding Title}"
+                                                IsVisible="{Binding IsStandaloneMenuItem}"
+                                                Margin="10,2">
+                                            <Grid>
+                                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{StaticResource SpacingLG}"
+                                                      IsVisible="{Binding $parent[UserControl].DataContext.IsNavigationPaneOpen}">
+                                                    <TextBlock Text="{Binding Icon}"
+                                                               FontSize="20"
+                                                               VerticalAlignment="Center" />
+                                                    <StackPanel Grid.Column="1" Spacing="1" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding Title}"
+                                                                   FontSize="{StaticResource FontSizeBody}"
+                                                                   FontWeight="{StaticResource FontWeightMedium}" />
+                                                        <TextBlock Text="{Binding Description}"
+                                                                   FontSize="11"
+                                                                   TextWrapping="Wrap"
+                                                                   Foreground="{DynamicResource BrushTextTertiary}" />
+                                                    </StackPanel>
+                                                </Grid>
+                                                <TextBlock Text="{Binding Icon}"
+                                                           IsVisible="{Binding $parent[UserControl].DataContext.IsNavigationPaneCollapsed}"
+                                                           FontSize="20"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center" />
+                                            </Grid>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <Border Grid.Row="0"
+                            Grid.RowSpan="2"
+                            ZIndex="10"
+                            IsVisible="{Binding IsCharacterSwitcherOpen}"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Top"
+                            Margin="16,92,16,0"
+                            Background="{DynamicResource BrushSurfaceElevated}"
+                            BorderBrush="{DynamicResource BrushBorderLight}"
+                            BorderThickness="1"
+                            CornerRadius="{StaticResource RadiusLarge}"
+                            Padding="12">
+                        <StackPanel Spacing="10">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource SpacingMD}">
+                                <TextBlock Text="{loc:Localize CharSelection_SelectCharacter}"
+                                           FontWeight="{StaticResource FontWeightBold}"
+                                           Foreground="{DynamicResource BrushTextPrimary}"
+                                           VerticalAlignment="Center" />
+                                <Button Grid.Column="1"
+                                        Command="{Binding CloseCharacterSwitcherCommand}"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Padding="4">
+                                    <TextBlock Text="✕" />
+                                </Button>
+                            </Grid>
+
+                            <ProgressBar IsIndeterminate="True"
+                                         IsVisible="{Binding IsCharacterSwitcherLoading}" />
+
+                            <ScrollViewer MaxHeight="180"
+                                          HorizontalScrollBarVisibility="Disabled">
+                                <ItemsControl ItemsSource="{Binding QuickSwitchCharacters}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:CharacterQuickSwitchItem">
+                                            <Button Classes="CharacterChoice"
+                                                    Classes.current="{Binding IsCurrent}"
+                                                    Command="{Binding $parent[UserControl].DataContext.ActivateCharacterCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    Margin="0,0,0,6">
+                                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource SpacingMD}">
+                                                    <StackPanel Spacing="1">
+                                                        <TextBlock Text="{Binding Name}"
+                                                                   FontWeight="{StaticResource FontWeightBold}"
+                                                                   Foreground="{DynamicResource BrushTextPrimary}" />
+                                                        <TextBlock Text="{Binding LevelText}"
+                                                                   FontSize="{StaticResource FontSizeLabel}"
+                                                                   Foreground="{DynamicResource BrushTextSecondary}" />
+                                                    </StackPanel>
+                                                    <TextBlock Grid.Column="1"
+                                                               Text="●"
+                                                               IsVisible="{Binding IsCurrent}"
+                                                               Foreground="{DynamicResource BrushAccentGold}"
+                                                               VerticalAlignment="Center" />
+                                                </Grid>
+                                            </Button>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+
+                            <Button Command="{Binding OpenAddCharacterFormCommand}"
+                                    IsVisible="{Binding ShowAddCharacterButton}"
+                                    HorizontalAlignment="Stretch"
+                                    Background="{DynamicResource BrushSurface}"
+                                    BorderBrush="{DynamicResource BrushBorder}"
+                                    BorderThickness="1"
+                                    CornerRadius="{StaticResource RadiusMedium}"
+                                    Padding="10,8">
+                                <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingMD}" HorizontalAlignment="Center">
+                                    <TextBlock Text="＋" />
+                                    <TextBlock Text="{loc:Localize CharSelection_AddCharacter}" />
+                                </StackPanel>
+                            </Button>
+
+                            <Border IsVisible="{Binding IsAddCharacterFormOpen}"
+                                    Background="{DynamicResource BrushSurface}"
+                                    BorderBrush="{DynamicResource BrushBorder}"
+                                    BorderThickness="1"
+                                    CornerRadius="{StaticResource RadiusMedium}"
+                                    Padding="10">
+                                <StackPanel Spacing="8">
+                                    <TextBox Text="{Binding NewCharacterName}"
+                                             PlaceholderText="{loc:Localize CharSelection_NamePlaceholder}" />
+                                    <Grid ColumnDefinitions="*,*" ColumnSpacing="{StaticResource SpacingMD}">
+                                        <Button Grid.Column="0"
+                                                Command="{Binding ImportCharacterCommand}"
+                                                Background="{DynamicResource BrushSurfaceElevated}"
+                                                BorderBrush="{DynamicResource BrushBorderLight}"
+                                                BorderThickness="1"
+                                                CornerRadius="{StaticResource RadiusMedium}"
+                                                Padding="8,6">
+                                            <TextBlock Text="{loc:Localize CharSelection_Import}" HorizontalAlignment="Center" />
+                                        </Button>
+                                        <Button Grid.Column="1"
+                                                Command="{Binding CancelAddCharacterCommand}"
+                                                Background="Transparent"
+                                                BorderBrush="{DynamicResource BrushBorderLight}"
+                                                BorderThickness="1"
+                                                CornerRadius="{StaticResource RadiusMedium}"
+                                                Padding="8,6">
+                                            <TextBlock Text="{loc:Localize Common_Cancel}" HorizontalAlignment="Center" />
+                                        </Button>
+                                    </Grid>
+                                    <ProgressBar IsIndeterminate="True"
+                                                 IsVisible="{Binding IsImportingCharacter}" />
+                                </StackPanel>
+                            </Border>
+
+                            <TextBlock Text="{Binding CharacterSwitcherError}"
+                                       Foreground="{DynamicResource BrushError}"
+                                       FontSize="{StaticResource FontSizeLabel}"
+                                       TextWrapping="Wrap"
+                                       IsVisible="{Binding CharacterSwitcherError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                        </StackPanel>
+                    </Border>
+
+                    <StackPanel Grid.Row="2" Spacing="{StaticResource SpacingMD}" Margin="15,0,15,20">
+                        <Button Command="{Binding OpenSettingsCommand}"
+                                HorizontalAlignment="Stretch"
+                                Background="{DynamicResource BrushSurfaceElevated}"
+                                BorderBrush="{DynamicResource BrushBorderLight}"
+                                BorderThickness="1"
+                                CornerRadius="{StaticResource RadiusMedium}"
+                                Foreground="{DynamicResource BrushTextPrimary}"
+                                ToolTip.Tip="{Binding SettingsTitle}">
+                            <Grid>
+                                <StackPanel Orientation="Horizontal"
+                                            Spacing="{StaticResource SpacingMD}"
+                                            HorizontalAlignment="Center"
+                                            IsVisible="{Binding IsNavigationPaneOpen}">
+                                    <TextBlock Text="⚙️" VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding SettingsTitle}" VerticalAlignment="Center" />
+                                </StackPanel>
+                                <TextBlock Text="⚙️"
+                                           IsVisible="{Binding IsNavigationPaneCollapsed}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" />
+                            </Grid>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </SplitView.Pane>
+
+            <Border Background="{DynamicResource BrushBackground}"
+                    Padding="{StaticResource PaddingPage}">
+                <TransitioningContentControl Content="{Binding CurrentContent}">
+                    <TransitioningContentControl.PageTransition>
+                        <CrossFade Duration="0:0:0.25" />
+                    </TransitioningContentControl.PageTransition>
+                </TransitioningContentControl>
+            </Border>
+        </SplitView>
+
+        <Border IsVisible="{Binding IsSettingsDialogOpen}"
+                Background="#99040A12"
+                ZIndex="20">
+            <Grid Margin="24">
+                <Border HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Width="680"
+                        Height="620"
+                        Background="{DynamicResource BrushSurfaceElevated}"
+                        BorderBrush="{DynamicResource BrushBorderLight}"
+                        BorderThickness="1"
+                        CornerRadius="{StaticResource RadiusLarge}"
+                        Padding="24">
+                    <Grid RowDefinitions="Auto,Auto,*" RowSpacing="18">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Text="{Binding SettingsTitle}"
+                                       FontSize="{StaticResource FontSizeHeading2}"
+                                       FontWeight="{StaticResource FontWeightBold}"
+                                       Foreground="{DynamicResource BrushTextPrimary}" />
+                            <Button Grid.Column="1"
+                                    Command="{Binding CloseSettingsCommand}"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    Padding="8"
+                                    ToolTip.Tip="{loc:Localize Common_Close}">
+                                <TextBlock Text="✕" />
+                            </Button>
+                        </Grid>
+
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="{StaticResource SpacingMD}">
+                            <Button Classes="SettingsDialogTab"
+                                    Classes.selected="{Binding IsLanguageTabSelected}"
+                                    Command="{Binding SelectSettingsTabCommand}"
+                                    CommandParameter="language">
+                                <TextBlock Text="{loc:Localize Settings_Language}" />
+                            </Button>
+                            <Button Classes="SettingsDialogTab"
+                                    Classes.selected="{Binding IsThemeTabSelected}"
+                                    Command="{Binding SelectSettingsTabCommand}"
+                                    CommandParameter="theme">
+                                <TextBlock Text="{Binding ThemeTabTitle}" />
+                            </Button>
+                            <Button Classes="SettingsDialogTab"
+                                    Classes.selected="{Binding IsSupportTabSelected}"
+                                    Command="{Binding SelectSettingsTabCommand}"
+                                    CommandParameter="support">
+                                <TextBlock Text="{loc:Localize Dashboard_ExportDiagnostics}" />
+                            </Button>
+                        </StackPanel>
+
+                        <ScrollViewer Grid.Row="2"
+                                      HorizontalScrollBarVisibility="Disabled">
+                            <StackPanel Spacing="18">
+                                <StackPanel IsVisible="{Binding IsLanguageTabSelected}" Spacing="14">
+                                    <Border Background="{DynamicResource BrushSurface}"
+                                            BorderBrush="{DynamicResource BrushBorder}"
+                                            BorderThickness="1"
+                                            CornerRadius="{StaticResource RadiusMedium}"
+                                            Padding="16">
+                                        <StackPanel Spacing="6">
+                                            <TextBlock Text="{loc:Localize Settings_Language}"
+                                                       FontWeight="{StaticResource FontWeightBold}"
+                                                       Foreground="{DynamicResource BrushTextPrimary}" />
+                                            <ComboBox ItemsSource="{Binding AvailableLanguages}"
+                                                      SelectedItem="{Binding SelectedLanguage}"
+                                                      HorizontalAlignment="Stretch">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate x:DataType="vm:LanguageItem">
+                                                        <TextBlock Text="{Binding DisplayName}" />
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+
+                                <StackPanel IsVisible="{Binding IsThemeTabSelected}" Spacing="14">
+                                    <Border Background="{DynamicResource BrushSurface}"
+                                            BorderBrush="{DynamicResource BrushBorder}"
+                                            BorderThickness="1"
+                                            CornerRadius="{StaticResource RadiusMedium}"
+                                            Padding="16">
+                                        <TextBlock Text="{Binding ThemeTabTitle}"
+                                                   FontWeight="{StaticResource FontWeightBold}"
+                                                   Foreground="{DynamicResource BrushTextPrimary}" />
+                                    </Border>
+
+                                    <Grid ColumnDefinitions="*,*" ColumnSpacing="{StaticResource SpacingMD}">
+                                        <Button Grid.Column="0"
+                                                Classes="SettingsDialogTab"
+                                                Classes.selected="{Binding IsDarkThemeSelected}"
+                                                Command="{Binding SetThemeCommand}"
+                                                CommandParameter="Dark"
+                                                HorizontalAlignment="Stretch">
+                                            <StackPanel Spacing="4" HorizontalAlignment="Center">
+                                                <TextBlock Text="🌙" HorizontalAlignment="Center" />
+                                                <TextBlock Text="{loc:Localize Settings_ThemeDark}" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Grid.Column="1"
+                                                Classes="SettingsDialogTab"
+                                                Classes.selected="{Binding IsLightThemeSelected}"
+                                                Command="{Binding SetThemeCommand}"
+                                                CommandParameter="Light"
+                                                HorizontalAlignment="Stretch">
+                                            <StackPanel Spacing="4" HorizontalAlignment="Center">
+                                                <TextBlock Text="☀️" HorizontalAlignment="Center" />
+                                                <TextBlock Text="{loc:Localize Settings_ThemeLight}" />
+                                            </StackPanel>
+                                        </Button>
+                                    </Grid>
+                                </StackPanel>
+
+                                <StackPanel IsVisible="{Binding IsSupportTabSelected}" Spacing="14">
+                                    <Button Command="{Binding ExportDiagnosticsCommand}"
+                                            HorizontalAlignment="Left"
+                                            Background="{DynamicResource BrushSurfaceElevated}"
+                                            BorderBrush="{DynamicResource BrushBorderLight}"
+                                            BorderThickness="1"
+                                            CornerRadius="{StaticResource RadiusMedium}"
+                                            Padding="14,10">
+                                        <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingMD}">
+                                            <TextBlock Text="🩺" />
+                                            <TextBlock Text="{loc:Localize Dashboard_ExportDiagnostics}" />
+                                        </StackPanel>
+                                    </Button>
+
+                                    <ProgressBar IsIndeterminate="True"
+                                                 IsVisible="{Binding IsExportingDiagnostics}" />
+
+                                    <Border IsVisible="{Binding ShowDiagnosticsStatus}"
+                                            Background="{DynamicResource BrushSurface}"
+                                            BorderBrush="{DynamicResource BrushBorder}"
+                                            BorderThickness="1"
+                                            CornerRadius="{StaticResource RadiusMedium}"
+                                            Padding="14,12">
+                                        <TextBlock Text="{Binding DiagnosticsStatusText}"
+                                                   Foreground="{DynamicResource BrushTextPrimary}"
+                                                   TextWrapping="Wrap" />
+                                    </Border>
+
+                                    <Border Background="{DynamicResource BrushSurface}"
+                                            BorderBrush="{DynamicResource BrushBorder}"
+                                            BorderThickness="1"
+                                            CornerRadius="{StaticResource RadiusMedium}"
+                                            Padding="16">
+                                        <StackPanel Spacing="12">
+                                            <TextBlock Text="{loc:Localize Settings_DatabaseSectionTitle}"
+                                                       FontWeight="{StaticResource FontWeightBold}"
+                                                       Foreground="{DynamicResource BrushTextPrimary}" />
+                                            <TextBlock Text="{loc:Localize Settings_DatabaseSectionHint}"
+                                                       Foreground="{DynamicResource BrushTextSecondary}"
+                                                       TextWrapping="Wrap" />
+
+                                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingMD}">
+                                                <Button Command="{Binding UpdateDatabaseCommand}"
+                                                        IsEnabled="{Binding !IsDatabaseMaintenanceRunning}"
+                                                        Background="{DynamicResource BrushSurfaceElevated}"
+                                                        BorderBrush="{DynamicResource BrushBorderLight}"
+                                                        BorderThickness="1"
+                                                        CornerRadius="{StaticResource RadiusMedium}"
+                                                        Padding="14,10">
+                                                    <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingMD}">
+                                                        <TextBlock Text="↻" />
+                                                        <TextBlock Text="{loc:Localize Settings_UpdateDatabase}" />
+                                                    </StackPanel>
+                                                </Button>
+
+                                                <Button Command="{Binding OpenRebuildDatabaseConfirmationCommand}"
+                                                        IsEnabled="{Binding !IsDatabaseMaintenanceRunning}"
+                                                        Background="{DynamicResource BrushSurfaceElevated}"
+                                                        BorderBrush="{DynamicResource BrushError}"
+                                                        BorderThickness="1"
+                                                        CornerRadius="{StaticResource RadiusMedium}"
+                                                        Padding="14,10">
+                                                    <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingMD}">
+                                                        <TextBlock Text="⚠" Foreground="{DynamicResource BrushError}" />
+                                                        <TextBlock Text="{loc:Localize Settings_RebuildDatabase}" />
+                                                    </StackPanel>
+                                                </Button>
+                                            </StackPanel>
+
+                                            <Border IsVisible="{Binding IsDatabaseRebuildConfirmationVisible}"
+                                                    Background="{DynamicResource BrushSurfaceElevated}"
+                                                    BorderBrush="{DynamicResource BrushError}"
+                                                    BorderThickness="1"
+                                                    CornerRadius="{StaticResource RadiusMedium}"
+                                                    Padding="14,12">
+                                                <StackPanel Spacing="10">
+                                                    <TextBlock Text="{loc:Localize Settings_RebuildDatabaseWarning}"
+                                                               Foreground="{DynamicResource BrushTextPrimary}"
+                                                               TextWrapping="Wrap" />
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="{StaticResource SpacingMD}">
+                                                        <Button Command="{Binding CancelRebuildDatabaseCommand}"
+                                                                Background="Transparent">
+                                                            <TextBlock Text="{loc:Localize Common_Cancel}" />
+                                                        </Button>
+                                                        <Button Command="{Binding ConfirmRebuildDatabaseCommand}"
+                                                                Classes="Primary">
+                                                            <TextBlock Text="{loc:Localize Settings_RebuildDatabaseConfirm}" />
+                                                        </Button>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Border>
+
+                                            <ProgressBar IsIndeterminate="True"
+                                                         IsVisible="{Binding IsDatabaseMaintenanceRunning}" />
+
+                                            <Border IsVisible="{Binding ShowDatabaseMaintenanceStatus}"
+                                                    Background="{DynamicResource BrushSurfaceElevated}"
+                                                    BorderBrush="{DynamicResource BrushBorderLight}"
+                                                    BorderThickness="1"
+                                                    CornerRadius="{StaticResource RadiusMedium}"
+                                                    Padding="14,12">
+                                                <TextBlock Text="{Binding DatabaseMaintenanceStatusText}"
+                                                           Foreground="{DynamicResource BrushTextPrimary}"
+                                                           TextWrapping="Wrap" />
+                                            </Border>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

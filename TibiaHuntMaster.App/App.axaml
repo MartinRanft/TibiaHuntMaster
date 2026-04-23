@@ -1,0 +1,32 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="TibiaHuntMaster.App.App"
+             xmlns:local="using:TibiaHuntMaster.App"
+             RequestedThemeVariant="Default">
+    <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+    <Application.DataTemplates>
+        <local:ViewLocator />
+    </Application.DataTemplates>
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- TibiaHuntMaster Design System -->
+                <!-- Default Dark Theme (will be replaced by ThemeService) -->
+                <ResourceInclude Source="/Styles/Themes/DarkTheme.axaml" />
+                <ResourceInclude Source="/Styles/Colors.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+
+    <Application.Styles>
+        <FluentTheme>
+            <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
+        </FluentTheme>
+
+        <!-- TibiaHuntMaster Custom Styles -->
+        <StyleInclude Source="/Styles/Controls.axaml" />
+        <StyleInclude Source="/Styles/Animations.axaml" />
+    </Application.Styles>
+</Application>

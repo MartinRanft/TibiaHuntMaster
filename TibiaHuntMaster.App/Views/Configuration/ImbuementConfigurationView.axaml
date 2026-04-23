@@ -1,0 +1,160 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TibiaHuntMaster.App.ViewModels.Configuration"
+             xmlns:bev="clr-namespace:TibiaHuntMaster.App.Behaviors"
+             x:Class="TibiaHuntMaster.App.Views.Configuration.ImbuementConfigurationView"
+             x:DataType="vm:ImbuementConfigurationViewModel">
+
+    <Grid RowDefinitions="Auto, *, Auto" Margin="30">
+
+        <!-- Header & Filter -->
+        <StackPanel Margin="0,0,0,15">
+            <TextBlock Text="Imbuement Configuration" FontSize="24" FontWeight="Light"
+                       Foreground="{DynamicResource BrushTextPrimary}"
+                       Margin="0,0,0,10" />
+
+            <Grid ColumnDefinitions="*, 200">
+                <!-- Filter Tabs -->
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <!-- Wir nutzen eine ComboBox für die Kategorien (sauberer und einfacher als RadioButtons) -->
+                    <ComboBox SelectedIndex="{Binding SelectedCategoryIndex}" Width="180">
+                        <ComboBoxItem>All Categories</ComboBoxItem>
+                        <ComboBoxItem>Core (Void/Crit)</ComboBoxItem>
+                        <ComboBoxItem>Skills</ComboBoxItem>
+                        <ComboBoxItem>Protection</ComboBoxItem>
+                        <ComboBoxItem>Utility (Speed/Cap)</ComboBoxItem>
+                    </ComboBox>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+
+        <!-- Main Content -->
+        <Grid Grid.Row="1" ColumnDefinitions="2*, 20, 1*">
+
+            <!-- LINKS: Imbuements -->
+            <Border Grid.Column="0" Background="{DynamicResource BrushSurface}" CornerRadius="8"
+                    BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1"
+                    Padding="15">
+                <Grid RowDefinitions="Auto, *">
+                    <CheckBox IsChecked="{Binding UseBlankScrolls}" Content="Use Blank Scrolls? (+25k fee)"
+                              Margin="0,0,0,10" />
+
+                    <ScrollViewer Grid.Row="1">
+                        <!-- Binding auf FilteredGroups! -->
+                        <ItemsControl ItemsSource="{Binding FilteredGroups}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="0,0,0,15">
+                                        <TextBlock Text="{Binding Name}" FontWeight="Bold"
+                                                   Foreground="{DynamicResource BrushTextSecondary}"
+                                                   FontSize="14" Margin="0,0,0,5" />
+
+                                        <ItemsControl ItemsSource="{Binding Recipes}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="{DynamicResource BrushSurfaceElevated}"
+                                                            CornerRadius="4" BorderBrush="{DynamicResource BrushBorder}"
+                                                            BorderThickness="1"
+                                                            Padding="8" Margin="0,0,8,8" Width="200">
+                                                        <Grid ColumnDefinitions="*, Auto">
+                                                            <StackPanel>
+                                                                <TextBlock Text="{Binding Recipe.Name}"
+                                                                           Foreground="{Binding TierColor}"
+                                                                           FontWeight="Bold" FontSize="13"
+                                                                           TextWrapping="Wrap" />
+                                                                <TextBlock
+                                                                    Text="{Binding Recipe.BaseFee, StringFormat='Fee: {0:N0}'}"
+                                                                    FontSize="10"
+                                                                    Foreground="{DynamicResource BrushTextSecondary}" />
+                                                            </StackPanel>
+
+                                                            <StackPanel Grid.Column="1" Orientation="Horizontal"
+                                                                        VerticalAlignment="Center" Spacing="2">
+                                                                <Button Command="{Binding DecrementCommand}"
+                                                                        Content="-" Padding="4,2"
+                                                                        Background="{DynamicResource BrushBorder}"
+                                                                        FontSize="10" />
+                                                                <TextBlock Text="{Binding Count}"
+                                                                           VerticalAlignment="Center" FontWeight="Bold"
+                                                                           Width="20" TextAlignment="Center" />
+                                                                <Button Command="{Binding IncrementCommand}"
+                                                                        Content="+" Padding="4,2"
+                                                                        Background="{DynamicResource BrushBorder}"
+                                                                        FontSize="10" />
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+
+            <!-- RECHTS: Preise -->
+            <Border Grid.Column="2" Background="{DynamicResource BrushSurface}" CornerRadius="8"
+                    BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1"
+                    Padding="15">
+                <Grid RowDefinitions="Auto, *">
+                    <TextBlock Text="Market Prices" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"
+                               Margin="0,0,0,10" />
+                    <TextBlock Text="Set to 0 to use base fee only." FontSize="10"
+                               Foreground="{DynamicResource BrushTextDisabled}" Margin="0,0,0,10" />
+
+                    <ScrollViewer Grid.Row="1">
+                        <ItemsControl ItemsSource="{Binding ItemPrices}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="{DynamicResource BrushBorder}" BorderThickness="0,0,0,1"
+                                            Padding="4">
+                                        <Grid ColumnDefinitions="*, Auto">
+                                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center"
+                                                       Foreground="{DynamicResource BrushTextSecondary}" FontSize="12"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       ToolTip.Tip="{Binding Name}" />
+
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="5">
+                                                <!-- Warn-Farbe wenn 0 -->
+                                                <TextBox bev:NumericTextBoxBehavior.DigitsOnly="True"
+                                                         Text="{Binding Price}" Width="70" FontSize="12"
+                                                         Classes.isZero="{Binding Price, Converter={x:Static ObjectConverters.IsNull}}" />
+                                                <!-- Style Trigger für Farbe wäre hier nice, oder einfach Standard -->
+                                                <TextBlock Text="gp" VerticalAlignment="Center"
+                                                           Foreground="{DynamicResource BrushTextDisabled}"
+                                                           FontSize="10" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Footer -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10" Margin="0,15,0,0">
+            <Button Content="Cancel" Command="{Binding CancelCommand}"
+                    Background="{DynamicResource BrushSurfaceElevated}"
+                    BorderBrush="{DynamicResource BrushBorder}"
+                    BorderThickness="1"
+                    Foreground="{DynamicResource BrushTextPrimary}"
+                    Padding="20,10" />
+            <Button Content="Save &amp; Calculate" Command="{Binding SaveCommand}" Classes="Primary" Padding="20,10" />
+        </StackPanel>
+
+        <Grid Grid.RowSpan="3" Background="{DynamicResource BrushOverlay}" IsVisible="{Binding IsLoading}">
+            <ProgressBar IsIndeterminate="True" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Grid>
+    </Grid>
+</UserControl>

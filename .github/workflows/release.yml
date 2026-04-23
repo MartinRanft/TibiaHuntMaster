@@ -1,0 +1,279 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+env:
+  APP_NAME: TibiaHuntMaster
+  APP_PROJECT: TibiaHuntMaster.App/TibiaHuntMaster.App.csproj
+
+jobs:
+  guard:
+    name: Guard Release Execution
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.guard.outputs.should_run }}
+
+    steps:
+      - name: Evaluate release guard
+        id: guard
+        shell: bash
+        env:
+          RELEASE_ENABLED: ${{ vars.RELEASE_ENABLED }}
+          RELEASE_REPOSITORY: ${{ vars.RELEASE_REPOSITORY }}
+        run: |
+          should_run="false"
+
+          if [ "$RELEASE_ENABLED" = "true" ] && [ -n "$RELEASE_REPOSITORY" ] && [ "${{ github.repository }}" = "$RELEASE_REPOSITORY" ]; then
+            should_run="true"
+          fi
+
+          echo "should_run=$should_run" >> "$GITHUB_OUTPUT"
+
+  tests:
+    name: Run Tests
+    needs: guard
+    if: needs.guard.outputs.should_run == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore Dependencies
+        run: dotnet restore
+
+      - name: Run Tests
+        run: dotnet test TibiaHuntMaster.sln --no-restore --verbosity normal
+
+  build-windows:
+    name: Build Windows (win-x64)
+    if: needs.guard.outputs.should_run == 'true'
+    needs: [guard, tests]
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore RID assets
+        run: dotnet restore ${{ env.APP_PROJECT }} -r win-x64
+
+      - name: Publish win-x64 (no debug symbols)
+        shell: pwsh
+        run: |
+          dotnet publish ${{ env.APP_PROJECT }} `
+            -c Release `
+            -r win-x64 `
+            --self-contained true `
+            -p:DebugType=None `
+            -p:DebugSymbols=false `
+            -o ./publish/win-x64
+
+      - name: Package zip
+        shell: pwsh
+        run: |
+          Compress-Archive -Path ./publish/win-x64/* -DestinationPath ./TibiaHuntMaster-win-x64.zip -Force
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-win-x64
+          path: TibiaHuntMaster-win-x64.zip
+
+  build-linux-appimage:
+    name: Build Linux AppImage (linux-x64)
+    if: needs.guard.outputs.should_run == 'true'
+    needs: [guard, tests]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore RID assets
+        run: dotnet restore ${{ env.APP_PROJECT }} -r linux-x64
+
+      - name: Publish linux-x64 (no debug symbols)
+        run: |
+          dotnet publish ${{ env.APP_PROJECT }} \
+            -c Release \
+            -r linux-x64 \
+            --self-contained true \
+            -p:DebugType=None \
+            -p:DebugSymbols=false \
+            -o ./publish/linux-x64
+
+      - name: Build AppDir structure
+        run: |
+          mkdir -p AppDir/usr/bin
+          cp -a ./publish/linux-x64/. AppDir/usr/bin/
+
+          cat > AppDir/AppRun <<'EOF'
+          #!/bin/sh
+          HERE="$(dirname "$(readlink -f "$0")")"
+          exec "$HERE/usr/bin/TibiaHuntMaster.App" "$@"
+          EOF
+          chmod +x AppDir/AppRun
+
+          cat > AppDir/TibiaHuntMaster.desktop <<'EOF'
+          [Desktop Entry]
+          Type=Application
+          Name=TibiaHuntMaster
+          Exec=TibiaHuntMaster.App
+          Icon=tibiahuntmaster
+          Categories=Game;Utility;
+          Terminal=false
+          EOF
+
+          cp TibiaHuntMaster.App/Assets/logo.png AppDir/tibiahuntmaster.png
+          cp TibiaHuntMaster.App/Assets/logo.png AppDir/.DirIcon
+
+      - name: Build AppImage
+        run: |
+          curl -L -o appimagetool-x86_64.AppImage \
+            https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x appimagetool-x86_64.AppImage
+          ARCH=x86_64 ./appimagetool-x86_64.AppImage --appimage-extract-and-run \
+            AppDir TibiaHuntMaster-linux-x64.AppImage
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-linux-appimage
+          path: TibiaHuntMaster-linux-x64.AppImage
+
+  build-macos:
+    name: Build macOS (${{ matrix.rid }})
+    if: needs.guard.outputs.should_run == 'true'
+    needs: [guard, tests]
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        rid: [osx-x64, osx-arm64]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore RID assets
+        run: dotnet restore ${{ env.APP_PROJECT }} -r ${{ matrix.rid }}
+
+      - name: Publish ${{ matrix.rid }} (no debug symbols)
+        run: |
+          dotnet publish ${{ env.APP_PROJECT }} \
+            -c Release \
+            -r ${{ matrix.rid }} \
+            --self-contained true \
+            -p:DebugType=None \
+            -p:DebugSymbols=false \
+            -o ./publish/${{ matrix.rid }}
+
+      - name: Package tar.gz
+        run: |
+          tar -czf TibiaHuntMaster-${{ matrix.rid }}.tar.gz -C ./publish/${{ matrix.rid }} .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.rid }}
+          path: TibiaHuntMaster-${{ matrix.rid }}.tar.gz
+
+  create-release:
+    name: Create GitHub Release
+    if: needs.guard.outputs.should_run == 'true'
+    needs: [guard, build-windows, build-linux-appimage, build-macos]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: release-*
+          merge-multiple: true
+          path: release-assets
+
+      - name: Generate checksums and updater manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          TAG_NAME="${GITHUB_REF_NAME}"
+          VERSION="${TAG_NAME#v}"
+          REPO="${GITHUB_REPOSITORY}"
+          BASE_URL="https://github.com/${REPO}/releases/download/${TAG_NAME}"
+
+          cd release-assets
+
+          sha256sum ./* > checksums.txt
+
+          python3 <<'PY'
+          import hashlib
+          import json
+          import os
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          tag_name = os.environ["GITHUB_REF_NAME"]
+          version = tag_name[1:] if tag_name.startswith("v") else tag_name
+          repo = os.environ["GITHUB_REPOSITORY"]
+          base_url = f"https://github.com/{repo}/releases/download/{tag_name}"
+
+          files = {
+              "windowsX64": "TibiaHuntMaster-win-x64.zip",
+              "linuxX64": "TibiaHuntMaster-linux-x64.AppImage",
+              "osxX64": "TibiaHuntMaster-osx-x64.tar.gz",
+              "osxArm64": "TibiaHuntMaster-osx-arm64.tar.gz",
+          }
+
+          manifest = {
+              "version": version,
+              "tag": tag_name,
+              "channel": "stable",
+              "publishedAtUtc": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+          }
+
+          for key, filename in files.items():
+              path = Path(filename)
+              if not path.exists():
+                  continue
+
+              sha256 = hashlib.sha256(path.read_bytes()).hexdigest()
+              manifest[key] = {
+                  "fileName": filename,
+                  "url": f"{base_url}/{filename}",
+                  "sha256": sha256,
+              }
+
+          Path("latest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+          PY
+
+      - name: Publish release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release-assets/*
+          draft: false
+          prerelease: false
+          generate_release_notes: true

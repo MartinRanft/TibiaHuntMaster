@@ -1,0 +1,146 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:components="using:TibiaHuntMaster.App.Components"
+             xmlns:loc="using:TibiaHuntMaster.App.Extensions"
+             xmlns:primitives="clr-namespace:Avalonia.Controls.Primitives;assembly=Avalonia.Controls"
+             x:Class="TibiaHuntMaster.App.Components.DateRangeCalendar"
+             x:DataType="components:DateRangeCalendar"
+             x:CompileBindings="False">
+
+    <UserControl.Styles>
+        <Style Selector="Button.CalendarDay">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="1" />
+            <Setter Property="Height" Value="38" />
+            <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+        </Style>
+
+        <Style Selector="Button.CalendarDay:pointerover">
+            <Setter Property="Background" Value="#10FFFFFF" />
+        </Style>
+
+        <Style Selector="Button.CalendarDay.rangeFill">
+            <Setter Property="Background" Value="#F5F5F5" />
+            <Setter Property="Foreground" Value="#111111" />
+        </Style>
+
+        <Style Selector="Button.CalendarDay.rangeStart">
+            <Setter Property="Background" Value="#FFFFFF" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BrushAccentGold}" />
+            <Setter Property="Foreground" Value="#111111" />
+        </Style>
+
+        <Style Selector="Button.CalendarDay.rangeEnd">
+            <Setter Property="Background" Value="#FFFFFF" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BrushAccentGold}" />
+            <Setter Property="Foreground" Value="#111111" />
+        </Style>
+
+        <Style Selector="Button.CalendarDay.outsideMonth">
+            <Setter Property="Opacity" Value="0.35" />
+        </Style>
+
+        <Style Selector="Button.CalendarDay.today">
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BrushBorderLight}" />
+        </Style>
+    </UserControl.Styles>
+
+    <Border Background="{DynamicResource BrushSurface}"
+            BorderBrush="{DynamicResource BrushBorder}"
+            BorderThickness="1"
+            CornerRadius="{StaticResource RadiusMedium}"
+            Padding="14"
+            MinWidth="320"
+            MaxWidth="360">
+
+        <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
+            <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="6">
+                <Button Grid.Column="0"
+                        Name="PrevMonthButton"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Padding="8,4"
+                        Click="PrevMonthButton_Click">
+                    <TextBlock Text="◀" FontSize="12" />
+                </Button>
+
+                <TextBlock Grid.Column="1"
+                           Text="{Binding CurrentMonth, StringFormat='{}{0:MMMM yyyy}'}"
+                           FontSize="13"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource BrushTextPrimary}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+
+                <Button Grid.Column="2"
+                        Name="ClearButton"
+                        IsVisible="{Binding StartDate, Converter={x:Static ObjectConverters.IsNotNull}}"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Padding="8,4"
+                        Click="ClearButton_Click"
+                        ToolTip.Tip="{loc:Localize History_ClearDateFilters}">
+                    <TextBlock Text="✕" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" />
+                </Button>
+
+                <Button Grid.Column="3"
+                        Name="NextMonthButton"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Padding="8,4"
+                        Click="NextMonthButton_Click">
+                    <TextBlock Text="▶" FontSize="12" />
+                </Button>
+            </Grid>
+
+            <ItemsControl Grid.Row="1" ItemsSource="{Binding WeekdayHeaders}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <primitives:UniformGrid Rows="1" Columns="7" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}"
+                                   FontSize="10"
+                                   FontWeight="Medium"
+                                   Foreground="{DynamicResource BrushTextTertiary}"
+                                   HorizontalAlignment="Center" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <ItemsControl Grid.Row="2" ItemsSource="{Binding Days}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <primitives:UniformGrid Rows="6" Columns="7" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="components:CalendarDay">
+                        <Button Tag="{Binding}"
+                                Classes="CalendarDay"
+                                Classes.rangeFill="{Binding IsInRange}"
+                                Classes.rangeStart="{Binding IsRangeStart}"
+                                Classes.rangeEnd="{Binding IsRangeEnd}"
+                                Classes.outsideMonth="{Binding !IsCurrentMonth}"
+                                Classes.today="{Binding IsToday}">
+                            <TextBlock Text="{Binding Day}"
+                                       FontSize="12"
+                                       FontWeight="SemiBold"
+                                       Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+    </Border>
+</UserControl>

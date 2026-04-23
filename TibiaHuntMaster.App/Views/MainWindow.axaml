@@ -1,0 +1,108 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:TibiaHuntMaster.App.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+        x:Class="TibiaHuntMaster.App.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/logo.png"
+        Title="{Binding WindowTitle}"
+        WindowStartupLocation="CenterScreen"
+        Width="1200" Height="800"
+        Background="#1e1e1e">
+
+    <Design.DataContext>
+        <!-- Für die Vorschau im Designer -->
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,*"> <!-- Root Grid -->
+
+        <!-- CONTENT -->
+        <TransitioningContentControl Grid.Row="1" Content="{Binding CurrentView}" />
+
+        <!-- BANNER OVERLAY (Zeigt sich nur wenn Message da ist) -->
+        <!-- BANNER OVERLAY -->
+        <Border Grid.Row="0"
+                IsVisible="{Binding IsBannerVisible}"
+                Padding="15, 8">
+
+            <Border.Styles>
+                <Style Selector="Border">
+                    <Setter Property="Background" Value="#2196f3" />
+                </Style>
+                <!-- Warnung (Missing DB / Retry): Gold -->
+                <Style Selector="Border[Tag=True]">
+                    <Setter Property="Background" Value="#FFD700" />
+                </Style>
+            </Border.Styles>
+
+            <Border.Tag>
+                <Binding Path="StatusService.IsCriticalMissing" />
+            </Border.Tag>
+
+            <!-- ÄNDERUNG: Grid statt StackPanel für Cancel-Button rechts -->
+            <Grid ColumnDefinitions="*, Auto">
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+
+                    <!-- Icon / Spinner -->
+                    <Panel Margin="0,0,10,0">
+                        <TextBlock Text="⚠️" IsVisible="{Binding StatusService.IsCriticalMissing}"
+                                   Foreground="Black" VerticalAlignment="Center" FontSize="16" />
+
+                        <ProgressBar IsIndeterminate="True"
+                                     IsVisible="{Binding StatusService.IsSyncing}"
+                                     Foreground="{DynamicResource BrushTextPrimary}"
+                                     Width="20" Height="20" />
+                    </Panel>
+
+                    <!-- Text -->
+                    <TextBlock Text="{Binding StatusService.StatusMessage}"
+                               VerticalAlignment="Center" FontWeight="Bold"
+                               TextAlignment="Center">
+                        <TextBlock.Styles>
+                            <Style Selector="TextBlock">
+                                <Setter Property="Foreground" Value="White" />
+                            </Style>
+                            <Style Selector="TextBlock[Tag=True]">
+                                <Setter Property="Foreground" Value="Black" />
+                            </Style>
+                        </TextBlock.Styles>
+                        <TextBlock.Tag>
+                            <Binding Path="StatusService.IsCriticalMissing" />
+                        </TextBlock.Tag>
+                    </TextBlock>
+                </StackPanel>
+
+                <!-- Cancel Button -->
+                <Button Grid.Column="1" Command="{Binding CancelSyncCommand}"
+                        IsVisible="{Binding StatusService.IsSyncing}"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Padding="10,5"
+                        Margin="10,0,10,0"
+                        VerticalAlignment="Center"
+                        ToolTip.Tip="Cancel sync">
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <TextBlock Text="✖" FontSize="14" FontWeight="Bold" VerticalAlignment="Center">
+                            <TextBlock.Styles>
+                                <Style Selector="TextBlock">
+                                    <Setter Property="Foreground" Value="White" />
+                                </Style>
+                                <Style Selector="TextBlock[Tag=True]">
+                                    <Setter Property="Foreground" Value="Black" />
+                                </Style>
+                            </TextBlock.Styles>
+                            <TextBlock.Tag>
+                                <Binding Path="StatusService.IsCriticalMissing" />
+                            </TextBlock.Tag>
+                        </TextBlock>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

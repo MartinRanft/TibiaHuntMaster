@@ -1,0 +1,166 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TibiaHuntMaster.App.ViewModels.Dashboard"
+             xmlns:loc="using:TibiaHuntMaster.App.Extensions"
+             x:Class="TibiaHuntMaster.App.Views.Dashboard.GoalHistoryView"
+             x:DataType="vm:GoalHistoryViewModel">
+
+    <Grid Margin="{StaticResource Padding2XL}">
+        <Grid RowDefinitions="Auto, *">
+            <!-- Header -->
+            <StackPanel Grid.Row="0" Margin="0,0,0,20">
+                <TextBlock Text="{loc:Localize GoalHistory_Title}"
+                           FontSize="28"
+                           FontWeight="Bold"
+                           Foreground="{DynamicResource BrushTextPrimary}"
+                           Margin="0,0,0,5" />
+                <TextBlock Text="{Binding CharacterName}"
+                           FontSize="16"
+                           Foreground="{DynamicResource BrushTextSecondary}" />
+            </StackPanel>
+
+            <!-- Content -->
+            <ScrollViewer Grid.Row="1">
+                <StackPanel Spacing="20">
+                    <!-- Completed Goals Section -->
+                    <Border Background="{DynamicResource BrushSurfaceElevated}"
+                            CornerRadius="8"
+                            Padding="20">
+                        <StackPanel>
+                            <TextBlock Text="{loc:Localize GoalHistory_CompletedGoals}"
+                                       FontSize="18"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource BrushSuccess}"
+                                       Margin="0,0,0,15" />
+
+                            <ItemsControl ItemsSource="{Binding CompletedGoals}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:GoalHistoryItem">
+                                        <Border Background="{DynamicResource BrushSurface}"
+                                                CornerRadius="6"
+                                                Padding="15"
+                                                Margin="0,0,0,10">
+                                            <Grid ColumnDefinitions="Auto, *, Auto">
+                                                <!-- Icon -->
+                                                <TextBlock Grid.Column="0"
+                                                           Text="{Binding TypeIcon}"
+                                                           FontSize="24"
+                                                           Margin="0,0,15,0" />
+
+                                                <!-- Info -->
+                                                <StackPanel Grid.Column="1">
+                                                    <TextBlock Text="{Binding Title}"
+                                                               FontSize="16"
+                                                               FontWeight="SemiBold"
+                                                               Foreground="{DynamicResource BrushTextPrimary}" />
+                                                    <TextBlock Text="{Binding ProgressDisplay}"
+                                                               FontSize="14"
+                                                               Foreground="{DynamicResource BrushTextSecondary}"
+                                                               Margin="0,2,0,0" />
+                                                    <TextBlock Text="{Binding CompletedDate}"
+                                                               FontSize="12"
+                                                               Foreground="{DynamicResource BrushTextTertiary}"
+                                                               Margin="0,5,0,0" />
+                                                </StackPanel>
+
+                                                <!-- Progress -->
+                                                <TextBlock Grid.Column="2"
+                                                           Text="100%"
+                                                           FontSize="18"
+                                                           FontWeight="Bold"
+                                                           Foreground="{DynamicResource BrushSuccess}"
+                                                           VerticalAlignment="Center" />
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <TextBlock Text="{loc:Localize GoalHistory_NoCompleted}"
+                                       IsVisible="{Binding !CompletedGoals.Count}"
+                                       HorizontalAlignment="Center"
+                                       Foreground="{DynamicResource BrushTextMuted}"
+                                       FontStyle="Italic"
+                                       Margin="0,20,0,20" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Abandoned Goals Section -->
+                    <Border Background="{DynamicResource BrushSurfaceElevated}"
+                            CornerRadius="8"
+                            Padding="20"
+                            IsVisible="{Binding AbandonedGoals.Count}">
+                        <StackPanel>
+                            <TextBlock Text="{loc:Localize GoalHistory_AbandonedGoals}"
+                                       FontSize="18"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource BrushTextSecondary}"
+                                       Margin="0,0,0,15" />
+
+                            <ItemsControl ItemsSource="{Binding AbandonedGoals}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:GoalHistoryItem">
+                                        <Border Background="{DynamicResource BrushSurface}"
+                                                CornerRadius="6"
+                                                Padding="15"
+                                                Margin="0,0,0,10"
+                                                Opacity="0.6">
+                                            <Grid ColumnDefinitions="Auto, *, Auto">
+                                                <!-- Icon -->
+                                                <TextBlock Grid.Column="0"
+                                                           Text="{Binding TypeIcon}"
+                                                           FontSize="24"
+                                                           Margin="0,0,15,0" />
+
+                                                <!-- Info -->
+                                                <StackPanel Grid.Column="1">
+                                                    <TextBlock Text="{Binding Title}"
+                                                               FontSize="16"
+                                                               FontWeight="SemiBold"
+                                                               Foreground="{DynamicResource BrushTextPrimary}" />
+                                                    <TextBlock Text="{Binding ProgressDisplay}"
+                                                               FontSize="14"
+                                                               Foreground="{DynamicResource BrushTextSecondary}"
+                                                               Margin="0,2,0,0" />
+                                                    <TextBlock Text="{Binding CompletedDate}"
+                                                               FontSize="12"
+                                                               Foreground="{DynamicResource BrushTextTertiary}"
+                                                               Margin="0,5,0,0" />
+                                                </StackPanel>
+
+                                                <!-- Progress -->
+                                                <TextBlock Grid.Column="2"
+                                                           Text="{Binding Percentage, StringFormat='{}{0:F0}%'}"
+                                                           FontSize="18"
+                                                           FontWeight="Bold"
+                                                           Foreground="{DynamicResource BrushTextMuted}"
+                                                           VerticalAlignment="Center" />
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Loading Overlay -->
+            <Border Grid.Row="1"
+                    Background="{DynamicResource BrushOverlay}"
+                    IsVisible="{Binding IsLoading}">
+                <StackPanel HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Spacing="15">
+                    <ProgressBar IsIndeterminate="True"
+                                 Width="200"
+                                 Height="4"
+                                 Foreground="{DynamicResource BrushAccentGold}" />
+                    <TextBlock Text="{loc:Localize GoalHistory_Loading}"
+                               Foreground="{DynamicResource BrushTextPrimary}"
+                               FontSize="14" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

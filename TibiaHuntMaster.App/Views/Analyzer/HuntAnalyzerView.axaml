@@ -1,0 +1,89 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TibiaHuntMaster.App.ViewModels.Analyzer"
+             xmlns:components="using:TibiaHuntMaster.App.Views.Analyzer.Components"
+             xmlns:loc="using:TibiaHuntMaster.App.Extensions"
+             x:Name="Root"
+             x:Class="TibiaHuntMaster.App.Views.Analyzer.HuntAnalyzerView"
+             x:DataType="vm:HuntAnalyzerViewModel">
+
+    <Grid Margin="{StaticResource Padding2XL}" x:CompileBindings="False">
+        <!-- STATE 1: INPUT -->
+        <components:InputView IsVisible="{Binding !IsAnalyzed}"
+                              DataContext="{Binding}" />
+
+        <!-- STATE 2: RESULT -->
+        <Grid IsVisible="{Binding IsAnalyzed}">
+            <!-- SOLO RESULT -->
+            <components:SoloResultView IsVisible="{Binding !IsTeamHunt}"
+                                       DataContext="{Binding}" />
+
+            <!-- TEAM RESULT -->
+            <components:TeamResultView IsVisible="{Binding IsTeamHunt}"
+                                       DataContext="{Binding}" />
+        </Grid>
+
+        <!-- LOADING OVERLAY -->
+        <Border Background="{DynamicResource BrushOverlay}" IsVisible="{Binding IsLoading}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="15">
+                <ProgressBar IsIndeterminate="True"
+                             Width="200"
+                             Height="4"
+                             Foreground="{DynamicResource BrushAccentGold}" />
+                <TextBlock Text="Loading hunt session..."
+                           Foreground="{DynamicResource BrushTextPrimary}"
+                           FontSize="14" />
+            </StackPanel>
+        </Border>
+
+        <Grid IsVisible="{Binding IsSummaryDialogOpen}"
+              Background="{DynamicResource BrushOverlay}"
+              Margin="-40"
+              PointerPressed="SummaryOverlayBackdrop_PointerPressed">
+            <Border x:Name="SummaryDialogCard"
+                    MaxWidth="920"
+                    Margin="24"
+                    Background="{DynamicResource BrushSurfaceElevated}"
+                    BorderBrush="{DynamicResource BrushBorder}"
+                    BorderThickness="1"
+                    CornerRadius="{StaticResource RadiusLarge}"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center">
+                <Grid RowDefinitions="Auto,Auto,*"
+                      RowSpacing="16"
+                      Margin="26">
+                    <Grid ColumnDefinitions="*,Auto"
+                          ColumnSpacing="16">
+                        <StackPanel>
+                            <TextBlock Text="{loc:Localize Analyzer_SummaryDialogTitle}"
+                                       FontSize="20"
+                                       FontWeight="Bold"
+                                       Foreground="{DynamicResource BrushTextPrimary}" />
+                            <TextBlock Text="{loc:Localize Analyzer_SummaryDialogHint}"
+                                       Margin="0,4,0,0"
+                                       Foreground="{DynamicResource BrushTextSecondary}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+
+                        <Button Grid.Column="1"
+                                Content="{loc:Localize Common_Close}"
+                                Command="{Binding CloseSummaryDialogCommand}"
+                                Background="Transparent"
+                                Foreground="{DynamicResource BrushTextSecondary}" />
+                    </Grid>
+
+                    <Separator Grid.Row="1"
+                               Background="{DynamicResource BrushBorder}" />
+
+                    <ScrollViewer Grid.Row="2"
+                                  MaxHeight="620"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Auto">
+                        <components:SummaryGeneratorCard />
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+
+</UserControl>

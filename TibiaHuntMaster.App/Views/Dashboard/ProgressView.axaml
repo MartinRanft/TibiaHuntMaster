@@ -1,0 +1,319 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TibiaHuntMaster.App.ViewModels.Dashboard"
+             xmlns:loc="using:TibiaHuntMaster.App.Extensions"
+             xmlns:conv="using:TibiaHuntMaster.App.Converters"
+             x:Class="TibiaHuntMaster.App.Views.Dashboard.ProgressView"
+             x:DataType="vm:ProgressViewModel">
+
+    <UserControl.Resources>
+        <conv:TibiaCurrencyConverter x:Key="TibiaCurrencyConverter" />
+        <conv:NullableIntConverter x:Key="NullableIntConverter" />
+    </UserControl.Resources>
+
+    <Grid RowDefinitions="Auto, Auto, *">
+        <Border Background="{DynamicResource BrushSurfaceElevated}" CornerRadius="8,8,0,0" Padding="20"
+                BorderThickness="0,0,0,1">
+            <Grid ColumnDefinitions="*, Auto">
+                <StackPanel Spacing="4">
+                    <TextBlock Text="{loc:Localize Progress_Title}" FontSize="22" FontWeight="SemiBold"
+                               Foreground="{DynamicResource BrushTextPrimary}" />
+                    <TextBlock Text="{loc:Localize Progress_Subtitle}" FontSize="13"
+                               Foreground="{DynamicResource BrushTextSecondary}" />
+                </StackPanel>
+
+                <ComboBox Grid.Column="1" Width="160"
+                          ItemsSource="{Binding ProgressPeriodOptions}"
+                          SelectedIndex="{Binding SelectedProgressPeriodIndex}" />
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1" ColumnDefinitions="*, 1, *, 1, *">
+            <Border Grid.Column="0" Background="{DynamicResource BrushSurfaceElevated}" Padding="18"
+                    BorderThickness="0,0,0,1">
+                <StackPanel>
+                    <TextBlock Text="{loc:Localize Progress_SessionsInPeriod}" FontSize="11" FontWeight="Bold"
+                               Foreground="{DynamicResource BrushTextTertiary}" Margin="0,0,0,5" />
+                    <TextBlock Text="{Binding InsightSessionCount}" FontSize="26" FontWeight="SemiBold"
+                               Foreground="{DynamicResource BrushTextPrimary}" />
+                </StackPanel>
+            </Border>
+            <Rectangle Grid.Column="1" Fill="{DynamicResource BrushBorder}" />
+            <Border Grid.Column="2" Background="{DynamicResource BrushSurfaceElevated}" Padding="18"
+                    BorderThickness="0,0,0,1">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="{loc:Localize Overview_AvgXpPerHour}" FontSize="11" FontWeight="Bold"
+                               Foreground="{DynamicResource BrushTextTertiary}" />
+                    <TextBlock Text="{Binding InsightAverageXpPerHour, Converter={StaticResource TibiaCurrencyConverter}}"
+                               FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource BrushInfo}" />
+                    <TextBlock Text="{Binding InsightXpTrendText}" FontSize="11"
+                               Foreground="{DynamicResource BrushTextSecondary}" />
+                </StackPanel>
+            </Border>
+            <Rectangle Grid.Column="3" Fill="{DynamicResource BrushBorder}" />
+            <Border Grid.Column="4" Background="{DynamicResource BrushSurfaceElevated}" Padding="18"
+                    BorderThickness="0,0,0,1">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="{loc:Localize Overview_LevelDelta}" FontSize="11" FontWeight="Bold"
+                               Foreground="{DynamicResource BrushTextTertiary}" />
+                    <TextBlock Text="{Binding InsightLevelDeltaText}" FontSize="26" FontWeight="SemiBold"
+                               Foreground="{DynamicResource BrushAccentGold}" />
+                    <TextBlock Text="{Binding InsightLevelRangeText}" FontSize="11"
+                               Foreground="{DynamicResource BrushTextSecondary}" />
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <ScrollViewer Grid.Row="2" Margin="0,20,0,0" VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="20">
+                <Border Background="{DynamicResource BrushSurfaceElevated}" CornerRadius="0,0,8,0"
+                        Padding="20">
+                    <StackPanel Spacing="16">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="{loc:Localize Progress_LevelTimelineTitle}" FontSize="18" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource BrushTextPrimary}" />
+                            <TextBlock Text="{loc:Localize Progress_LevelTimelineSubtitle}" FontSize="12"
+                                       Foreground="{DynamicResource BrushTextSecondary}" />
+                        </StackPanel>
+
+                        <TextBlock Text="{loc:Localize Progress_NoLevelTimeline}"
+                                   Foreground="{DynamicResource BrushTextSecondary}"
+                                   IsVisible="{Binding !HasLevelTimeline}" />
+
+                        <Border IsVisible="{Binding HasLevelTimeline}"
+                                Background="{DynamicResource BrushSurface}" CornerRadius="10" Padding="14"
+                                BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1">
+                            <StackPanel Spacing="12">
+                                <Grid ColumnDefinitions="Auto, *, Auto">
+                                    <TextBlock Text="{Binding LevelChartMinLabel}" FontSize="11"
+                                               Foreground="{DynamicResource BrushTextSecondary}" />
+                                    <TextBlock Grid.Column="2" Text="{Binding LevelChartMaxLabel}" FontSize="11"
+                                               Foreground="{DynamicResource BrushTextSecondary}" />
+                                </Grid>
+
+                                <Viewbox Stretch="Uniform">
+                                    <Canvas Width="{Binding LevelChartWidth}" Height="{Binding LevelChartHeight}">
+                                        <Rectangle Width="{Binding LevelChartWidth}" Height="{Binding LevelChartHeight}"
+                                                   RadiusX="12" RadiusY="12"
+                                                   Fill="#12000000"
+                                                   Stroke="#25FFFFFF" StrokeThickness="1" />
+                                        <Line StartPoint="24,45" EndPoint="656,45" Stroke="#18FFFFFF" StrokeThickness="1" />
+                                        <Line StartPoint="24,90" EndPoint="656,90" Stroke="#14FFFFFF" StrokeThickness="1" />
+                                        <Line StartPoint="24,135" EndPoint="656,135" Stroke="#18FFFFFF" StrokeThickness="1" />
+
+                                        <Path Data="{Binding LevelChartPathData}" Stroke="{DynamicResource BrushAccentGold}"
+                                              StrokeThickness="3" />
+
+                                        <ItemsControl ItemsSource="{Binding LevelChartPoints}"
+                                                      Width="{Binding LevelChartWidth}"
+                                                      Height="{Binding LevelChartHeight}">
+                                            <ItemsControl.Styles>
+                                                <Style Selector="ItemsControl > ContentPresenter">
+                                                    <Setter Property="Canvas.Left" Value="{Binding X}" />
+                                                    <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                                                </Style>
+                                            </ItemsControl.Styles>
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <Canvas />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="vm:LevelChartPointItem">
+                                                    <Border Width="12" Height="12" CornerRadius="6"
+                                                            Background="{DynamicResource BrushAccentGold}"
+                                                            BorderBrush="{DynamicResource BrushSurfaceElevated}"
+                                                            BorderThickness="2"
+                                                            ToolTip.Tip="{Binding Tooltip}" />
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Canvas>
+                                </Viewbox>
+
+                                <ItemsControl ItemsSource="{Binding LevelTimelineItems}"
+                                              IsVisible="{Binding HasLevelTimeline}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:LevelTimelineChipItem">
+                                            <Border Background="{DynamicResource BrushBackground}" BorderBrush="{DynamicResource BrushBorder}"
+                                                    BorderThickness="1" CornerRadius="999" Padding="10,6" Margin="0,0,8,8">
+                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                    <TextBlock Text="{Binding DateText}" FontSize="11"
+                                                               Foreground="{DynamicResource BrushTextSecondary}" />
+                                                    <TextBlock Text="{Binding LevelText}" FontSize="11" FontWeight="Bold"
+                                                               Foreground="{DynamicResource BrushAccentGold}" />
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Background="{DynamicResource BrushSurface}" CornerRadius="10" Padding="14"
+                                BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1">
+                            <StackPanel Spacing="12">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="{loc:Localize Progress_LevelForecastTitle}" FontSize="16" FontWeight="SemiBold"
+                                               Foreground="{DynamicResource BrushTextPrimary}" />
+                                    <TextBlock Text="{loc:Localize Progress_LevelForecastSubtitle}" FontSize="12"
+                                               TextWrapping="Wrap"
+                                               Foreground="{DynamicResource BrushTextSecondary}" />
+                                </StackPanel>
+
+                                <Grid ColumnDefinitions="220, Auto" ColumnSpacing="12">
+                                    <StackPanel Spacing="6">
+                                        <TextBlock Text="{loc:Localize Progress_LevelForecastTargetLevel}" FontSize="11"
+                                                   Foreground="{DynamicResource BrushTextTertiary}" />
+                                        <TextBox Text="{Binding LevelForecastTargetLevelInput, Converter={StaticResource NullableIntConverter}}"
+                                                 PlaceholderText="{loc:Localize Progress_LevelForecastTargetLevelWatermark}" />
+                                    </StackPanel>
+                                    <Button Grid.Column="1"
+                                            Content="{loc:Localize Progress_LevelForecastCalculate}"
+                                            Command="{Binding CalculateLevelForecastCommand}"
+                                            VerticalAlignment="Bottom" />
+                                </Grid>
+
+                                <TextBlock Text="{Binding LevelForecastStatusText}"
+                                           Foreground="{DynamicResource BrushTextSecondary}"
+                                           TextWrapping="Wrap"
+                                           IsVisible="{Binding !HasLevelForecast}" />
+
+                                <StackPanel IsVisible="{Binding HasLevelForecast}" Spacing="12">
+                                    <TextBlock Text="{Binding LevelForecastSummaryText}"
+                                               Foreground="{DynamicResource BrushTextSecondary}"
+                                               TextWrapping="Wrap" />
+                                    <TextBlock Text="{Binding LevelForecastCadenceText}"
+                                               Foreground="{DynamicResource BrushTextTertiary}"
+                                               TextWrapping="Wrap" />
+
+                                    <Border Background="{DynamicResource BrushBackground}" CornerRadius="10" Padding="14"
+                                            BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1">
+                                        <StackPanel Spacing="10">
+                                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                                <TextBlock Text="{Binding LevelForecastStartLabel}" FontSize="11"
+                                                           Foreground="{DynamicResource BrushTextSecondary}" />
+                                                <TextBlock Grid.Column="2" Text="{Binding LevelForecastEndLabel}" FontSize="11"
+                                                           Foreground="{DynamicResource BrushTextSecondary}" />
+                                            </Grid>
+                                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                                <TextBlock Text="{Binding LevelForecastMinLabel}" FontSize="11"
+                                                           Foreground="{DynamicResource BrushTextTertiary}" />
+                                                <TextBlock Grid.Column="2" Text="{Binding LevelForecastMaxLabel}" FontSize="11"
+                                                           Foreground="{DynamicResource BrushTextTertiary}" />
+                                            </Grid>
+
+                                            <Viewbox Stretch="Uniform">
+                                                <Canvas Width="{Binding LevelChartWidth}" Height="{Binding LevelForecastChartHeight}">
+                                                    <Rectangle Width="{Binding LevelChartWidth}" Height="{Binding LevelForecastChartHeight}"
+                                                               RadiusX="12" RadiusY="12"
+                                                               Fill="#12000000"
+                                                               Stroke="#25FFFFFF" StrokeThickness="1" />
+                                                    <Line StartPoint="24,35" EndPoint="656,35" Stroke="#18FFFFFF" StrokeThickness="1" />
+                                                    <Line StartPoint="24,70" EndPoint="656,70" Stroke="#14FFFFFF" StrokeThickness="1" />
+                                                    <Line StartPoint="24,105" EndPoint="656,105" Stroke="#18FFFFFF" StrokeThickness="1" />
+
+                                                    <Path Data="{Binding LevelForecastPathData}"
+                                                          Stroke="{DynamicResource BrushSuccess}"
+                                                          StrokeThickness="3" />
+
+                                                    <Border Canvas.Left="{Binding LevelForecastStartPointX}"
+                                                            Canvas.Top="{Binding LevelForecastStartPointY}"
+                                                            Width="12"
+                                                            Height="12"
+                                                            CornerRadius="6"
+                                                            Background="{DynamicResource BrushInfo}"
+                                                            BorderBrush="{DynamicResource BrushSurfaceElevated}"
+                                                            BorderThickness="2" />
+
+                                                    <ItemsControl ItemsSource="{Binding LevelForecastMarkers}"
+                                                                  Width="{Binding LevelChartWidth}"
+                                                                  Height="{Binding LevelForecastChartHeight}">
+                                                        <ItemsControl.Styles>
+                                                            <Style Selector="ItemsControl > ContentPresenter">
+                                                                <Setter Property="Canvas.Left" Value="{Binding X}" />
+                                                                <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                                                            </Style>
+                                                        </ItemsControl.Styles>
+                                                        <ItemsControl.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <Canvas />
+                                                            </ItemsPanelTemplate>
+                                                        </ItemsControl.ItemsPanel>
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate x:DataType="vm:LevelForecastMarkerItem">
+                                                                <Border Width="12" Height="12" CornerRadius="6"
+                                                                        Background="{DynamicResource BrushSuccess}"
+                                                                        BorderBrush="{DynamicResource BrushSurfaceElevated}"
+                                                                        BorderThickness="2"
+                                                                        ToolTip.Tip="{Binding Tooltip}" />
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </Canvas>
+                                            </Viewbox>
+
+                                            <ItemsControl ItemsSource="{Binding LevelForecastItems}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <WrapPanel />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="vm:LevelForecastChipItem">
+                                                        <Border Background="{DynamicResource BrushSurfaceElevated}"
+                                                                BorderBrush="{DynamicResource BrushBorder}"
+                                                                BorderThickness="1"
+                                                                CornerRadius="999"
+                                                                Padding="10,6"
+                                                                Margin="0,0,8,8">
+                                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                <TextBlock Text="{Binding DateText}" FontSize="11"
+                                                                           Foreground="{DynamicResource BrushTextSecondary}" />
+                                                                <TextBlock Text="{Binding TimeOffsetText}" FontSize="11"
+                                                                           Foreground="{DynamicResource BrushInfo}" />
+                                                                <TextBlock Text="{Binding LevelText}" FontSize="11" FontWeight="Bold"
+                                                                           Foreground="{DynamicResource BrushSuccess}" />
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                <Border Background="{DynamicResource BrushSurfaceElevated}" CornerRadius="8"
+                        Padding="20">
+                    <StackPanel Spacing="10">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="{loc:Localize Progress_SkillTimelineTitle}" FontSize="18" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource BrushTextPrimary}" />
+                            <TextBlock Text="{loc:Localize Progress_SkillTimelineSubtitle}" FontSize="12"
+                                       Foreground="{DynamicResource BrushTextSecondary}" />
+                        </StackPanel>
+
+                        <Border Background="{DynamicResource BrushSurface}" CornerRadius="10" Padding="14"
+                                BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1">
+                            <StackPanel Spacing="10">
+                                <TextBlock Text="{loc:Localize Progress_SkillTimelinePlaceholderTitle}" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource BrushTextPrimary}" />
+                                <TextBlock Text="{Binding SkillTimelineStatusText}" TextWrapping="Wrap"
+                                           Foreground="{DynamicResource BrushTextSecondary}" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

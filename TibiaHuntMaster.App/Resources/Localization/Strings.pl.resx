@@ -1,0 +1,1458 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" msdata:Ordinal="5" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- Common -->
+  <data name="Common_Save" xml:space="preserve">
+    <value>Zapisz</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="Common_Delete" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="Common_Edit" xml:space="preserve">
+    <value>Edytuj</value>
+  </data>
+  <data name="Common_Close" xml:space="preserve">
+    <value>Zamknij</value>
+  </data>
+  <data name="Common_Loading" xml:space="preserve">
+    <value>Ładowanie...</value>
+  </data>
+  <data name="Common_Error" xml:space="preserve">
+    <value>Błąd</value>
+  </data>
+
+  <!-- Navigation -->
+  <data name="Nav_Overview" xml:space="preserve">
+    <value>Przegląd</value>
+  </data>
+  <data name="NavDesc_Overview" xml:space="preserve">
+    <value>Podsumowanie, cele i stan postaci</value>
+  </data>
+  <data name="Nav_Progress" xml:space="preserve">
+    <value>Postęp</value>
+  </data>
+  <data name="NavDesc_Progress" xml:space="preserve">
+    <value>Osie czasu, trendy i rozwój</value>
+  </data>
+  <data name="Nav_Economy" xml:space="preserve">
+    <value>Ekonomia</value>
+  </data>
+  <data name="NavDesc_Economy" xml:space="preserve">
+    <value>Wartość depo, sprzedaże i rytm zysku</value>
+  </data>
+  <data name="Nav_HuntAnalyzer" xml:space="preserve">
+    <value>Analizator Łowów</value>
+  </data>
+  <data name="NavDesc_HuntAnalyzer" xml:space="preserve">
+    <value>Importuj, poprawiaj i zapisuj sesje łowów</value>
+  </data>
+  <data name="Nav_History" xml:space="preserve">
+    <value>Historia Łowów</value>
+  </data>
+  <data name="NavDesc_History" xml:space="preserve">
+    <value>Przeglądaj solo i team hunty</value>
+  </data>
+  <data name="Nav_HuntingPlaces" xml:space="preserve">
+    <value>Miejsca Łowów</value>
+  </data>
+  <data name="NavDesc_HuntingPlaces" xml:space="preserve">
+    <value>Porównuj spoty, statystyki i cele na mapie</value>
+  </data>
+  <data name="Nav_GoalHistory" xml:space="preserve">
+    <value>Historia Celów</value>
+  </data>
+  <data name="NavDesc_GoalHistory" xml:space="preserve">
+    <value>Przeglądaj ukończone i porzucone cele</value>
+  </data>
+
+  <!-- Goals (Old - kept for compatibility) -->
+  <data name="Goal_Level" xml:space="preserve">
+    <value>Poziom</value>
+  </data>
+  <data name="Goal_Gold" xml:space="preserve">
+    <value>Złoto</value>
+  </data>
+  <data name="Goal_Target" xml:space="preserve">
+    <value>Cel</value>
+  </data>
+  <data name="Goal_Progress" xml:space="preserve">
+    <value>Postęp</value>
+  </data>
+
+  <!-- Hunt Analyzer -->
+  <data name="Analyzer_PasteLog" xml:space="preserve">
+    <value>Wklej log łowów ze schowka</value>
+  </data>
+  <data name="Analyzer_Duration" xml:space="preserve">
+    <value>Czas trwania</value>
+  </data>
+  <data name="Analyzer_Experience" xml:space="preserve">
+    <value>Doświadczenie</value>
+  </data>
+  <data name="Analyzer_Loot" xml:space="preserve">
+    <value>Łup</value>
+  </data>
+  <data name="Analyzer_Supplies" xml:space="preserve">
+    <value>Zapasy</value>
+  </data>
+  <data name="Analyzer_Balance" xml:space="preserve">
+    <value>Bilans</value>
+  </data>
+
+  <!-- Imbuements -->
+  <data name="Imbuement_Configuration" xml:space="preserve">
+    <value>Konfiguracja Imbuementów</value>
+  </data>
+  <data name="Imbuement_Search" xml:space="preserve">
+    <value>Szukaj imbuementów...</value>
+  </data>
+  <data name="Imbuement_UseBlankScrolls" xml:space="preserve">
+    <value>Użyj Pustych Zwojów</value>
+  </data>
+
+  <!-- Setup -->
+  <data name="Setup_Initializing" xml:space="preserve">
+    <value>Inicjalizacja...</value>
+  </data>
+  <data name="Setup_CheckingDatabase" xml:space="preserve">
+    <value>Sprawdzanie integralności bazy danych...</value>
+  </data>
+  <data name="Setup_InitializingDatabase" xml:space="preserve">
+    <value>Inicjalizacja bazy danych (Pierwsze uruchomienie)...</value>
+  </data>
+  <data name="Setup_ServerUnreachable" xml:space="preserve">
+    <value>Serwer niedostępny. Używanie trybu offline...</value>
+  </data>
+  <data name="Setup_Ready" xml:space="preserve">
+    <value>Gotowe!</value>
+  </data>
+  <data name="Setup_CriticalError" xml:space="preserve">
+    <value>Błąd krytyczny: {0}</value>
+  </data>
+
+  <!-- Character Selection -->
+  <data name="CharSelection_Title" xml:space="preserve">
+    <value>POSTACIE</value>
+  </data>
+  <data name="CharSelection_Syncing" xml:space="preserve">
+    <value>Synchronizacja...</value>
+  </data>
+  <data name="CharSelection_AddCharacter" xml:space="preserve">
+    <value>Dodaj Postać</value>
+  </data>
+  <data name="CharSelection_SelectCharacter" xml:space="preserve">
+    <value>Wybierz postać</value>
+  </data>
+  <data name="CharSelection_EnterDashboard" xml:space="preserve">
+    <value>WEJDŹ DO PANELU</value>
+  </data>
+  <data name="CharSelection_ImportCharacter" xml:space="preserve">
+    <value>Importuj Postać</value>
+  </data>
+  <data name="CharSelection_NamePlaceholder" xml:space="preserve">
+    <value>Imię (np. Bubble)</value>
+  </data>
+  <data name="CharSelection_Import" xml:space="preserve">
+    <value>Importuj</value>
+  </data>
+  <data name="CharSelection_Guild" xml:space="preserve">
+    <value>GILDIA</value>
+  </data>
+  <data name="CharSelection_Residence" xml:space="preserve">
+    <value>MIEJSCE ZAMIESZKANIA</value>
+  </data>
+  <data name="CharSelection_Level" xml:space="preserve">
+    <value>Lvl {0}</value>
+  </data>
+
+  <!-- Dashboard -->
+  <data name="Dashboard_ToggleTheme" xml:space="preserve">
+    <value>Przełącz Motyw</value>
+  </data>
+  <data name="Dashboard_SwitchCharacter" xml:space="preserve">
+    <value>Zmień Postać</value>
+  </data>
+  <data name="Dashboard_Settings" xml:space="preserve">
+    <value>Ustawienia</value>
+  </data>
+  <data name="Dashboard_ExpandMenu" xml:space="preserve">
+    <value>Rozwiń menu</value>
+  </data>
+  <data name="Dashboard_CollapseMenu" xml:space="preserve">
+    <value>Zwiń menu</value>
+  </data>
+  <data name="Dashboard_ExportDiagnostics" xml:space="preserve">
+    <value>Eksportuj diagnostykę</value>
+  </data>
+  <data name="Dashboard_DiagnosticsExporting" xml:space="preserve">
+    <value>Tworzenie archiwum diagnostycznego...</value>
+  </data>
+  <data name="Dashboard_DiagnosticsExported" xml:space="preserve">
+    <value>Zapisano archiwum diagnostyczne: {0}</value>
+  </data>
+  <data name="Dashboard_DiagnosticsExportOpened" xml:space="preserve">
+    <value>Archiwum diagnostyczne zostało utworzone i otwarte w menedżerze plików</value>
+  </data>
+  <data name="Dashboard_DiagnosticsExportFailed" xml:space="preserve">
+    <value>Nie udało się utworzyć archiwum diagnostycznego</value>
+  </data>
+
+  <!-- Common UI -->
+  <data name="Common_Syncing" xml:space="preserve">
+    <value>Synchronizacja...</value>
+  </data>
+  <data name="Common_CancelSync" xml:space="preserve">
+    <value>Anuluj synchronizację</value>
+  </data>
+  <data name="Common_PasteFromClipboard" xml:space="preserve">
+    <value>Wklej ze Schowka</value>
+  </data>
+  <data name="Common_Back" xml:space="preserve">
+    <value>Wstecz</value>
+  </data>
+
+  <!-- Language Names -->
+  <data name="Language_English" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Language_German" xml:space="preserve">
+    <value>Deutsch</value>
+  </data>
+  <data name="Language_Polish" xml:space="preserve">
+    <value>Polski</value>
+  </data>
+  <data name="Language_Spanish" xml:space="preserve">
+    <value>Español</value>
+  </data>
+  <data name="Language_Portuguese" xml:space="preserve">
+    <value>Português</value>
+  </data>
+  <data name="Language_Swedish" xml:space="preserve">
+    <value>Svenska</value>
+  </data>
+  <data name="Settings_Language" xml:space="preserve">
+    <value>Język</value>
+  </data>
+  <data name="Settings_Theme" xml:space="preserve">
+    <value>Motyw</value>
+  </data>
+  <data name="Settings_ThemeDark" xml:space="preserve">
+    <value>Ciemny</value>
+  </data>
+  <data name="Settings_ThemeLight" xml:space="preserve">
+    <value>Jasny</value>
+  </data>
+  <data name="Settings_DatabaseSectionTitle" xml:space="preserve">
+    <value>Lokalna baza danych</value>
+  </data>
+  <data name="Settings_DatabaseSectionHint" xml:space="preserve">
+    <value>Zaktualizuj lub odbuduj lokalną bazę danych treści. Historia huntów, postacie i dane użytkownika nie zostaną usunięte.</value>
+  </data>
+  <data name="Settings_UpdateDatabase" xml:space="preserve">
+    <value>Aktualizuj DB</value>
+  </data>
+  <data name="Settings_RebuildDatabase" xml:space="preserve">
+    <value>Odbuduj DB</value>
+  </data>
+  <data name="Settings_RebuildDatabaseWarning" xml:space="preserve">
+    <value>To wyczyści i ponownie zaimportuje lokalne tabele treści z API. Historia huntów i dane użytkownika pozostaną bez zmian.</value>
+  </data>
+  <data name="Settings_RebuildDatabaseConfirm" xml:space="preserve">
+    <value>Potwierdź odbudowę</value>
+  </data>
+  <data name="Settings_DatabasePreparing" xml:space="preserve">
+    <value>Przygotowywanie danych pomocniczych...</value>
+  </data>
+  <data name="Settings_DatabaseUpdating" xml:space="preserve">
+    <value>Aktualizowanie lokalnej bazy danych...</value>
+  </data>
+  <data name="Settings_DatabaseRebuilding" xml:space="preserve">
+    <value>Odbudowywanie lokalnej bazy danych...</value>
+  </data>
+  <data name="Settings_DatabaseFinalizing" xml:space="preserve">
+    <value>Kończenie pracy na lokalnej bazie danych...</value>
+  </data>
+  <data name="Settings_DatabaseRefreshCompleted" xml:space="preserve">
+    <value>Aktualizacja bazy danych zakończona. Załadowano {0}, utworzono {1}, zaktualizowano {2}, pominięto {3}, niepowodzeń {4}.</value>
+  </data>
+  <data name="Settings_DatabaseRebuildCompleted" xml:space="preserve">
+    <value>Odbudowa bazy danych zakończona. Załadowano {0}, utworzono {1}, zaktualizowano {2}, pominięto {3}, niepowodzeń {4}.</value>
+  </data>
+  <data name="Settings_DatabaseMaintenanceFailed" xml:space="preserve">
+    <value>Operacja na bazie danych nie powiodła się: {0}</value>
+  </data>
+
+  <!-- Overview View -->
+  <data name="Overview_TotalProfit" xml:space="preserve">
+    <value>CAŁKOWITY ZYSK</value>
+  </data>
+  <data name="Overview_AvgXpPerHour" xml:space="preserve">
+    <value>ŚR. XP/GODZ.</value>
+  </data>
+  <data name="Overview_TrackedTime" xml:space="preserve">
+    <value>ŚLEDZONY CZAS</value>
+  </data>
+  <data name="Overview_ActiveGoals" xml:space="preserve">
+    <value>🎯 Aktywne Cele</value>
+  </data>
+  <data name="Overview_RecentDeaths" xml:space="preserve">
+    <value>☠ Ostatnie Śmierci</value>
+  </data>
+  <data name="Overview_NoDeaths" xml:space="preserve">
+    <value>Brak zarejestrowanych śmierci.</value>
+  </data>
+  <data name="Overview_NoActiveGoalsMessage" xml:space="preserve">
+    <value>Brak aktywnych celów. Kliknij +, aby utworzyć nowy!</value>
+  </data>
+  <data name="Overview_ShowHuntsInHistory" xml:space="preserve">
+    <value>Pokaż Łowy w Historii</value>
+  </data>
+  <data name="Overview_AddManualProgress" xml:space="preserve">
+    <value>Dodaj Postęp Ręcznie</value>
+  </data>
+  <data name="Overview_EditGoal" xml:space="preserve">
+    <value>Edytuj Cel</value>
+  </data>
+  <data name="Overview_DeleteGoal" xml:space="preserve">
+    <value>Usuń Cel</value>
+  </data>
+  <data name="Overview_ProgressInsights" xml:space="preserve">
+    <value>📊 Wgląd w postępy</value>
+  </data>
+  <data name="Overview_Period7Days" xml:space="preserve">
+    <value>Ostatnie 7 dni</value>
+  </data>
+  <data name="Overview_Period30Days" xml:space="preserve">
+    <value>Ostatnie 30 dni</value>
+  </data>
+  <data name="Overview_Period90Days" xml:space="preserve">
+    <value>Ostatnie 90 dni</value>
+  </data>
+  <data name="Overview_PeriodAll" xml:space="preserve">
+    <value>Cały okres</value>
+  </data>
+  <data name="Overview_SessionsInPeriod" xml:space="preserve">
+    <value>SESJE W OKRESIE</value>
+  </data>
+  <data name="Overview_AvgBalancePerHunt" xml:space="preserve">
+    <value>ŚR. BILANS / HUNT</value>
+  </data>
+  <data name="Overview_LevelDelta" xml:space="preserve">
+    <value>PRZYROST POZIOMU</value>
+  </data>
+  <data name="Overview_SkillProgress" xml:space="preserve">
+    <value>Postęp skilli:</value>
+  </data>
+  <data name="Overview_LevelTimeline" xml:space="preserve">
+    <value>Oś poziomów</value>
+  </data>
+  <data name="Overview_NoLevelTimeline" xml:space="preserve">
+    <value>Brak osi poziomów</value>
+  </data>
+  <data name="Overview_NoSkillDataYet" xml:space="preserve">
+    <value>Brak danych snapshotów skilli</value>
+  </data>
+  <data name="Overview_SkillDataAvailable" xml:space="preserve">
+    <value>Snapshoty skilli dostępne</value>
+  </data>
+  <data name="Overview_TrendUp" xml:space="preserve">
+    <value>▲ {0:N1}% vs poprzednie okno</value>
+  </data>
+  <data name="Overview_TrendDown" xml:space="preserve">
+    <value>▼ {0:N1}% vs poprzednie okno</value>
+  </data>
+  <data name="Overview_TrendFlat" xml:space="preserve">
+    <value>• Stabilnie vs poprzednie okno</value>
+  </data>
+  <data name="Overview_TrendNoData" xml:space="preserve">
+    <value>Brak okna porównawczego</value>
+  </data>
+  <data name="Overview_NoSnapshotBaseline" xml:space="preserve">
+    <value>Brak bazowego snapshotu</value>
+  </data>
+  <data name="Progress_Title" xml:space="preserve">
+    <value>Postęp postaci</value>
+  </data>
+  <data name="Progress_Subtitle" xml:space="preserve">
+    <value>Oś poziomów i przyszła historia skilli aktywnej postaci</value>
+  </data>
+  <data name="Economy_Title" xml:space="preserve">
+    <value>Ekonomia postaci</value>
+  </data>
+  <data name="Economy_Subtitle" xml:space="preserve">
+    <value>Wartość depo, zrealizowane sprzedaże i rytm sprzedaży aktywnej postaci</value>
+  </data>
+  <data name="Progress_SessionsInPeriod" xml:space="preserve">
+    <value>WYPRAWY W OKRESIE</value>
+  </data>
+  <data name="Progress_LevelTimelineTitle" xml:space="preserve">
+    <value>Oś poziomów</value>
+  </data>
+  <data name="Progress_LevelTimelineSubtitle" xml:space="preserve">
+    <value>Punkty kontrolne poziomu oparte na snapshotach dla wybranego okresu</value>
+  </data>
+  <data name="Progress_NoLevelTimeline" xml:space="preserve">
+    <value>Brak osi poziomów</value>
+  </data>
+  <data name="Progress_LevelForecastTitle" xml:space="preserve">
+    <value>Level forecast</value>
+  </data>
+  <data name="Progress_LevelForecastSubtitle" xml:space="preserve">
+    <value>Estimate future level-ups from the selected period's XP/h and average hunt hours per day.</value>
+  </data>
+  <data name="Progress_LevelForecastTargetLevel" xml:space="preserve">
+    <value>Target level</value>
+  </data>
+  <data name="Progress_LevelForecastTargetLevelWatermark" xml:space="preserve">
+    <value>Enter at least current level + 1</value>
+  </data>
+  <data name="Progress_LevelForecastCalculate" xml:space="preserve">
+    <value>Calculate forecast</value>
+  </data>
+  <data name="Progress_LevelForecastNoData" xml:space="preserve">
+    <value>Enter a target level and calculate a forecast</value>
+  </data>
+  <data name="Progress_LevelForecastNeedHigherLevel" xml:space="preserve">
+    <value>Target level must be at least Lv {0}</value>
+  </data>
+  <data name="Progress_LevelForecastNoXpData" xml:space="preserve">
+    <value>No XP/h data available for the selected period</value>
+  </data>
+  <data name="Progress_LevelForecastNoCadenceData" xml:space="preserve">
+    <value>No hunt-duration data available for the selected period</value>
+  </data>
+  <data name="Progress_LevelForecastSummaryEstimated" xml:space="preserve">
+    <value>Estimated {0} to reach {2} at {1} XP/h and {3} hunt h/day. Current level progress was estimated from the timeline.</value>
+  </data>
+  <data name="Progress_LevelForecastSummaryLevelStart" xml:space="preserve">
+    <value>Estimated {0} to reach {2} at {1} XP/h and {3} hunt h/day. Current level progress starts from level start.</value>
+  </data>
+  <data name="Progress_LevelForecastCadence" xml:space="preserve">
+    <value>Based on {0} hunt h/day across {1} days and {2} hunts.</value>
+  </data>
+  <data name="Progress_LevelForecastMarkerTooltip" xml:space="preserve">
+    <value>{0} • {1} • in {2}</value>
+  </data>
+  <data name="Progress_LevelForecastNow" xml:space="preserve">
+    <value>Now</value>
+  </data>
+  <data name="Progress_LevelForecastHoursOnly" xml:space="preserve">
+    <value>{0}h</value>
+  </data>
+  <data name="Progress_LevelForecastHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="Progress_LevelForecastDaysHours" xml:space="preserve">
+    <value>{0}d {1}h</value>
+  </data>
+  <data name="Progress_LevelForecastDaysHoursMinutes" xml:space="preserve">
+    <value>{0}d {1}h {2}m</value>
+  </data>
+  <data name="Progress_LevelForecastMinutesOnly" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="Progress_DepotValueTitle" xml:space="preserve">
+    <value>Otwarta wartość depo</value>
+  </data>
+  <data name="Progress_DepotValueSubtitle" xml:space="preserve">
+    <value>Skumulowana wartość lootu z wypraw w wybranym okresie</value>
+  </data>
+  <data name="Progress_DepotValueCurrent" xml:space="preserve">
+    <value>OBECNA OTWARTA WARTOŚĆ</value>
+  </data>
+  <data name="Progress_DepotValueSummary" xml:space="preserve">
+    <value>Na podstawie {0} wypraw od ostatniej sprzedaży</value>
+  </data>
+  <data name="Progress_NoDepotTimeline" xml:space="preserve">
+    <value>Brak danych o wartości depo dla tego okresu</value>
+  </data>
+  <data name="Progress_DepotRealizedTitle" xml:space="preserve">
+    <value>ZREALIZOWANE W OKRESIE</value>
+  </data>
+  <data name="Progress_DepotLastSaleTitle" xml:space="preserve">
+    <value>OSTATNIA SPRZEDAŻ</value>
+  </data>
+  <data name="Progress_SellRhythmTitle" xml:space="preserve">
+    <value>RYTM SPRZEDAŻY</value>
+  </data>
+  <data name="Progress_DepotRecentSalesTitle" xml:space="preserve">
+    <value>OSTATNIE SPRZEDAŻE</value>
+  </data>
+  <data name="Progress_DepotSalesSummary" xml:space="preserve">
+    <value>{0} sprzedaży w tym okresie</value>
+  </data>
+  <data name="Progress_SellRhythmAverage" xml:space="preserve">
+    <value>Średnio co {0} dni</value>
+  </data>
+  <data name="Progress_SellRhythmSingleSale" xml:space="preserve">
+    <value>Tylko jedna sprzedaż w tym okresie</value>
+  </data>
+  <data name="Progress_SellRhythmNoData" xml:space="preserve">
+    <value>Brak danych o rytmie sprzedaży</value>
+  </data>
+  <data name="Progress_MarkDepotSoldNow" xml:space="preserve">
+    <value>Oznacz depo jako sprzedane teraz</value>
+  </data>
+  <data name="Progress_RecordManualSale" xml:space="preserve">
+    <value>Zapisz ręczną sprzedaż</value>
+  </data>
+  <data name="Progress_ManualSaleTitle" xml:space="preserve">
+    <value>Zapisz sprzedaż depo</value>
+  </data>
+  <data name="Progress_ManualSaleHint" xml:space="preserve">
+    <value>Ustaw zrealizowaną wartość oraz dokładną datę i godzinę sprzedaży depo.</value>
+  </data>
+  <data name="Progress_ManualSaleAmount" xml:space="preserve">
+    <value>Zrealizowana wartość</value>
+  </data>
+  <data name="Progress_ManualSaleAmountPlaceholder" xml:space="preserve">
+    <value>Wpisz sprzedaną wartość</value>
+  </data>
+  <data name="Progress_ManualSaleDate" xml:space="preserve">
+    <value>Data sprzedaży</value>
+  </data>
+  <data name="Progress_ManualSaleTime" xml:space="preserve">
+    <value>Godzina sprzedaży</value>
+  </data>
+  <data name="Progress_DepotSaleSaved" xml:space="preserve">
+    <value>Sprzedaż depo zapisana: {0}</value>
+  </data>
+  <data name="Progress_DepotSaleDeleted" xml:space="preserve">
+    <value>Sprzedaż depo usunięta</value>
+  </data>
+  <data name="Progress_DepotSaleSaveFailed" xml:space="preserve">
+    <value>Nie udało się zapisać sprzedaży depo</value>
+  </data>
+  <data name="Progress_DepotSaleDeleteFailed" xml:space="preserve">
+    <value>Nie udało się usunąć sprzedaży depo</value>
+  </data>
+  <data name="Progress_DepotNothingToSell" xml:space="preserve">
+    <value>Brak otwartej wartości depo do sprzedaży</value>
+  </data>
+  <data name="Progress_ManualSaleAmountRequired" xml:space="preserve">
+    <value>Wpisz zrealizowaną wartość</value>
+  </data>
+  <data name="Progress_ManualSaleInvalidAmount" xml:space="preserve">
+    <value>Wpisz poprawną dodatnią wartość</value>
+  </data>
+  <data name="Progress_ManualSaleFutureDate" xml:space="preserve">
+    <value>Data sprzedaży nie może być w przyszłości</value>
+  </data>
+  <data name="Progress_SkillTimelineTitle" xml:space="preserve">
+    <value>Oś skilli</value>
+  </data>
+  <data name="Progress_SkillTimelineSubtitle" xml:space="preserve">
+    <value>Postęp skilli pojawi się tutaj, gdy zaczną być zapisywane snapshoty skilli</value>
+  </data>
+  <data name="Progress_SkillTimelinePlaceholderTitle" xml:space="preserve">
+    <value>Historia skilli niedostępna</value>
+  </data>
+  <data name="Progress_NoSkillHistoryYet" xml:space="preserve">
+    <value>Brak danych snapshotów skilli</value>
+  </data>
+
+  <!-- Goal Dialogs -->
+  <data name="Goal_AddNewGoal" xml:space="preserve">
+    <value>Dodaj Nowy Cel</value>
+  </data>
+  <data name="Goal_EditGoal" xml:space="preserve">
+    <value>Edytuj Cel</value>
+  </data>
+  <data name="Goal_AddManualProgress" xml:space="preserve">
+    <value>Dodaj Postęp Ręcznie</value>
+  </data>
+  <data name="Goal_Title" xml:space="preserve">
+    <value>Tytuł</value>
+  </data>
+  <data name="Goal_TitlePlaceholder" xml:space="preserve">
+    <value>np. Fundusz na Falcon Greaves</value>
+  </data>
+  <data name="Goal_Type" xml:space="preserve">
+    <value>Typ</value>
+  </data>
+  <data name="Goal_LevelGoal" xml:space="preserve">
+    <value>📈 Cel Poziomu</value>
+  </data>
+  <data name="Goal_GoldGoal" xml:space="preserve">
+    <value>💰 Cel Złota (Zysk)</value>
+  </data>
+  <data name="Goal_TargetValue" xml:space="preserve">
+    <value>Wartość Docelowa</value>
+  </data>
+  <data name="Goal_TargetPlaceholder" xml:space="preserve">
+    <value>Kwota Docelowa</value>
+  </data>
+  <data name="Goal_BaseLevelPlaceholder" xml:space="preserve">
+    <value>Aktualny Poziom</value>
+  </data>
+  <data name="Goal_StartTracking" xml:space="preserve">
+    <value>Rozpocznij Śledzenie Od</value>
+  </data>
+  <data name="Goal_StartTrackingInfo" xml:space="preserve">
+    <value>ℹ Łowy zalogowane po tej dacie będą liczone automatycznie.</value>
+  </data>
+  <data name="Goal_Amount" xml:space="preserve">
+    <value>Kwota</value>
+  </data>
+  <data name="Goal_AmountPlaceholder" xml:space="preserve">
+    <value>Wartość (np. 500000)</value>
+  </data>
+  <data name="Goal_ManualProgressInfo" xml:space="preserve">
+    <value>Ręcznie dodaj (lub odejmij) postęp.</value>
+  </data>
+  <data name="Goal_ValidationError" xml:space="preserve">
+    <value>Błąd Walidacji</value>
+  </data>
+  <data name="Goal_Completed" xml:space="preserve">
+    <value>CEL OSIĄGNIĘTY!</value>
+  </data>
+  <data name="Goal_Awesome" xml:space="preserve">
+    <value>Wspaniale!</value>
+  </data>
+
+  <!-- History View -->
+  <data name="History_Title" xml:space="preserve">
+    <value>Historia Łowów</value>
+  </data>
+  <data name="History_Duration" xml:space="preserve">
+    <value>Czas trwania</value>
+  </data>
+  <data name="History_XpPerHour" xml:space="preserve">
+    <value>XP/h</value>
+  </data>
+  <data name="History_Profit" xml:space="preserve">
+    <value>Zysk</value>
+  </data>
+  <data name="History_FilterByGoal" xml:space="preserve">
+    <value>Filtruj według Celu</value>
+  </data>
+  <data name="History_SelectedSessions" xml:space="preserve">
+    <value>Wybrane Sesje</value>
+  </data>
+  <data name="History_Ungroup" xml:space="preserve">
+    <value>Rozgrupuj</value>
+  </data>
+  <data name="History_AnalyzeMerge" xml:space="preserve">
+    <value>ANALIZUJ / SCAL</value>
+  </data>
+  <data name="History_Group" xml:space="preserve">
+    <value>GRUPUJ</value>
+  </data>
+  <data name="History_TotalProfit" xml:space="preserve">
+    <value>Całkowity Zysk</value>
+  </data>
+  <data name="History_AllTypes" xml:space="preserve">
+    <value>Wszystkie Typy</value>
+  </data>
+  <data name="History_TypeFilterLabel" xml:space="preserve">
+    <value>Typ</value>
+  </data>
+  <data name="History_DateRangeLabel" xml:space="preserve">
+    <value>Zakres dat</value>
+  </data>
+  <data name="History_AllDates" xml:space="preserve">
+    <value>Wszystkie daty</value>
+  </data>
+  <data name="History_DateDialogTitle" xml:space="preserve">
+    <value>Wybierz zakres dat polowania</value>
+  </data>
+  <data name="History_DateDialogHint" xml:space="preserve">
+    <value>Kliknij datę początkową i końcową. Kliknięcie poza oknem zastosuje zaznaczony zakres.</value>
+  </data>
+  <data name="History_ApplyDateRange" xml:space="preserve">
+    <value>Zastosuj</value>
+  </data>
+  <data name="History_Solo" xml:space="preserve">
+    <value>👤 Solo</value>
+  </data>
+  <data name="History_Party" xml:space="preserve">
+    <value>👥 Drużyna</value>
+  </data>
+  <data name="History_FromDate" xml:space="preserve">
+    <value>Od</value>
+  </data>
+  <data name="History_ToDate" xml:space="preserve">
+    <value>Do</value>
+  </data>
+  <data name="History_ClearDateFilters" xml:space="preserve">
+    <value>Wyczyść daty</value>
+  </data>
+  <data name="History_PreviousPage" xml:space="preserve">
+    <value>Poprzednia</value>
+  </data>
+  <data name="History_NextPage" xml:space="preserve">
+    <value>Następna</value>
+  </data>
+  <data name="History_PaginationSummary" xml:space="preserve">
+    <value>Pokazano {0}-{1} z {2} • Strona {3} z {4}</value>
+  </data>
+  <data name="History_NoHunts" xml:space="preserve">
+    <value>Brak zarejestrowanych łowów. Rozpocznij polowanie i analizuj swoje sesje, aby zobaczyć je tutaj!</value>
+  </data>
+  <data name="History_Delete" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+
+  <!-- Goal History View -->
+  <data name="GoalHistory_Title" xml:space="preserve">
+    <value>🏆 Historia Celów</value>
+  </data>
+  <data name="GoalHistory_CompletedGoals" xml:space="preserve">
+    <value>✅ Ukończone Cele</value>
+  </data>
+  <data name="GoalHistory_AbandonedGoals" xml:space="preserve">
+    <value>⏸️ Porzucone Cele</value>
+  </data>
+  <data name="GoalHistory_NoCompleted" xml:space="preserve">
+    <value>Brak ukończonych celów.</value>
+  </data>
+  <data name="GoalHistory_NoAbandoned" xml:space="preserve">
+    <value>Brak porzuconych celów.</value>
+  </data>
+  <data name="GoalHistory_Loading" xml:space="preserve">
+    <value>Ładowanie historii celów...</value>
+  </data>
+
+  <!-- Hunting Places View -->
+  <data name="HuntingPlaces_Title" xml:space="preserve">
+    <value>Miejsca Łowów</value>
+  </data>
+  <data name="HuntingPlaces_Vocation" xml:space="preserve">
+    <value>Profesja</value>
+  </data>
+  <data name="HuntingPlaces_FilterCharacterVocation" xml:space="preserve">
+    <value>Profesja Postaci</value>
+  </data>
+  <data name="HuntingPlaces_FilterMages" xml:space="preserve">
+    <value>🔮 Magowie</value>
+  </data>
+  <data name="HuntingPlaces_FilterKnights" xml:space="preserve">
+    <value>⚔️ Rycerze</value>
+  </data>
+  <data name="HuntingPlaces_FilterPaladins" xml:space="preserve">
+    <value>🏹 Paladyni</value>
+  </data>
+  <data name="HuntingPlaces_MinLevel" xml:space="preserve">
+    <value>Min. Poziom (0 = Bez Limitu)</value>
+  </data>
+  <data name="HuntingPlaces_MaxLevel" xml:space="preserve">
+    <value>Maks. Poziom (0 = Bez Limitu)</value>
+  </data>
+  <data name="HuntingPlaces_RecommendedLevels" xml:space="preserve">
+    <value>Zalecane Poziomy</value>
+  </data>
+  <data name="HuntingPlaces_Experience" xml:space="preserve">
+    <value>Doświadczenie</value>
+  </data>
+  <data name="HuntingPlaces_LootValue" xml:space="preserve">
+    <value>Wartość Łupu</value>
+  </data>
+  <data name="HuntingPlaces_NoResults" xml:space="preserve">
+    <value>Nie znaleziono miejsc łowów</value>
+  </data>
+  <data name="HuntingPlaces_AdjustFilters" xml:space="preserve">
+    <value>Spróbuj dostosować filtry, aby znaleźć odpowiednie miejsca łowów!</value>
+  </data>
+
+  <!-- Hunt Analyzer Input -->
+  <data name="Analyzer_Title" xml:space="preserve">
+    <value>Analizator Łowów</value>
+  </data>
+  <data name="Analyzer_Subtitle" xml:space="preserve">
+    <value>Wklej log sesji lub skopiuj go w grze (Automatyczne Wykrywanie)</value>
+  </data>
+  <data name="Analyzer_PasteHere" xml:space="preserve">
+    <value>Wklej 'Dane sesji' tutaj...</value>
+  </data>
+  <data name="Analyzer_ActiveEvents" xml:space="preserve">
+    <value>AKTYWNE WYDARZENIA</value>
+  </data>
+  <data name="Analyzer_DoubleXP" xml:space="preserve">
+    <value>Podwójne XP</value>
+  </data>
+  <data name="Analyzer_DoubleLoot" xml:space="preserve">
+    <value>Podwójny Łup</value>
+  </data>
+  <data name="Analyzer_RapidRespawn" xml:space="preserve">
+    <value>Szybki Respawn</value>
+  </data>
+  <data name="Analyzer_XpModifiersTitle" xml:space="preserve">
+    <value>Solo XP modifiers</value>
+  </data>
+  <data name="Analyzer_XpModifiersHint" xml:space="preserve">
+    <value>Default XP rate is 150 for premium characters with green stamina (42h-39h). Double XP and temporary boosts are applied on top for raw XP/h estimation.</value>
+  </data>
+  <data name="Analyzer_XpBoostPercentLabel" xml:space="preserve">
+    <value>Extra boost %</value>
+  </data>
+  <data name="Analyzer_XpBoostPercentWatermark" xml:space="preserve">
+    <value>e.g. 50</value>
+  </data>
+  <data name="Analyzer_XpBoostMinutesLabel" xml:space="preserve">
+    <value>Boost minutes</value>
+  </data>
+  <data name="Analyzer_XpBoostMinutesWatermark" xml:space="preserve">
+    <value>empty = whole hunt</value>
+  </data>
+  <data name="Analyzer_CustomXpRateLabel" xml:space="preserve">
+    <value>XP rate %</value>
+  </data>
+  <data name="Analyzer_CustomXpRateWatermark" xml:space="preserve">
+    <value>default 150</value>
+  </data>
+  <data name="Analyzer_CustomXpRateHint" xml:space="preserve">
+    <value>Adjust this only if the hunt was below 39h stamina or used another base XP rate. 150 is the normal premium green-stamina default.</value>
+  </data>
+  <data name="Analyzer_AnalyzeLog" xml:space="preserve">
+    <value>ANALIZUJ LOG</value>
+  </data>
+  <data name="Analyzer_Analyze" xml:space="preserve">
+    <value>Analizuj</value>
+  </data>
+  <data name="Analyzer_Clear" xml:space="preserve">
+    <value>Wyczyść</value>
+  </data>
+  <data name="Analyzer_Solo" xml:space="preserve">
+    <value>Łowy Solo</value>
+  </data>
+  <data name="Analyzer_Team" xml:space="preserve">
+    <value>Łowy Drużynowe</value>
+  </data>
+  <data name="Analyzer_Results" xml:space="preserve">
+    <value>Wyniki</value>
+  </data>
+  <data name="Analyzer_SaveHunt" xml:space="preserve">
+    <value>Zapisz Łowy</value>
+  </data>
+  <data name="Analyzer_Waste" xml:space="preserve">
+    <value>Strata</value>
+  </data>
+  <data name="Analyzer_LootValue" xml:space="preserve">
+    <value>Wartość Łupu</value>
+  </data>
+  <data name="Analyzer_SuppliesUsed" xml:space="preserve">
+    <value>Zużyte Zapasy</value>
+  </data>
+  <data name="Analyzer_NetProfit" xml:space="preserve">
+    <value>Zysk Netto</value>
+  </data>
+  <data name="Analyzer_Kills" xml:space="preserve">
+    <value>Zabójstwa</value>
+  </data>
+  <data name="Analyzer_TopLoot" xml:space="preserve">
+    <value>Najlepszy Łup</value>
+  </data>
+
+  <!-- Imbuement Configuration -->
+  <data name="Imbuement_Title" xml:space="preserve">
+    <value>Konfiguracja Imbuementów</value>
+  </data>
+  <data name="Imbuement_Fee" xml:space="preserve">
+    <value>Opłata:</value>
+  </data>
+  <data name="Imbuement_Ingredients" xml:space="preserve">
+    <value>Składniki</value>
+  </data>
+
+  <!-- ==================== VM STRINGS ==================== -->
+  <!-- Setup -->
+  <data name="Setup_PreparingConfig" xml:space="preserve">
+    <value>Przygotowywanie konfiguracji...</value>
+  </data>
+
+  <!-- Window Titles -->
+  <data name="Window_TitleDefault" xml:space="preserve">
+    <value>TibiaHuntMaster</value>
+  </data>
+  <data name="Window_TitleSelectCharacter" xml:space="preserve">
+    <value>TibiaHuntMaster - Wybierz Postać</value>
+  </data>
+  <data name="Window_TitleDashboard" xml:space="preserve">
+    <value>TibiaHuntMaster - {0} ({1} {2})</value>
+  </data>
+
+  <!-- History Item -->
+  <data name="HistoryItem_MergedHunt" xml:space="preserve">
+    <value>Scalone Łowy ({0})</value>
+  </data>
+  <data name="HistoryItem_MergedGroup" xml:space="preserve">
+    <value>Scalona Grupa</value>
+  </data>
+  <data name="HistoryItem_TypeMerged" xml:space="preserve">
+    <value>SCALONE</value>
+  </data>
+  <data name="HistoryItem_TypeParty" xml:space="preserve">
+    <value>DRUŻYNA</value>
+  </data>
+  <data name="HistoryItem_TypeSolo" xml:space="preserve">
+    <value>SOLO</value>
+  </data>
+  <data name="HistoryItem_MinutesSuffix" xml:space="preserve">
+    <value> min</value>
+  </data>
+
+  <!-- Hunting Places VM -->
+  <data name="HuntingPlaces_StatusLoading" xml:space="preserve">
+    <value>Ładowanie miejsc łowów...</value>
+  </data>
+  <data name="HuntingPlaces_StatusEmpty" xml:space="preserve">
+    <value>Nie znaleziono miejsc łowów.</value>
+  </data>
+  <data name="HuntingPlaces_StatusCount" xml:space="preserve">
+    <value>Znaleziono {0} miejsc łowów.</value>
+  </data>
+  <data name="HuntingPlaces_LocationUnknown" xml:space="preserve">
+    <value>Nieznane</value>
+  </data>
+  <data name="HuntingPlaces_LevelMages" xml:space="preserve">
+    <value>Mages: {0}</value>
+  </data>
+  <data name="HuntingPlaces_LevelKnights" xml:space="preserve">
+    <value>Knights: {0}</value>
+  </data>
+  <data name="HuntingPlaces_LevelPaladins" xml:space="preserve">
+    <value>Paladins: {0}</value>
+  </data>
+  <data name="HuntingPlaces_NotAvailable" xml:space="preserve">
+    <value>N/D</value>
+  </data>
+  <data name="HuntingPlaces_ShowOnMap" xml:space="preserve">
+    <value>Pokaż na mapie</value>
+  </data>
+  <data name="HuntingPlaces_MapNoCoordinates" xml:space="preserve">
+    <value>Brak dokładnych koordynatów</value>
+  </data>
+  <data name="HuntingPlaces_MapNoCoordinatesForPlace" xml:space="preserve">
+    <value>Nie znaleziono koordynatów minimapy dla: {0}.</value>
+  </data>
+
+  <!-- History VM -->
+  <data name="History_StatusEmpty" xml:space="preserve">
+    <value>Nie znaleziono łowów.</value>
+  </data>
+  <data name="History_StatusFilteredEmpty" xml:space="preserve">
+    <value>Brak widocznych łowów. Dane istnieją, ale bieżące filtry ukrywają wszystkie wpisy.</value>
+  </data>
+  <data name="History_AllHuntsNoGoal" xml:space="preserve">
+    <value>Wszystkie Łowy (Bez Celu)</value>
+  </data>
+  <data name="History_TrackingStarted" xml:space="preserve">
+    <value>Rozpoczęto śledzenie: {0}</value>
+  </data>
+  <data name="History_StatusCompleted" xml:space="preserve">
+    <value>✅ Ukończone</value>
+  </data>
+  <data name="History_StatusInProgress" xml:space="preserve">
+    <value>🔄 W Trakcie</value>
+  </data>
+  <data name="History_Finished" xml:space="preserve">
+    <value>  ➔  Zakończono: {0}</value>
+  </data>
+  <data name="History_EntriesLoaded" xml:space="preserve">
+    <value>Załadowano {0} wpisów.</value>
+  </data>
+
+  <!-- Overview VM / Goals -->
+  <data name="Goal_UnitGold" xml:space="preserve">
+    <value>gp</value>
+  </data>
+  <data name="Goal_UnitLevels" xml:space="preserve">
+    <value>Poziomy</value>
+  </data>
+  <data name="Goal_ValidationTitleRequired" xml:space="preserve">
+    <value>Proszę wpisać tytuł dla swojego celu.</value>
+  </data>
+  <data name="Goal_ValidationTargetPositive" xml:space="preserve">
+    <value>Wartość docelowa musi być liczbą dodatnią.</value>
+  </data>
+  <data name="Goal_ValidationTargetLevel" xml:space="preserve">
+    <value>Poziom docelowy musi być wyższy niż obecny poziom ({0}).</value>
+  </data>
+  <data name="Goal_KillerDeath" xml:space="preserve">
+    <value>Śmierć</value>
+  </data>
+  <data name="Goal_TimeToday" xml:space="preserve">
+    <value>Dzisiaj</value>
+  </data>
+  <data name="Goal_TimeDaysAgo" xml:space="preserve">
+    <value>{0} dni temu</value>
+  </data>
+
+  <!-- Hunt Analyzer VM -->
+  <data name="Analyzer_ErrorTeamHuntParse" xml:space="preserve">
+    <value>Nie udało się sparsować Łowów Drużynowych.</value>
+  </data>
+  <data name="Analyzer_ErrorLogParse" xml:space="preserve">
+    <value>Nie można sparsować logu: {0}</value>
+  </data>
+  <data name="Analyzer_ErrorDuplicate" xml:space="preserve">
+    <value>Ta sesja jest już w Twojej historii!</value>
+  </data>
+  <data name="Analyzer_ErrorCharacterNotFound" xml:space="preserve">
+    <value>Nie znaleziono aktywnej postaci.</value>
+  </data>
+  <data name="Analyzer_NotesSaved" xml:space="preserve">
+    <value>📝 Notatki zapisane!</value>
+  </data>
+  <data name="Analyzer_AutoImbuements" xml:space="preserve">
+    <value>Auto: Imbuementy</value>
+  </data>
+  <data name="Analyzer_ChangesSaved" xml:space="preserve">
+    <value>✅ Zapisano!</value>
+  </data>
+  <data name="Analyzer_SmartSupplyFormat" xml:space="preserve">
+    <value>{0} ({1}min)</value>
+  </data>
+  <data name="Analyzer_LogDetected" xml:space="preserve">
+    <value>✅ Wykryto log!</value>
+  </data>
+  <data name="Analyzer_MergedHuntName" xml:space="preserve">
+    <value>Scalone Łowy ({0})</value>
+  </data>
+  <data name="Analyzer_CopiedDiscord" xml:space="preserve">
+    <value>📋 Skopiowano dla Discorda!</value>
+  </data>
+  <data name="Analyzer_DiscordPartyHeader" xml:space="preserve">
+    <value>Łowy Drużynowe: {0}</value>
+  </data>
+  <data name="Analyzer_DiscordTotalBalance" xml:space="preserve">
+    <value>Całkowity Bilans: {0} gp</value>
+  </data>
+  <data name="Analyzer_DiscordTableName" xml:space="preserve">
+    <value>Imię</value>
+  </data>
+  <data name="Analyzer_DiscordTableBalance" xml:space="preserve">
+    <value>Bilans</value>
+  </data>
+  <data name="Analyzer_DiscordTableDamage" xml:space="preserve">
+    <value>Obrażenia</value>
+  </data>
+  <data name="Analyzer_DiscordTransfers" xml:space="preserve">
+    <value>[ Transfery ]</value>
+  </data>
+  <data name="Analyzer_DiscordSoloHeader" xml:space="preserve">
+    <value>[ Łowy Solo: {0} ]</value>
+  </data>
+  <data name="Analyzer_DiscordDate" xml:space="preserve">
+    <value>Data:    {0}</value>
+  </data>
+  <data name="Analyzer_DiscordTime" xml:space="preserve">
+    <value>Czas:    {0}h</value>
+  </data>
+  <data name="Analyzer_DiscordXpPerHour" xml:space="preserve">
+    <value>XP/h:    {0}</value>
+  </data>
+  <data name="Analyzer_DiscordBalance" xml:space="preserve">
+    <value>Bilans:  {0} gp</value>
+  </data>
+  <data name="Analyzer_DiscordLoot" xml:space="preserve">
+    <value>Łup:     {0} gp</value>
+  </data>
+  <data name="Analyzer_DiscordSupplies" xml:space="preserve">
+    <value>Zapasy:  {0} gp</value>
+  </data>
+  <data name="Analyzer_DiscordImbuementCost" xml:space="preserve">
+    <value> (w tym {0} koszt imbuementów)</value>
+  </data>
+
+  <!-- Character Selection VM -->
+  <data name="CharSelection_Error" xml:space="preserve">
+    <value>Błąd: {0}</value>
+  </data>
+
+  <!-- Goal History VM -->
+  <data name="GoalHistory_ProgressLevel" xml:space="preserve">
+    <value>{0} / {1}</value>
+  </data>
+  <data name="GoalHistory_ProgressGold" xml:space="preserve">
+    <value>{0} / {1} gp</value>
+  </data>
+  <data name="GoalHistory_CompletedDate" xml:space="preserve">
+    <value>Ukończono: {0}</value>
+  </data>
+  <data name="GoalHistory_AbandonedDate" xml:space="preserve">
+    <value>Porzucono: {0}</value>
+  </data>
+  <data name="Nav_Minimap" xml:space="preserve">
+    <value>Tibia Map</value>
+  </data>
+  <data name="NavDesc_Minimap" xml:space="preserve">
+    <value>Przeglądaj mapę Tibii, markery i spawny</value>
+  </data>
+  <data name="Goal_TargetLevel" xml:space="preserve">
+    <value>Poziom docelowy</value>
+  </data>
+  <data name="Goal_BaseLevel" xml:space="preserve">
+    <value>Poziom bazowy</value>
+  </data>
+  <data name="Goal_BaseLevelInfo" xml:space="preserve">
+    <value>Używany jako baza 0% postępu. Jeśli po śmierci spadniesz poniżej niego, postęp spadnie do 0%.</value>
+  </data>
+  <data name="Setup_MayTakeTime" xml:space="preserve">
+    <value>Początkowa konfiguracja może potrwać kilka minut w zależności od szybkości internetu i dysku.</value>
+  </data>
+  <data name="Minimap_ControlsHint" xml:space="preserve">
+    <value>Kółko=Zoom • Ctrl+Kółko=Piętro • Przeciągnij=Przesuwaj</value>
+  </data>
+  <data name="Minimap_ResetView" xml:space="preserve">
+    <value>Resetuj widok</value>
+  </data>
+  <data name="Minimap_ResetViewTooltip" xml:space="preserve">
+    <value>Przywraca domyślny zoom i pozycję</value>
+  </data>
+  <data name="Progress_NoDepotSalesYet" xml:space="preserve">
+    <value>Brak sprzedaży depo</value>
+  </data>
+  <data name="Analyzer_SaveChanges" xml:space="preserve">
+    <value>Save changes</value>
+  </data>
+  <data name="Analyzer_SaveGroup" xml:space="preserve">
+    <value>Save group</value>
+  </data>
+  <data name="Analyzer_NewAnalysis" xml:space="preserve">
+    <value>New analysis</value>
+  </data>
+  <data name="Analyzer_NotesTitle" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="Analyzer_HuntingPlaceTitle" xml:space="preserve">
+    <value>Hunting place</value>
+  </data>
+  <data name="Analyzer_HuntingPlaceWatermark" xml:space="preserve">
+    <value>Type to search hunting place</value>
+  </data>
+  <data name="Analyzer_ClearHuntingPlace" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="Analyzer_SaveHuntingPlace" xml:space="preserve">
+    <value>Save spot</value>
+  </data>
+  <data name="Analyzer_HuntingPlaceChooseSpecific" xml:space="preserve">
+    <value>Please choose a specific hunting place from the suggestions.</value>
+  </data>
+  <data name="Analyzer_HuntingPlaceSaved" xml:space="preserve">
+    <value>Hunting place saved.</value>
+  </data>
+  <data name="Analyzer_HuntingPlaceCleared" xml:space="preserve">
+    <value>Hunting place cleared.</value>
+  </data>
+  <data name="Analyzer_SummaryHeaderEffectiveXp" xml:space="preserve">
+    <value>XP gain (effective)</value>
+  </data>
+  <data name="Analyzer_SummaryHeaderRealBalance" xml:space="preserve">
+    <value>Balance (real)</value>
+  </data>
+  <data name="Analyzer_SummaryHeaderPartyProfit" xml:space="preserve">
+    <value>Party profit</value>
+  </data>
+  <data name="Analyzer_SummaryHeaderTotalXp" xml:space="preserve">
+    <value>Total XP</value>
+  </data>
+  <data name="Analyzer_SummarySectionTitle" xml:space="preserve">
+    <value>Hunt summary</value>
+  </data>
+  <data name="Analyzer_SummarySectionHint" xml:space="preserve">
+    <value>Generate a shareable summary for Discord, plain text or a PNG card.</value>
+  </data>
+  <data name="Analyzer_SummaryFormatLabel" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="Analyzer_SummaryPresetLabel" xml:space="preserve">
+    <value>Preset</value>
+  </data>
+  <data name="Analyzer_SummaryNormalize15Minutes" xml:space="preserve">
+    <value>Normalize to 15-minute baseline</value>
+  </data>
+  <data name="Analyzer_SummaryShowRawXp" xml:space="preserve">
+    <value>Show raw XP/h</value>
+  </data>
+  <data name="Analyzer_SummaryPreviewLabel" xml:space="preserve">
+    <value>Preview</value>
+  </data>
+  <data name="Analyzer_SummaryFormatDiscord" xml:space="preserve">
+    <value>Discord</value>
+  </data>
+  <data name="Analyzer_SummaryFormatText" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="Analyzer_SummaryFormatImage" xml:space="preserve">
+    <value>Image (PNG)</value>
+  </data>
+  <data name="Analyzer_SummaryPresetCompact" xml:space="preserve">
+    <value>Compact</value>
+  </data>
+  <data name="Analyzer_SummaryPresetDetailed" xml:space="preserve">
+    <value>Detailed</value>
+  </data>
+  <data name="Analyzer_SummaryCopy" xml:space="preserve">
+    <value>Copy summary</value>
+  </data>
+  <data name="Analyzer_SummaryExportImage" xml:space="preserve">
+    <value>Export image</value>
+  </data>
+  <data name="Analyzer_SummaryCopied" xml:space="preserve">
+    <value>Summary copied to clipboard.</value>
+  </data>
+  <data name="Analyzer_SummaryImageExported" xml:space="preserve">
+    <value>Summary image exported.</value>
+  </data>
+  <data name="Analyzer_SummaryActionFailed" xml:space="preserve">
+    <value>Summary action failed: {0}</value>
+  </data>
+  <data name="Analyzer_SummarySoloTitle" xml:space="preserve">
+    <value>Solo hunt summary</value>
+  </data>
+  <data name="Analyzer_SummaryTeamTitle" xml:space="preserve">
+    <value>Team hunt summary</value>
+  </data>
+  <data name="Analyzer_SummarySubtitleSolo" xml:space="preserve">
+    <value>{0} • {1}</value>
+  </data>
+  <data name="Analyzer_SummarySubtitleTeam" xml:space="preserve">
+    <value>{0} party • {1}</value>
+  </data>
+  <data name="Analyzer_SummaryModeLine" xml:space="preserve">
+    <value>Mode: {0}</value>
+  </data>
+  <data name="Analyzer_SummaryModeSolo" xml:space="preserve">
+    <value>Solo</value>
+  </data>
+  <data name="Analyzer_SummaryModeTeam" xml:space="preserve">
+    <value>Team</value>
+  </data>
+  <data name="Analyzer_SummaryBaselineLine" xml:space="preserve">
+    <value>Baseline: {0}m normalized from {1}</value>
+  </data>
+  <data name="Analyzer_SummaryDurationLine" xml:space="preserve">
+    <value>Duration: {0}</value>
+  </data>
+  <data name="Analyzer_SummaryXpPerHourLine" xml:space="preserve">
+    <value>XP/h: {0}</value>
+  </data>
+  <data name="Analyzer_SummaryXpGainLine" xml:space="preserve">
+    <value>XP gain: {0}</value>
+  </data>
+  <data name="Analyzer_SummaryBalanceLine" xml:space="preserve">
+    <value>Balance: {0}</value>
+  </data>
+  <data name="Analyzer_SummaryLootLine" xml:space="preserve">
+    <value>Loot: {0}</value>
+  </data>
+  <data name="Analyzer_SummarySuppliesLine" xml:space="preserve">
+    <value>Supplies: {0}</value>
+  </data>
+  <data name="Analyzer_SummaryImbuementLine" xml:space="preserve">
+    <value>Imbuement: {0}</value>
+  </data>
+  <data name="Analyzer_SummaryPlaceLine" xml:space="preserve">
+    <value>Hunting place: {0}</value>
+  </data>
+  <data name="Analyzer_SummaryMembersLine" xml:space="preserve">
+    <value>Members: {0}</value>
+  </data>
+  <data name="Analyzer_SummaryGoldValue" xml:space="preserve">
+    <value>{0} gp</value>
+  </data>
+  <data name="Analyzer_SummaryGoldPerOzValue" xml:space="preserve">
+    <value>{0} gp/oz</value>
+  </data>
+  <data name="Analyzer_SummaryTopMonstersTitle" xml:space="preserve">
+    <value>Top monsters:</value>
+  </data>
+  <data name="Analyzer_SummaryMonsterEntry" xml:space="preserve">
+    <value>- {0} x{1}</value>
+  </data>
+  <data name="Analyzer_SummaryTopItemsTitle" xml:space="preserve">
+    <value>Top items by value/oz:</value>
+  </data>
+  <data name="Analyzer_SummaryTopItemEntry" xml:space="preserve">
+    <value>- {0} x{1} • {2} • {3}</value>
+  </data>
+  <data name="Analyzer_SummaryCommonDropsTitle" xml:space="preserve">
+    <value>Common drops (&lt;10k each):</value>
+  </data>
+  <data name="Analyzer_SummaryCommonDropEntry" xml:space="preserve">
+    <value>- {0} x{1} • {2} total • {3} each</value>
+  </data>
+  <data name="Analyzer_SummaryRespawnProfileTitle" xml:space="preserve">
+    <value>Profil respawnu:</value>
+  </data>
+  <data name="Analyzer_SummaryRespawnFocusLine" xml:space="preserve">
+    <value>Fokus: {0}</value>
+  </data>
+  <data name="Analyzer_SummaryRespawnFocusXp" xml:space="preserve">
+    <value>Nastawiony na XP</value>
+  </data>
+  <data name="Analyzer_SummaryRespawnFocusBalanced" xml:space="preserve">
+    <value>Zbalansowany</value>
+  </data>
+  <data name="Analyzer_SummaryRespawnFocusLoot" xml:space="preserve">
+    <value>Nastawiony na loot</value>
+  </data>
+  <data name="Analyzer_SummaryBalancePerHourLine" xml:space="preserve">
+    <value>Netto gp/h: {0}</value>
+  </data>
+  <data name="Analyzer_SummaryTrackedItemValueLine" xml:space="preserve">
+    <value>Wartość śledzonych itemów: {0}</value>
+  </data>
+  <data name="Analyzer_SummaryHighValueShareLine" xml:space="preserve">
+    <value>Udział cennych itemów: {0}</value>
+  </data>
+  <data name="Analyzer_SummaryCommonDropShareLine" xml:space="preserve">
+    <value>Udział common dropów: {0}</value>
+  </data>
+  <data name="Analyzer_SummaryBestDensityItemLine" xml:space="preserve">
+    <value>Najlepszy item wg wartości/oz: {0} ({1})</value>
+  </data>
+  <data name="Analyzer_SummaryMemberBreakdownTitle" xml:space="preserve">
+    <value>Member breakdown:</value>
+  </data>
+  <data name="Analyzer_SummaryMemberEntry" xml:space="preserve">
+    <value>- {0} | Balance {1} | Damage {2}</value>
+  </data>
+  <data name="Analyzer_SummaryTransfersTitle" xml:space="preserve">
+    <value>Transfers:</value>
+  </data>
+  <data name="Analyzer_SummaryTransferEntry" xml:space="preserve">
+    <value>- {0} -&gt; {1}: {2}</value>
+  </data>
+  <data name="Analyzer_SummaryTransfersOmitted" xml:space="preserve">
+    <value>Transfers omitted in 15m baseline mode.</value>
+  </data>
+  <data name="Analyzer_OpenSummaryDialog" xml:space="preserve">
+    <value>Summary</value>
+  </data>
+  <data name="Analyzer_SummaryDialogTitle" xml:space="preserve">
+    <value>Generate hunt summary</value>
+  </data>
+  <data name="Analyzer_SummaryDialogHint" xml:space="preserve">
+    <value>Choose output format, preset and optional 15-minute normalization before copying or exporting.</value>
+  </data>
+  <data name="Analyzer_SummaryRawXpPerHourLine" xml:space="preserve">
+    <value>Raw XP/h: {0}</value>
+  </data>
+  <data name="Analyzer_SummaryRawXpPerHourEstimatedLine" xml:space="preserve">
+    <value>Raw XP/h (estimated): {0}</value>
+  </data>
+  <data name="Analyzer_SummaryRawXpPerHourUnavailableLine" xml:space="preserve">
+    <value>Raw XP/h unavailable</value>
+  </data>
+  <data name="Setup_CurrentStepTitle" xml:space="preserve">
+    <value>Bieżący krok</value>
+  </data>
+  <data name="Setup_CurrentStepDefault" xml:space="preserve">
+    <value>Oczekiwanie na następną aktualizację...</value>
+  </data>
+  <data name="Setup_RecentActivityTitle" xml:space="preserve">
+    <value>Ostatnia aktywność</value>
+  </data>
+  <data name="Analyzer_VerificationTitle" xml:space="preserve">
+    <value>Ostrzeżenie analizatora</value>
+  </data>
+  <data name="Analyzer_VerificationHint" xml:space="preserve">
+    <value>Zgłoszone wartości analizatora nie zgadzają się z wyliczeniem z bazy danych. Możesz przygotować korektę i zapisać ją ręcznie.</value>
+  </data>
+  <data name="Analyzer_VerificationLootLine" xml:space="preserve">
+    <value>Łup: zgłoszono {0} gp, obliczono {1} gp, różnica {2} gp</value>
+  </data>
+  <data name="Analyzer_VerificationRawXpLine" xml:space="preserve">
+    <value>Surowe XP: zgłoszono {0}, obliczono {1}, różnica {2}</value>
+  </data>
+  <data name="Analyzer_VerificationXpLine" xml:space="preserve">
+    <value>Przyrost XP: zgłoszono {0}, obliczono {1}, różnica {2}</value>
+  </data>
+  <data name="Analyzer_VerificationXpEstimatedLine" xml:space="preserve">
+    <value>Przyrost XP (oszacowany na podstawie potworów i rate): zgłoszono {0}, obliczono {1}, różnica {2}</value>
+  </data>
+  <data name="Analyzer_VerificationSuppliesUnavailable" xml:space="preserve">
+    <value>Wydatki nie są automatycznie weryfikowane, ponieważ analizator klienta może raportować je błędnie.</value>
+  </data>
+  <data name="Analyzer_VerificationBalanceUnavailable" xml:space="preserve">
+    <value>Bilans nie jest automatycznie weryfikowany, ponieważ zależy od niewiarygodnych danych o wydatkach.</value>
+  </data>
+  <data name="Analyzer_VerificationUnmatchedLootItems" xml:space="preserve">
+    <value>Niedopasowane przedmioty z łupu: {0}</value>
+  </data>
+  <data name="Analyzer_VerificationUnmatchedCreatures" xml:space="preserve">
+    <value>Niedopasowane potwory: {0}</value>
+  </data>
+  <data name="Analyzer_VerificationApplyLoot" xml:space="preserve">
+    <value>Zastosuj korektę łupu</value>
+  </data>
+  <data name="Analyzer_VerificationIgnoreLoot" xml:space="preserve">
+    <value>Ignoruj ostrzeżenie o łupie</value>
+  </data>
+  <data name="Analyzer_VerificationApplyXp" xml:space="preserve">
+    <value>Zastosuj korektę XP</value>
+  </data>
+  <data name="Analyzer_VerificationIgnoreXp" xml:space="preserve">
+    <value>Ignoruj ostrzeżenie o XP</value>
+  </data>
+  <data name="Analyzer_VerificationCorrectionStaged" xml:space="preserve">
+    <value>Korekta została przygotowana. Zapisz sesję, aby ją utrwalić.</value>
+  </data>
+  <data name="Analyzer_VerificationIgnored" xml:space="preserve">
+    <value>Ostrzeżenie weryfikacyjne zostało zignorowane. Zapisz sesję, aby to utrwalić.</value>
+  </data>
+</root>
