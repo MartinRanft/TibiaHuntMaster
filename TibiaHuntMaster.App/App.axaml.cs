@@ -1,11 +1,13 @@
-using System;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Reflection;
 
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
+using Avalonia.Layout;
 
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -17,13 +19,16 @@ using TibiaHuntMaster.App.Services.Diagnostics;
 using TibiaHuntMaster.App.ViewModels;
 using TibiaHuntMaster.App.Views;
 using TibiaHuntMaster.Core.Abstractions.Map;
-using TibiaHuntMaster.Infrastructure.Data;
 using TibiaHuntMaster.Infrastructure.Services.TibiaData;
+using TibiaHuntMaster.Updater.Core.Abstractions;
+using TibiaHuntMaster.Updater.Core.Models;
 
 namespace TibiaHuntMaster.App
 {
     internal sealed class App : Application
     {
+        private const int DeferredUpdateReminderInterval = 10;
+        private const int UpdateFailureHintInterval = 5;
         private BoostedCreatureMonitor? _boostedCreatureMonitor;
         private ClipboardMonitorService? _clipboardMonitor;
         private AppExceptionMonitor? _exceptionMonitor;
@@ -41,10 +46,7 @@ namespace TibiaHuntMaster.App
 
         public override void OnFrameworkInitializationCompleted()
         {
-            // 1. DI Container aufbauen
             ServiceCollection collection = new();
-
-            // Hier rufen wir unsere Extension-Methode auf, die ALLES registriert
             collection.AddTibiaHuntMasterServices();
 
             Services = collection.BuildServiceProvider();
@@ -52,7 +54,6 @@ namespace TibiaHuntMaster.App
             _exceptionMonitor = Services.GetRequiredService<AppExceptionMonitor>();
             _exceptionMonitor.Start();
 
-            // 2. Datenbank initialisieren (Migrationen anwenden & DB erstellen)
             DatabaseInitializationResult dbInit = new DatabaseInitializationService(
                 Services,
                 message => _logger.LogInformation("{Message}", message)).Initialize();
@@ -66,7 +67,6 @@ namespace TibiaHuntMaster.App
                 _logger.LogCritical("Database initialization failed: {ErrorMessage}", dbInit.ErrorMessage);
             }
 
-            // 3. Theme Service initialisieren und gespeicherte Theme-Präferenz laden
             ThemeService themeService = Services.GetRequiredService<ThemeService>();
             themeService.SetTheme(themeService.CurrentTheme);
 
@@ -103,18 +103,50 @@ namespace TibiaHuntMaster.App
             if(ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 desktop.Exit += OnDesktopExit;
-
-                // 3. MainWindowViewModel aus dem DI holen
-                // Das stellt sicher, dass alle Abhängigkeiten (Services) korrekt injiziert werden.
-                MainWindowViewModel mainViewModel = Services.GetRequiredService<MainWindowViewModel>();
-
-                desktop.MainWindow = new MainWindow
-                {
-                    DataContext = mainViewModel
-                };
+                desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+                StartDesktopFlowSafe(desktop);
             }
 
             base.OnFrameworkInitializationCompleted();
+        }
+
+        private void StartDesktopFlowSafe(IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            _ = ObserveTaskAsync(StartDesktopFlowAsync(desktop), nameof(StartDesktopFlowAsync));
+        }
+
+        private async Task StartDesktopFlowAsync(IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            if(Services is null)
+            {
+                return;
+            }
+
+            bool continueStartup = await CheckForApplicationUpdatesAsync(desktop);
+            if(!continueStartup)
+            {
+                return;
+            }
+
+            MainWindowViewModel mainViewModel = Services.GetRequiredService<MainWindowViewModel>();
+            MainWindow mainWindow = new()
+            {
+                DataContext = mainViewModel
+            };
+
+            desktop.MainWindow = mainWindow;
+            desktop.ShutdownMode = ShutdownMode.OnMainWindowClose;
+            mainWindow.Show();
+            mainWindow.Activate();
+
+            if(TryGetUpdateCompletionDetails(out string? completedVersion, out string? releasePageUrl))
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    UpdateCompletedWindow window = new(completedVersion!, releasePageUrl);
+                    window.Show();
+                });
+            }
         }
 
         private void OnDesktopExit(object? sender, ControlledApplicationLifetimeExitEventArgs e)
@@ -156,6 +188,587 @@ namespace TibiaHuntMaster.App
                 {
                     _logger?.LogError(ex, "Failed to dispose service provider on exit.");
                 }
+            }
+        }
+
+        private async Task ObserveTaskAsync(Task task, string operationName)
+        {
+            try
+            {
+                await task;
+            }
+            catch(Exception ex)
+            {
+                _logger?.LogError(ex, "{OperationName} failed.", operationName);
+            }
+        }
+
+        private async Task<bool> CheckForApplicationUpdatesAsync(IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            if(Services is null)
+            {
+                return true;
+            }
+
+            UserPreferencesService? preferencesService = Services.GetService<UserPreferencesService>();
+            IUpdatePlanner? updatePlanner = Services.GetService<IUpdatePlanner>();
+            if(updatePlanner is null)
+            {
+                _logger?.LogInformation("No update planner is registered. Continuing normal startup.");
+                await HandleUpdateCheckFailureAsync(
+                    preferencesService,
+                    "Automatic app updates are currently unavailable because no update planner is registered.");
+                return true;
+            }
+
+            string currentVersion = GetCurrentVersion();
+            UpdateCheckResult? result = await updatePlanner.CheckForUpdateAsync(currentVersion);
+
+            if(result is null)
+            {
+                await HandleUpdateCheckFailureAsync(
+                    preferencesService,
+                    "Automatic app updates are currently unavailable.");
+                return true;
+            }
+
+            if (result.Status != UpdateCheckStatus.UpdateAvailable || result.UpdatePlan is null)
+            {
+                if(result.Status == UpdateCheckStatus.UpToDate)
+                {
+                    preferencesService?.ResetUpdateCheckFailureCounter();
+                    preferencesService?.ClearDeferredUpdatePrompt();
+                    return true;
+                }
+
+                if(result.Status == UpdateCheckStatus.UnsupportedPlatform)
+                {
+                    preferencesService?.ResetUpdateCheckFailureCounter();
+                    _logger?.LogInformation("Update check skipped because the current platform is not supported.");
+                    return true;
+                }
+
+                _logger?.LogWarning(
+                    "Update check finished with status {Status}. Message: {ErrorMessage}",
+                    result.Status,
+                    result.ErrorMessage);
+
+                await HandleUpdateCheckFailureAsync(
+                    preferencesService,
+                    result.ErrorMessage ?? "Automatic app updates are currently unavailable.");
+                return true;
+            }
+
+            preferencesService?.ResetUpdateCheckFailureCounter();
+
+            if(preferencesService is not null
+               && !preferencesService.ShouldShowDeferredUpdatePrompt(
+                   result.UpdatePlan.TargetVersion,
+                   DeferredUpdateReminderInterval))
+            {
+                _logger?.LogInformation(
+                    "Update reminder for version {TargetVersion} is deferred. Showing prompt again after {ReminderInterval} starts.",
+                    result.UpdatePlan.TargetVersion,
+                    DeferredUpdateReminderInterval);
+                return true;
+            }
+
+            bool shouldUpdate = await ShowUpdatePromptAsync(result.UpdatePlan);
+            if(!shouldUpdate)
+            {
+                preferencesService?.DeferUpdatePrompt(result.UpdatePlan.TargetVersion);
+                _logger?.LogInformation(
+                    "User skipped update from version {CurrentVersion} to {TargetVersion}.",
+                    result.CurrentVersion,
+                    result.UpdatePlan.TargetVersion);
+                return true;
+            }
+
+            preferencesService?.ClearDeferredUpdatePrompt();
+
+            if(Services.GetService<AppDataPaths>() is not AppDataPaths appDataPaths)
+            {
+                _logger?.LogError("AppDataPaths service is not available. Cannot download update.");
+                await ShowInformationWindowAsync(
+                    "Update failed",
+                    "The update could not be downloaded because the application data path is unavailable.");
+                return true;
+            }
+
+            UpdateDownloadWindow downloadWindow = new(result.UpdatePlan.TargetVersion);
+            downloadWindow.Show();
+
+            UpdateDownloadResult downloadResult;
+            try
+            {
+                string appBaseDirectory = appDataPaths.BaseDirectory;
+                IProgress<UpdateDownloadProgress> progress = new Progress<UpdateDownloadProgress>(value =>
+                {
+                    downloadWindow.UpdateProgress(value.BytesReceived, value.TotalBytes);
+                });
+
+                downloadResult = await updatePlanner.DownloadUpdateAsync(result.UpdatePlan, appBaseDirectory, progress);
+            }
+            finally
+            {
+                downloadWindow.Close();
+            }
+
+            if(downloadResult.Status != UpdateDownloadStatus.Succeeded || string.IsNullOrWhiteSpace(downloadResult.DownloadFilePath))
+            {
+                _logger?.LogError(
+                    "Update download failed. Status: {Status}, ErrorMessage: {ErrorMessage}",
+                    downloadResult.Status,
+                    downloadResult.ErrorMessage);
+
+                await ShowInformationWindowAsync(
+                    "Update failed",
+                    downloadResult.ErrorMessage ?? "The update package could not be downloaded.");
+                return true;
+            }
+
+            if(!TryStartUpdater(downloadResult))
+            {
+                await ShowInformationWindowAsync(
+                    "Updater missing",
+                    "The update package was downloaded, but the updater executable could not be started.");
+                return true;
+            }
+
+            _logger?.LogInformation(
+                "Updater started successfully for target version {TargetVersion}. Shutting down application.",
+                result.UpdatePlan.TargetVersion);
+
+            desktop.Shutdown();
+            return false;
+        }
+
+        private async Task HandleUpdateCheckFailureAsync(UserPreferencesService? preferencesService, string message)
+        {
+            int failureCount = preferencesService?.RegisterUpdateCheckFailure() ?? 0;
+
+            if(failureCount <= 0)
+            {
+                return;
+            }
+
+            if(failureCount != 1 && failureCount % UpdateFailureHintInterval != 0)
+            {
+                return;
+            }
+
+            string hintMessage =
+                $"Automatic app updates are currently unavailable. This reminder is shown every {UpdateFailureHintInterval} starts until the update check works again.\n\nDetails: {message}";
+
+            await ShowInformationWindowAsync("Update check unavailable", hintMessage);
+        }
+
+        private static string GetCurrentVersion()
+        {
+            return Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.0.0";
+        }
+
+        private static Task<bool> ShowUpdatePromptAsync(UpdatePlan updatePlan)
+        {
+            UpdatePromptWindow window = new(updatePlan);
+            return window.ShowAsync();
+        }
+
+        private static Task ShowInformationWindowAsync(string title, string message)
+        {
+            InformationWindow window = new(title, message);
+            return window.ShowAsync();
+        }
+
+        private bool TryStartUpdater(UpdateDownloadResult downloadResult)
+        {
+            string? updaterPath = ResolveUpdaterExecutablePath();
+            string? currentExecutablePath = Environment.ProcessPath;
+
+            if(string.IsNullOrWhiteSpace(updaterPath) || !File.Exists(updaterPath))
+            {
+                _logger?.LogError("Updater executable not found at {UpdaterPath}.", updaterPath);
+                return false;
+            }
+
+            if(string.IsNullOrWhiteSpace(currentExecutablePath))
+            {
+                _logger?.LogError("Current process path is not available. Cannot start updater.");
+                return false;
+            }
+
+            try
+            {
+                ProcessStartInfo startInfo = new()
+                {
+                    FileName = updaterPath,
+                    UseShellExecute = false,
+                    WorkingDirectory = AppContext.BaseDirectory,
+                };
+
+                startInfo.ArgumentList.Add("--wait-for-pid");
+                startInfo.ArgumentList.Add(Environment.ProcessId.ToString());
+                startInfo.ArgumentList.Add("--package");
+                startInfo.ArgumentList.Add(downloadResult.DownloadFilePath!);
+                startInfo.ArgumentList.Add("--app-dir");
+                startInfo.ArgumentList.Add(AppContext.BaseDirectory);
+                startInfo.ArgumentList.Add("--restart-executable");
+                startInfo.ArgumentList.Add(currentExecutablePath);
+                startInfo.ArgumentList.Add("--update-completed-version");
+                startInfo.ArgumentList.Add(downloadResult.UpdatePlan.TargetVersion);
+
+                if(!string.IsNullOrWhiteSpace(downloadResult.UpdatePlan.ReleasePageUrl))
+                {
+                    startInfo.ArgumentList.Add("--update-completed-release-page-url");
+                    startInfo.ArgumentList.Add(downloadResult.UpdatePlan.ReleasePageUrl!);
+                }
+
+                Process? process = Process.Start(startInfo);
+                return process is not null;
+            }
+            catch(Exception ex)
+            {
+                _logger?.LogError(ex, "Failed to start updater executable.");
+                return false;
+            }
+        }
+
+        private static string ResolveUpdaterExecutablePath()
+        {
+            string executableName = OperatingSystem.IsWindows()
+                ? "TibiaHuntMaster.Updater.exe"
+                : "TibiaHuntMaster.Updater";
+
+            return Path.Combine(AppContext.BaseDirectory, executableName);
+        }
+
+        private static bool TryGetUpdateCompletionDetails(out string? completedVersion, out string? releasePageUrl)
+        {
+            string[] args = Environment.GetCommandLineArgs();
+            completedVersion = GetCommandLineValue(args, "--update-completed-version");
+            releasePageUrl = GetCommandLineValue(args, "--update-completed-release-page-url");
+
+            return !string.IsNullOrWhiteSpace(completedVersion);
+        }
+
+        private static string? GetCommandLineValue(string[] args, string argumentName)
+        {
+            for(int index = 0; index < args.Length - 1; index++)
+            {
+                if(string.Equals(args[index], argumentName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return args[index + 1];
+                }
+            }
+
+            return null;
+        }
+
+        private sealed class UpdatePromptWindow : Window
+        {
+            private readonly TaskCompletionSource<bool> _taskCompletionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+            public UpdatePromptWindow(UpdatePlan updatePlan)
+            {
+                Title = "Update available";
+                Width = 440;
+                SizeToContent = SizeToContent.Height;
+                CanResize = false;
+                WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
+                TextBlock headline = new()
+                {
+                    Text = $"A new version is available: {updatePlan.TargetVersion}",
+                    FontSize = 18,
+                    TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+                };
+
+                TextBlock details = new()
+                {
+                    Text = $"Current version: {updatePlan.CurrentVersion}\nPublished: {updatePlan.PublishedAtUtc:yyyy-MM-dd HH:mm} UTC\nDo you want to download and install the update now?",
+                    TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+                };
+
+                Button laterButton = new()
+                {
+                    Content = "Later",
+                    MinWidth = 100,
+                };
+                laterButton.Click += (_, _) => CloseWithResult(false);
+
+                Button updateButton = new()
+                {
+                    Content = "Update now",
+                    MinWidth = 120,
+                };
+                updateButton.Click += (_, _) => CloseWithResult(true);
+
+                StackPanel buttonPanel = new()
+                {
+                    Orientation = Orientation.Horizontal,
+                    Spacing = 12,
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    Children =
+                    {
+                        laterButton,
+                        updateButton
+                    }
+                };
+
+                Content = new Border
+                {
+                    Padding = new Thickness(20),
+                    Child = new StackPanel
+                    {
+                        Spacing = 16,
+                        Children =
+                        {
+                            headline,
+                            details,
+                            buttonPanel
+                        }
+                    }
+                };
+
+                Closed += (_, _) =>
+                {
+                    if(!_taskCompletionSource.Task.IsCompleted)
+                    {
+                        _taskCompletionSource.TrySetResult(false);
+                    }
+                };
+            }
+
+            public Task<bool> ShowAsync()
+            {
+                Show();
+                Activate();
+                return _taskCompletionSource.Task;
+            }
+
+            private void CloseWithResult(bool result)
+            {
+                _taskCompletionSource.TrySetResult(result);
+                Close();
+            }
+        }
+
+        private sealed class UpdateDownloadWindow : Window
+        {
+            private readonly ProgressBar _progressBar;
+            private readonly TextBlock _statusText;
+
+            public UpdateDownloadWindow(string targetVersion)
+            {
+                Title = "Downloading update";
+                Width = 420;
+                SizeToContent = SizeToContent.Height;
+                CanResize = false;
+                WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
+                _statusText = new TextBlock
+                {
+                    Text = "Waiting for download progress...",
+                    TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+                };
+
+                _progressBar = new ProgressBar
+                {
+                    Minimum = 0,
+                    Maximum = 100,
+                    Value = 0,
+                    IsIndeterminate = true,
+                    Height = 10,
+                };
+
+                Content = new Border
+                {
+                    Padding = new Thickness(20),
+                    Child = new StackPanel
+                    {
+                        Spacing = 16,
+                        Children =
+                        {
+                            new TextBlock
+                            {
+                                Text = $"Downloading update {targetVersion}...",
+                                FontSize = 18,
+                                TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+                            },
+                            new TextBlock
+                            {
+                                Text = "Please wait while the update package is downloaded.",
+                                TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+                            },
+                            _statusText,
+                            _progressBar
+                        }
+                    }
+                };
+            }
+
+            public void UpdateProgress(long bytesReceived, long? totalBytes)
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    if(totalBytes is > 0)
+                    {
+                        double percentage = Math.Clamp(bytesReceived * 100d / totalBytes.Value, 0, 100);
+                        _progressBar.IsIndeterminate = false;
+                        _progressBar.Value = percentage;
+                        _statusText.Text = $"Downloaded {FormatByteSize(bytesReceived)} of {FormatByteSize(totalBytes.Value)} ({percentage:0.0}%).";
+                        return;
+                    }
+
+                    _progressBar.IsIndeterminate = true;
+                    _progressBar.Value = 0;
+                    _statusText.Text = $"Downloaded {FormatByteSize(bytesReceived)}...";
+                });
+            }
+
+            private static string FormatByteSize(long bytes)
+            {
+                if(bytes >= 1024L * 1024L * 1024L)
+                {
+                    return $"{bytes / (1024d * 1024d * 1024d):0.0} GB";
+                }
+
+                if(bytes >= 1024L * 1024L)
+                {
+                    return $"{bytes / (1024d * 1024d):0.0} MB";
+                }
+
+                if(bytes >= 1024L)
+                {
+                    return $"{bytes / 1024d:0.0} KB";
+                }
+
+                return $"{bytes} B";
+            }
+        }
+
+        private sealed class InformationWindow : Window
+        {
+            private readonly TaskCompletionSource _taskCompletionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+            public InformationWindow(string title, string message)
+            {
+                Title = title;
+                Width = 420;
+                SizeToContent = SizeToContent.Height;
+                CanResize = false;
+                WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
+                Button okButton = new()
+                {
+                    Content = "OK",
+                    MinWidth = 100,
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                };
+                okButton.Click += (_, _) => Close();
+
+                Content = new Border
+                {
+                    Padding = new Thickness(20),
+                    Child = new StackPanel
+                    {
+                        Spacing = 16,
+                        Children =
+                        {
+                            new TextBlock
+                            {
+                                Text = message,
+                                TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+                            },
+                            okButton
+                        }
+                    }
+                };
+
+                Closed += (_, _) => _taskCompletionSource.TrySetResult();
+            }
+
+            public Task ShowAsync()
+            {
+                Show();
+                Activate();
+                return _taskCompletionSource.Task;
+            }
+        }
+
+        private sealed class UpdateCompletedWindow : Window
+        {
+            public UpdateCompletedWindow(string completedVersion, string? releasePageUrl)
+            {
+                Title = "Update completed";
+                Width = 460;
+                SizeToContent = SizeToContent.Height;
+                CanResize = false;
+                WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
+                Button closeButton = new()
+                {
+                    Content = "Continue",
+                    MinWidth = 100,
+                };
+                closeButton.Click += (_, _) => Close();
+
+                StackPanel buttonPanel = new()
+                {
+                    Orientation = Orientation.Horizontal,
+                    Spacing = 12,
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    Children =
+                    {
+                        closeButton
+                    }
+                };
+
+                if(!string.IsNullOrWhiteSpace(releasePageUrl))
+                {
+                    Button changelogButton = new()
+                    {
+                        Content = "View changelog",
+                        MinWidth = 120,
+                    };
+                    changelogButton.Click += (_, _) => OpenUrl(releasePageUrl!);
+                    buttonPanel.Children.Insert(0, changelogButton);
+                }
+
+                Content = new Border
+                {
+                    Padding = new Thickness(20),
+                    Child = new StackPanel
+                    {
+                        Spacing = 16,
+                        Children =
+                        {
+                            new TextBlock
+                            {
+                                Text = $"Update completed successfully: {completedVersion}",
+                                FontSize = 18,
+                                TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+                            },
+                            new TextBlock
+                            {
+                                Text = "The application has been updated and restarted. You can review the changelog if you want.",
+                                TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+                            },
+                            buttonPanel
+                        }
+                    }
+                };
+            }
+
+            private static void OpenUrl(string url)
+            {
+                ProcessStartInfo startInfo = new()
+                {
+                    FileName = url,
+                    UseShellExecute = true,
+                };
+
+                Process.Start(startInfo);
             }
         }
     }

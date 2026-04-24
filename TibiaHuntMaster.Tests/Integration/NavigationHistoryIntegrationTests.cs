@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using TibiaHuntMaster.App.Services.Localization;
 using TibiaHuntMaster.App.Services.Navigation;
-using TibiaHuntMaster.App.ViewModels;
 using TibiaHuntMaster.App.ViewModels.Dashboard;
 using TibiaHuntMaster.Infrastructure.Data;
 using TibiaHuntMaster.Infrastructure.Data.Entities.Hunts;

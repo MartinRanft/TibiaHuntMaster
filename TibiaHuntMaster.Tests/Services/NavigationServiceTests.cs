@@ -1,7 +1,6 @@
-using System.ComponentModel;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
+
 using TibiaHuntMaster.App.Services.Navigation;
 using TibiaHuntMaster.App.ViewModels;
 

@@ -1,7 +1,4 @@
-﻿using System;
-
-using Avalonia;
-using Avalonia.X11;
+﻿using Avalonia;
 
 namespace TibiaHuntMaster.App
 {
@@ -18,7 +15,7 @@ namespace TibiaHuntMaster.App
         }
 
         // Avalonia configuration, don't remove; also used by visual designer.
-        public static AppBuilder BuildAvaloniaApp()
+        private static AppBuilder BuildAvaloniaApp()
         {
             return AppBuilder.Configure<App>()
                              .UsePlatformDetect()

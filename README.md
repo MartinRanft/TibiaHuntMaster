@@ -9,7 +9,8 @@
 A powerful desktop companion for Tibia players that automatically captures, analyzes, and tracks your hunting sessions—helping you level smarter, not harder.
 
 [![.NET](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
-[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey)](https://github.com/yourusername/TibiaHuntMaster)
+[![Verify](https://github.com/MartinRanft/TibiaHuntMaster/actions/workflows/verify.yml/badge.svg)](https://github.com/MartinRanft/TibiaHuntMaster/actions/workflows/verify.yml)
+[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey)](https://github.com/MartinRanft/TibiaHuntMaster/releases)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 [Features](#-features) • [Screenshots](#-screenshots) • [Getting Started](#-getting-started) • [How It Works](#-how-it-works) • [Privacy](#-privacy--data)
@@ -205,7 +206,7 @@ The app optionally downloads public game data (creatures, items, spawns) during 
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/TibiaHuntMaster.git
+git clone https://github.com/MartinRanft/TibiaHuntMaster.git
 cd TibiaHuntMaster
 
 # Restore dependencies
@@ -240,13 +241,18 @@ dotnet test --filter "FullyQualifiedName~LocalizationIntegrationTests"
 
 ## 📜 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+**Software:** This project's source code is licensed under the [MIT License](LICENSE).
+
+**Tibia Assets:** All Tibia-related graphical assets (monster images, item sprites, map tiles, icons) remain the intellectual property of **CipSoft GmbH** and are used in accordance with their Fansite and Streaming policies. These assets are **not** covered by the MIT License.
+
+See the [LICENSE](LICENSE) file for full details.
 
 ---
 
 ## 🙏 Credits
 
 - **Tibia** is a registered trademark of CipSoft GmbH
+- Tibia game assets (sprites, images, icons) © CipSoft GmbH - used with permission under Fansite policy
 - Content data delivered via the [ByteWizards API](https://tibiadata.bytewizards.de/), based on TibiaWiki data
 - Hunting spot recommendations sourced from [TibiaPal](https://www.tibiapal.com/)
 - Character lookup via [TibiaData API](https://tibiadata.com/)
@@ -257,6 +263,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Made with ❤️ for the Tibia community**
 
-[Report Bug](https://github.com/yourusername/TibiaHuntMaster/issues) • [Request Feature](https://github.com/yourusername/TibiaHuntMaster/issues)
+[Report Bug](https://github.com/MartinRanft/TibiaHuntMaster/issues) • [Request Feature](https://github.com/MartinRanft/TibiaHuntMaster/issues)
 
 </div>

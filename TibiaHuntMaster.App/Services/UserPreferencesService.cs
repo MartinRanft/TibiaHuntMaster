@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -15,6 +13,9 @@ namespace TibiaHuntMaster.App.Services
         public string? Language { get; set; }
         public bool MinimapShowMarkers { get; set; } = true;
         public bool MinimapShowSpawns { get; set; } = true;
+        public int UpdateCheckFailureStartCount { get; set; }
+        public string? DeferredUpdateVersion { get; set; }
+        public int DeferredUpdateStartCount { get; set; }
     }
 
     /// <summary>
@@ -137,6 +138,66 @@ namespace TibiaHuntMaster.App.Services
         {
             _preferences.MinimapShowMarkers = showMarkers;
             _preferences.MinimapShowSpawns = showSpawns;
+            SavePreferences();
+        }
+
+        public int RegisterUpdateCheckFailure()
+        {
+            _preferences.UpdateCheckFailureStartCount++;
+            SavePreferences();
+            return _preferences.UpdateCheckFailureStartCount;
+        }
+
+        public void ResetUpdateCheckFailureCounter()
+        {
+            if(_preferences.UpdateCheckFailureStartCount == 0)
+            {
+                return;
+            }
+
+            _preferences.UpdateCheckFailureStartCount = 0;
+            SavePreferences();
+        }
+
+        public bool ShouldShowDeferredUpdatePrompt(string targetVersion, int reminderIntervalStartCount)
+        {
+            if(string.IsNullOrWhiteSpace(targetVersion) || reminderIntervalStartCount <= 0)
+            {
+                return true;
+            }
+
+            if(!string.Equals(_preferences.DeferredUpdateVersion, targetVersion, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            _preferences.DeferredUpdateStartCount++;
+            SavePreferences();
+
+            return _preferences.DeferredUpdateStartCount >= reminderIntervalStartCount;
+        }
+
+        public void DeferUpdatePrompt(string targetVersion)
+        {
+            if(string.IsNullOrWhiteSpace(targetVersion))
+            {
+                return;
+            }
+
+            _preferences.DeferredUpdateVersion = targetVersion;
+            _preferences.DeferredUpdateStartCount = 0;
+            SavePreferences();
+        }
+
+        public void ClearDeferredUpdatePrompt()
+        {
+            if(string.IsNullOrWhiteSpace(_preferences.DeferredUpdateVersion) && _preferences.DeferredUpdateStartCount == 0)
+            {
+                return;
+            }
+
+            _preferences.DeferredUpdateVersion = null;
+            _preferences.DeferredUpdateStartCount = 0;
             SavePreferences();
         }
 

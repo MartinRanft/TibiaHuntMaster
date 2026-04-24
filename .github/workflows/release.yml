@@ -83,16 +83,33 @@ jobs:
             -p:DebugSymbols=false `
             -o ./publish/win-x64
 
-      - name: Package zip
+      - name: Install Inno Setup
         shell: pwsh
         run: |
-          Compress-Archive -Path ./publish/win-x64/* -DestinationPath ./TibiaHuntMaster-win-x64.zip -Force
+          choco install innosetup --no-progress -y
+
+      - name: Build Setup.exe
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path ./release-artifacts/win | Out-Null
+
+          $appVersion = "${env:GITHUB_REF_NAME}" -replace '^v', ''
+          $publishDir = (Resolve-Path ./publish/win-x64).Path
+          $outputDir = (Resolve-Path ./release-artifacts/win).Path
+          $iscc = Join-Path ${env:ProgramFiles(x86)} "Inno Setup 6\ISCC.exe"
+
+          & $iscc `
+            "/DAppVersion=$appVersion" `
+            "/DPublishDir=$publishDir" `
+            "/DOutputDir=$outputDir" `
+            "/DMainExecutable=TibiaHuntMaster.App.exe" `
+            packaging/windows/TibiaHuntMaster.iss
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: release-win-x64
-          path: TibiaHuntMaster-win-x64.zip
+          path: release-artifacts/win/TibiaHuntMaster-Setup.exe
 
   build-linux-appimage:
     name: Build Linux AppImage (linux-x64)
@@ -191,15 +208,71 @@ jobs:
             -p:DebugSymbols=false \
             -o ./publish/${{ matrix.rid }}
 
-      - name: Package tar.gz
+      - name: Build .app bundle
         run: |
-          tar -czf TibiaHuntMaster-${{ matrix.rid }}.tar.gz -C ./publish/${{ matrix.rid }} .
+          APP_VERSION="${GITHUB_REF_NAME#v}"
+          APP_BUNDLE_ROOT="./bundle/${{ matrix.rid }}/TibiaHuntMaster.app"
+          APP_CONTENTS="$APP_BUNDLE_ROOT/Contents"
+          APP_MACOS="$APP_CONTENTS/MacOS"
+          APP_RESOURCES="$APP_CONTENTS/Resources"
+
+          mkdir -p "$APP_MACOS" "$APP_RESOURCES"
+          cp -a ./publish/${{ matrix.rid }}/. "$APP_MACOS/"
+          cp TibiaHuntMaster.App/Assets/logo.png "$APP_RESOURCES/logo.png"
+
+          cat > "$APP_CONTENTS/Info.plist" <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>CFBundleDevelopmentRegion</key>
+            <string>en</string>
+            <key>CFBundleDisplayName</key>
+            <string>TibiaHuntMaster</string>
+            <key>CFBundleExecutable</key>
+            <string>TibiaHuntMaster.App</string>
+            <key>CFBundleIdentifier</key>
+            <string>eu.tibiafun.tibiahuntmaster</string>
+            <key>CFBundleInfoDictionaryVersion</key>
+            <string>6.0</string>
+            <key>CFBundleName</key>
+            <string>TibiaHuntMaster</string>
+            <key>CFBundlePackageType</key>
+            <string>APPL</string>
+            <key>CFBundleShortVersionString</key>
+            <string>$APP_VERSION</string>
+            <key>CFBundleVersion</key>
+            <string>$APP_VERSION</string>
+            <key>NSHighResolutionCapable</key>
+            <true/>
+          </dict>
+          </plist>
+          EOF
+
+          chmod +x "$APP_MACOS/TibiaHuntMaster.App"
+          codesign --force --deep --sign - "$APP_BUNDLE_ROOT"
+
+      - name: Package DMG
+        run: |
+          DMG_ROOT="./dmg-root/${{ matrix.rid }}"
+          APP_BUNDLE="./bundle/${{ matrix.rid }}/TibiaHuntMaster.app"
+
+          mkdir -p "$DMG_ROOT"
+          cp -a "$APP_BUNDLE" "$DMG_ROOT/"
+          ln -s /Applications "$DMG_ROOT/Applications"
+
+          hdiutil create \
+            -volname "TibiaHuntMaster" \
+            -srcfolder "$DMG_ROOT" \
+            -ov \
+            -format UDZO \
+            "TibiaHuntMaster-${{ matrix.rid }}.dmg"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: release-${{ matrix.rid }}
-          path: TibiaHuntMaster-${{ matrix.rid }}.tar.gz
+          path: TibiaHuntMaster-${{ matrix.rid }}.dmg
 
   create-release:
     name: Create GitHub Release
@@ -245,10 +318,10 @@ jobs:
           base_url = f"https://github.com/{repo}/releases/download/{tag_name}"
 
           files = {
-              "windowsX64": "TibiaHuntMaster-win-x64.zip",
+              "windowsX64": "TibiaHuntMaster-Setup.exe",
               "linuxX64": "TibiaHuntMaster-linux-x64.AppImage",
-              "osxX64": "TibiaHuntMaster-osx-x64.tar.gz",
-              "osxArm64": "TibiaHuntMaster-osx-arm64.tar.gz",
+              "osxX64": "TibiaHuntMaster-osx-x64.dmg",
+              "osxArm64": "TibiaHuntMaster-osx-arm64.dmg",
           }
 
           manifest = {

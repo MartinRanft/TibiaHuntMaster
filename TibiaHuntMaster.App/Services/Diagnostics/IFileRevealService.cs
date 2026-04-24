@@ -1,6 +1,3 @@
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace TibiaHuntMaster.App.Services.Diagnostics
 {
     public interface IFileRevealService

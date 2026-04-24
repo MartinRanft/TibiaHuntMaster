@@ -1,4 +1,3 @@
-using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -26,6 +25,8 @@ using TibiaHuntMaster.Infrastructure.Services.Parsing;
 using TibiaHuntMaster.Infrastructure.Services.System;
 using TibiaHuntMaster.Infrastructure.Services.TibiaData;
 using TibiaHuntMaster.Infrastructure.Services.TibiaPal;
+using TibiaHuntMaster.Updater.Core.Abstractions;
+using TibiaHuntMaster.Updater.Core.Services.Planning;
 
 namespace TibiaHuntMaster.App.Extensions
 {
@@ -50,6 +51,7 @@ namespace TibiaHuntMaster.App.Extensions
             });
 
             // 2. Datenbank-Factory registrieren
+            services.AddSingleton<IUpdatePlanner, UpdatePlanner>();
             services.AddDbContextFactory<AppDbContext>(options =>
             options.UseSqlite($"Data Source={appDataPaths.DatabasePath}"));
 
@@ -97,7 +99,6 @@ namespace TibiaHuntMaster.App.Extensions
             services.AddSingleton<IFileRevealService, FileRevealService>();
             services.AddSingleton<AppExceptionMonitor>();
             services.AddSingleton<IHuntSummaryGeneratorService, HuntSummaryGeneratorService>();
-
             // Localization Service
             services.AddSingleton<Services.Localization.ILocalizationService, Services.Localization.LocalizationService>();
             services.AddSingleton<Services.ErrorHandling.IErrorHandlingService, Services.ErrorHandling.ErrorHandlingService>();

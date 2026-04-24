@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.IO;
 using System.Resources;
 using System.Text.Json;
-
-using TibiaHuntMaster.App.Services;
 
 namespace TibiaHuntMaster.App.Services.Localization
 {

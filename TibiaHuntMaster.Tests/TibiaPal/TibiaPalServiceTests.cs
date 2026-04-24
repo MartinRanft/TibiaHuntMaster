@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Net;
 
 using FluentAssertions;
@@ -8,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 
 using TibiaHuntMaster.Infrastructure.Data;
-using TibiaHuntMaster.Infrastructure.Data.Entities.Content;
 using TibiaHuntMaster.Infrastructure.Http.TibiaPal;
 using TibiaHuntMaster.Infrastructure.Services.TibiaPal;
 using HuntingPlaceEntitys = TibiaHuntMaster.Infrastructure.Data.Entities.Content.HuntingPlaceEntity;

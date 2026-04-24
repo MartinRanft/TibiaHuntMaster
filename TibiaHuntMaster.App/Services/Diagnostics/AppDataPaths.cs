@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-
 namespace TibiaHuntMaster.App.Services.Diagnostics
 {
     public sealed class AppDataPaths

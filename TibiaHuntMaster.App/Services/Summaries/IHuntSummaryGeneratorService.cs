@@ -1,8 +1,3 @@
-using System.Collections.Generic;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-
 using TibiaHuntMaster.Infrastructure.Data.Entities.Hunts;
 
 namespace TibiaHuntMaster.App.Services.Summaries

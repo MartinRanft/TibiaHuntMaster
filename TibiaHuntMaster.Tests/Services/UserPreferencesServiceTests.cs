@@ -181,6 +181,71 @@ namespace TibiaHuntMaster.Tests.Services
             fileSystem.Contents[currentPath].Should().Contain("\"Theme\":\"Dark\"");
         }
 
+        [Fact]
+        public void ShouldShowDeferredUpdatePrompt_ShouldReturnFalse_UntilReminderIntervalIsReached_ForSameVersion()
+        {
+            string currentPath = "/virtual/preferences.json";
+
+            FakePreferencesFileSystem fileSystem = new();
+            UserPreferencesService service = new(
+                NullLogger<UserPreferencesService>.Instance,
+                currentPath,
+                legacyPreferencesFilePath: null,
+                fileSystem);
+
+            service.DeferUpdatePrompt("0.0.4");
+
+            for(int start = 1; start < 10; start++)
+            {
+                bool shouldShow = service.ShouldShowDeferredUpdatePrompt("0.0.4", 10);
+
+                shouldShow.Should().BeFalse();
+            }
+
+            service.ShouldShowDeferredUpdatePrompt("0.0.4", 10).Should().BeTrue();
+        }
+
+        [Fact]
+        public void ShouldShowDeferredUpdatePrompt_ShouldReturnTrue_Immediately_ForDifferentVersion()
+        {
+            string currentPath = "/virtual/preferences.json";
+
+            FakePreferencesFileSystem fileSystem = new();
+            UserPreferencesService service = new(
+                NullLogger<UserPreferencesService>.Instance,
+                currentPath,
+                legacyPreferencesFilePath: null,
+                fileSystem);
+
+            service.DeferUpdatePrompt("0.0.4");
+
+            bool shouldShow = service.ShouldShowDeferredUpdatePrompt("0.0.5", 10);
+
+            shouldShow.Should().BeTrue();
+        }
+
+        [Fact]
+        public void ClearDeferredUpdatePrompt_ShouldResetStoredReminderState()
+        {
+            string currentPath = "/virtual/preferences.json";
+
+            FakePreferencesFileSystem fileSystem = new();
+            UserPreferencesService service = new(
+                NullLogger<UserPreferencesService>.Instance,
+                currentPath,
+                legacyPreferencesFilePath: null,
+                fileSystem);
+
+            service.DeferUpdatePrompt("0.0.4");
+            _ = service.ShouldShowDeferredUpdatePrompt("0.0.4", 10);
+
+            service.ClearDeferredUpdatePrompt();
+
+            service.Preferences.DeferredUpdateVersion.Should().BeNull();
+            service.Preferences.DeferredUpdateStartCount.Should().Be(0);
+            service.ShouldShowDeferredUpdatePrompt("0.0.4", 10).Should().BeTrue();
+        }
+
         private sealed class FakePreferencesFileSystem : UserPreferencesService.IUserPreferencesFileSystem
         {
             public Dictionary<string, string> Contents { get; } = new(StringComparer.Ordinal);

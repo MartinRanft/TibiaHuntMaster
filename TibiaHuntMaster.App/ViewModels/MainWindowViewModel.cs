@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-using Avalonia.Threading;
+﻿using Avalonia.Threading;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;

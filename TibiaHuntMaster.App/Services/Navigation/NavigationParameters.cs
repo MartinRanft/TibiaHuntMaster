@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 using TibiaHuntMaster.Core.Characters;
 using TibiaHuntMaster.Infrastructure.Data.Entities.Character;
 using TibiaHuntMaster.Infrastructure.Data.Entities.Hunts;

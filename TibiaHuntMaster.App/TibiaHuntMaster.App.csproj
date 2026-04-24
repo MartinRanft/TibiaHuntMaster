@@ -7,6 +7,8 @@
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>
         <LangVersion>14</LangVersion>
+        <AssemblyVersion>0.0.3.0</AssemblyVersion>
+        <FileVersion>0.0.3.0</FileVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -63,5 +65,6 @@
     <ItemGroup>
         <ProjectReference Include="..\TibiaHuntMaster.Core\TibiaHuntMaster.Core.csproj"/>
         <ProjectReference Include="..\TibiaHuntMaster.Infrastructure\TibiaHuntMaster.Infrastructure.csproj"/>
+        <ProjectReference Include="..\TibiaHuntMaster.Updater.Core\TibiaHuntMaster.Updater.Core.csproj" />
     </ItemGroup>
 </Project>

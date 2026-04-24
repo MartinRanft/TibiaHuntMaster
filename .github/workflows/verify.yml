@@ -1,4 +1,4 @@
-name: CI
+name: Verify
 
 on:
   push:
@@ -10,25 +10,29 @@ permissions:
   contents: read
 
 jobs:
-  test-and-coverage:
-    name: Test and Coverage
+  verify:
+    name: Build and Test
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup .NET 10
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 10.0.x
 
       - name: Restore Dependencies
         run: dotnet restore
 
+      - name: Build Solution
+        run: dotnet build TibiaHuntMaster.sln --no-restore --configuration Release
+
       - name: Run Tests with Coverage
         run: |
           dotnet test TibiaHuntMaster.sln \
-            --no-restore \
+            --no-build \
+            --configuration Release \
             --verbosity normal \
             --logger "trx;LogFileName=test-results.trx" \
             --results-directory ./artifacts/test-results \
@@ -38,7 +42,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ci-test-results
+          name: verify-test-results
           path: ./artifacts/test-results/**/*.trx
           if-no-files-found: warn
 
@@ -46,6 +50,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ci-coverage-results
+          name: verify-coverage-results
           path: ./artifacts/test-results/**/coverage.cobertura.xml
           if-no-files-found: warn

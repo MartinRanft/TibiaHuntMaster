@@ -1,6 +1,3 @@
-using System;
-using System.Threading.Tasks;
-
 using TibiaHuntMaster.App.ViewModels;
 
 namespace TibiaHuntMaster.App.Services.Navigation

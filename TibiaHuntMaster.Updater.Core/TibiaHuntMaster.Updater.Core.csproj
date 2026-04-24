@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>14</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="Services\Download\" />
+      <Folder Include="Services\Packages\" />
+      <Folder Include="Services\Versioning\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="NuGet.Versioning" />
+    </ItemGroup>
+
+</Project>

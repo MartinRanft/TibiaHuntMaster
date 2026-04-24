@@ -8,6 +8,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TibiaHuntMaster.Infrastruct
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TibiaHuntMaster.Tests", "TibiaHuntMaster.Tests\TibiaHuntMaster.Tests.csproj", "{9BAF62BD-47CA-431F-BCF5-BEDAC9388DC1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TibiaHuntMaster.Updater", "TibiaHuntMaster.Updater\TibiaHuntMaster.Updater.csproj", "{4C701636-83A8-42A4-8252-4DD69E511EA2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TibiaHuntMaster.Updater.Core", "TibiaHuntMaster.Updater.Core\TibiaHuntMaster.Updater.Core.csproj", "{26FF2811-EA49-400E-B0BB-F44D4EAB578B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +34,13 @@ Global
 		{9BAF62BD-47CA-431F-BCF5-BEDAC9388DC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BAF62BD-47CA-431F-BCF5-BEDAC9388DC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BAF62BD-47CA-431F-BCF5-BEDAC9388DC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C701636-83A8-42A4-8252-4DD69E511EA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C701636-83A8-42A4-8252-4DD69E511EA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C701636-83A8-42A4-8252-4DD69E511EA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C701636-83A8-42A4-8252-4DD69E511EA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26FF2811-EA49-400E-B0BB-F44D4EAB578B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26FF2811-EA49-400E-B0BB-F44D4EAB578B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26FF2811-EA49-400E-B0BB-F44D4EAB578B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26FF2811-EA49-400E-B0BB-F44D4EAB578B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
