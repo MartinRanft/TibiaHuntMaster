@@ -707,23 +707,23 @@ namespace TibiaHuntMaster.App
 
         private sealed class UpdateCompletedWindow : Window
         {
-            private readonly SelectableTextBlock _changelogText;
+            private readonly StackPanel _changelogPanel;
 
             public UpdateCompletedWindow(string completedVersion, string? releasePageUrl, IChangelogService changelogService)
             {
                 Title = $"Updated to {completedVersion}";
-                Width = 580;
-                Height = 520;
+                Width = 600;
+                Height = 540;
                 CanResize = true;
                 WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
-                _changelogText = new SelectableTextBlock
+                _changelogPanel = new StackPanel { Spacing = 2, Margin = new Thickness(0, 4, 0, 0) };
+                _changelogPanel.Children.Add(new TextBlock
                 {
                     Text = "Loading changelog...",
-                    TextWrapping = Avalonia.Media.TextWrapping.Wrap,
-                    FontFamily = new Avalonia.Media.FontFamily("Consolas, Menlo, monospace"),
                     FontSize = 13,
-                };
+                    Opacity = 0.6,
+                });
 
                 Button closeButton = new()
                 {
@@ -756,6 +756,7 @@ namespace TibiaHuntMaster.App
                 {
                     Text = $"What's new in {completedVersion}",
                     FontSize = 18,
+                    FontWeight = Avalonia.Media.FontWeight.SemiBold,
                     TextWrapping = Avalonia.Media.TextWrapping.Wrap,
                 };
 
@@ -767,7 +768,7 @@ namespace TibiaHuntMaster.App
 
                 ScrollViewer scrollViewer = new()
                 {
-                    Content = _changelogText,
+                    Content = _changelogPanel,
                     Margin = new Thickness(0, 8, 0, 0),
                 };
 
@@ -789,15 +790,97 @@ namespace TibiaHuntMaster.App
                     string? markdown = await changelogService.GetChangelogSectionAsync(version, releasePageUrl);
                     await Dispatcher.UIThread.InvokeAsync(() =>
                     {
-                        _changelogText.Text = markdown ?? $"No changelog found for version {version}.";
+                        _changelogPanel.Children.Clear();
+                        if(markdown is null)
+                        {
+                            _changelogPanel.Children.Add(new TextBlock
+                            {
+                                Text = $"No changelog available for version {version}.",
+                                FontSize = 13,
+                                Opacity = 0.6,
+                            });
+                            return;
+                        }
+                        RenderMarkdown(markdown);
                     });
                 }
                 catch
                 {
                     await Dispatcher.UIThread.InvokeAsync(() =>
                     {
-                        _changelogText.Text = $"Could not load changelog for version {version}.";
+                        _changelogPanel.Children.Clear();
+                        _changelogPanel.Children.Add(new TextBlock
+                        {
+                            Text = $"Could not load changelog for version {version}.",
+                            FontSize = 13,
+                            Opacity = 0.6,
+                        });
                     });
+                }
+            }
+
+            private void RenderMarkdown(string markdown)
+            {
+                string[] lines = markdown.Split('\n');
+                bool lastWasEmpty = true;
+
+                foreach(string rawLine in lines)
+                {
+                    string line = rawLine.TrimEnd();
+
+                    if(string.IsNullOrEmpty(line))
+                    {
+                        lastWasEmpty = true;
+                        continue;
+                    }
+
+                    TextBlock block;
+
+                    if(line.StartsWith("## ", StringComparison.Ordinal))
+                    {
+                        block = new TextBlock
+                        {
+                            Text = line[3..].Trim(),
+                            FontSize = 15,
+                            FontWeight = Avalonia.Media.FontWeight.Bold,
+                            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+                            Margin = new Thickness(0, lastWasEmpty ? 6 : 2, 0, 4),
+                        };
+                    }
+                    else if(line.StartsWith("### ", StringComparison.Ordinal))
+                    {
+                        block = new TextBlock
+                        {
+                            Text = line[4..].Trim(),
+                            FontSize = 13,
+                            FontWeight = Avalonia.Media.FontWeight.SemiBold,
+                            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+                            Margin = new Thickness(0, lastWasEmpty ? 8 : 2, 0, 2),
+                        };
+                    }
+                    else if(line.StartsWith("- ", StringComparison.Ordinal))
+                    {
+                        block = new TextBlock
+                        {
+                            Text = "•  " + line[2..].Trim(),
+                            FontSize = 13,
+                            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+                            Margin = new Thickness(14, 1, 0, 1),
+                        };
+                    }
+                    else
+                    {
+                        block = new TextBlock
+                        {
+                            Text = line,
+                            FontSize = 13,
+                            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+                            Margin = new Thickness(0, lastWasEmpty ? 4 : 0, 0, 0),
+                        };
+                    }
+
+                    _changelogPanel.Children.Add(block);
+                    lastWasEmpty = false;
                 }
             }
 

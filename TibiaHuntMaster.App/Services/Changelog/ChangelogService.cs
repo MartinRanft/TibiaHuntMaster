@@ -10,7 +10,11 @@ namespace TibiaHuntMaster.App.Services.Changelog
             if (rawUrl is null)
                 return null;
 
-            string markdown = await httpClient.GetStringAsync(rawUrl, cancellationToken);
+            using HttpResponseMessage response = await httpClient.GetAsync(rawUrl, cancellationToken);
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            string markdown = await response.Content.ReadAsStringAsync(cancellationToken);
             return ParseVersionSection(markdown, version);
         }
 
