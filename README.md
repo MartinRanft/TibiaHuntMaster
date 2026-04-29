@@ -97,6 +97,8 @@ Explore 386+ hunting locations with vocation-specific recommendations and stats.
 - **.NET 10 Runtime** ([download here](https://dotnet.microsoft.com/download/dotnet/10.0))
 - **Internet connection** (optional, for creature/item data sync during first run)
 
+> **Note:** macOS builds are provided but currently untested. Windows and Linux are fully tested via CI/CD. If you encounter issues on macOS, please [report them](https://github.com/MartinRanft/TibiaHuntMaster/issues).
+
 ### Installation
 
 1. Download the latest release for your platform

@@ -75,12 +75,14 @@ jobs:
       - name: Publish win-x64 (no debug symbols)
         shell: pwsh
         run: |
+          $appVersion = "${env:GITHUB_REF_NAME}" -replace '^v', ''
           dotnet publish ${{ env.APP_PROJECT }} `
             -c Release `
             -r win-x64 `
             --self-contained true `
             -p:DebugType=None `
             -p:DebugSymbols=false `
+            -p:Version=$appVersion `
             -o ./publish/win-x64
 
       - name: Install Inno Setup
@@ -130,12 +132,14 @@ jobs:
 
       - name: Publish linux-x64 (no debug symbols)
         run: |
+          APP_VERSION="${GITHUB_REF_NAME#v}"
           dotnet publish ${{ env.APP_PROJECT }} \
             -c Release \
             -r linux-x64 \
             --self-contained true \
             -p:DebugType=None \
             -p:DebugSymbols=false \
+            -p:Version=$APP_VERSION \
             -o ./publish/linux-x64
 
       - name: Build AppDir structure
@@ -200,12 +204,14 @@ jobs:
 
       - name: Publish ${{ matrix.rid }} (no debug symbols)
         run: |
+          APP_VERSION="${GITHUB_REF_NAME#v}"
           dotnet publish ${{ env.APP_PROJECT }} \
             -c Release \
             -r ${{ matrix.rid }} \
             --self-contained true \
             -p:DebugType=None \
             -p:DebugSymbols=false \
+            -p:Version=$APP_VERSION \
             -o ./publish/${{ matrix.rid }}
 
       - name: Build .app bundle
@@ -329,6 +335,7 @@ jobs:
               "tag": tag_name,
               "channel": "stable",
               "publishedAtUtc": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+              "releasePageUrl": f"https://github.com/{repo}/releases/tag/{tag_name}",
           }
 
           for key, filename in files.items():

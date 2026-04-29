@@ -27,5 +27,8 @@ namespace TibiaHuntMaster.Updater.Core.Models
 
         [JsonPropertyName("osxArm64")]
         public ReleaseFeedAssetResponse? OsxArm64 { get; init; }
+
+        [JsonPropertyName("releasePageUrl")]
+        public string? ReleasePageUrl { get; init; }
     }
 }

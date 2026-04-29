@@ -8,9 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Services\Download\" />
       <Folder Include="Services\Packages\" />
-      <Folder Include="Services\Versioning\" />
     </ItemGroup>
 
     <ItemGroup>

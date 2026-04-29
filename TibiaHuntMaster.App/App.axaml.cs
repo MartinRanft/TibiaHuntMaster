@@ -410,8 +410,6 @@ namespace TibiaHuntMaster.App
                 startInfo.ArgumentList.Add(Environment.ProcessId.ToString());
                 startInfo.ArgumentList.Add("--package");
                 startInfo.ArgumentList.Add(downloadResult.DownloadFilePath!);
-                startInfo.ArgumentList.Add("--app-dir");
-                startInfo.ArgumentList.Add(AppContext.BaseDirectory);
                 startInfo.ArgumentList.Add("--restart-executable");
                 startInfo.ArgumentList.Add(currentExecutablePath);
                 startInfo.ArgumentList.Add("--update-completed-version");
