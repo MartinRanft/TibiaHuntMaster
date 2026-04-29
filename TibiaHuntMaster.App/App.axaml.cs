@@ -394,7 +394,11 @@ namespace TibiaHuntMaster.App
         private bool TryStartUpdater(UpdateDownloadResult downloadResult)
         {
             string? updaterPath = ResolveUpdaterExecutablePath();
-            string? currentExecutablePath = Environment.ProcessPath;
+            // On Linux the process runs inside the AppImage FUSE mount — use $APPIMAGE
+            // to get the actual .AppImage file path on disk.
+            string? currentExecutablePath = (OperatingSystem.IsLinux()
+                ? Environment.GetEnvironmentVariable("APPIMAGE")
+                : null) ?? Environment.ProcessPath;
 
             if(string.IsNullOrWhiteSpace(updaterPath) || !File.Exists(updaterPath))
             {

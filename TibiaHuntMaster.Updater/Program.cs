@@ -33,11 +33,14 @@ namespace TibiaHuntMaster.Updater
             }
             else if(OperatingSystem.IsLinux())
             {
-                File.Delete(arguments.RestartExecutable);
-                File.Move(arguments.Package, arguments.RestartExecutable);
+                // Copy instead of Move to handle cross-filesystem paths (e.g. /tmp vs /home).
+                // File.Copy with overwrite:true works even when the destination was previously deleted.
+                File.Copy(arguments.Package, arguments.RestartExecutable, overwrite: true);
                 File.SetUnixFileMode(arguments.RestartExecutable, UnixFileMode.UserRead | UnixFileMode.UserWrite |
                                                                   UnixFileMode.UserExecute | UnixFileMode.GroupRead |
-                                                                  UnixFileMode.GroupExecute | UnixFileMode.OtherRead | UnixFileMode.OtherExecute);
+                                                                  UnixFileMode.GroupExecute | UnixFileMode.OtherRead |
+                                                                  UnixFileMode.OtherExecute);
+                try { File.Delete(arguments.Package); } catch { }
             } 
             else if(OperatingSystem.IsMacOS())
             {
