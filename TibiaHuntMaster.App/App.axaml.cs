@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using TibiaHuntMaster.App.Extensions;
+using TibiaHuntMaster.App.Services.Changelog;
 using TibiaHuntMaster.App.Services.Map;
 using TibiaHuntMaster.App.Services;
 using TibiaHuntMaster.App.Services.Database;
@@ -141,9 +142,10 @@ namespace TibiaHuntMaster.App
 
             if(TryGetUpdateCompletionDetails(out string? completedVersion, out string? releasePageUrl))
             {
+                IChangelogService changelogService = Services.GetRequiredService<IChangelogService>();
                 Dispatcher.UIThread.Post(() =>
                 {
-                    UpdateCompletedWindow window = new(completedVersion!, releasePageUrl);
+                    UpdateCompletedWindow window = new(completedVersion!, releasePageUrl, changelogService);
                     window.Show();
                 });
             }
@@ -365,7 +367,16 @@ namespace TibiaHuntMaster.App
 
         private static string GetCurrentVersion()
         {
-            return Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.0.0";
+            string? informational = Assembly.GetExecutingAssembly()
+                .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                ?.InformationalVersion;
+
+            if(string.IsNullOrWhiteSpace(informational))
+                return "0.0.0";
+
+            // Strip build metadata suffix (e.g. "1.0.0+abc1234" → "1.0.0")
+            int plusIndex = informational.IndexOf('+');
+            return plusIndex >= 0 ? informational[..plusIndex] : informational;
         }
 
         private static Task<bool> ShowUpdatePromptAsync(UpdatePlan updatePlan)
@@ -696,13 +707,23 @@ namespace TibiaHuntMaster.App
 
         private sealed class UpdateCompletedWindow : Window
         {
-            public UpdateCompletedWindow(string completedVersion, string? releasePageUrl)
+            private readonly SelectableTextBlock _changelogText;
+
+            public UpdateCompletedWindow(string completedVersion, string? releasePageUrl, IChangelogService changelogService)
             {
-                Title = "Update completed";
-                Width = 460;
-                SizeToContent = SizeToContent.Height;
-                CanResize = false;
+                Title = $"Updated to {completedVersion}";
+                Width = 580;
+                Height = 520;
+                CanResize = true;
                 WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
+                _changelogText = new SelectableTextBlock
+                {
+                    Text = "Loading changelog...",
+                    TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+                    FontFamily = new Avalonia.Media.FontFamily("Consolas, Menlo, monospace"),
+                    FontSize = 13,
+                };
 
                 Button closeButton = new()
                 {
@@ -716,57 +737,73 @@ namespace TibiaHuntMaster.App
                     Orientation = Orientation.Horizontal,
                     Spacing = 12,
                     HorizontalAlignment = HorizontalAlignment.Right,
-                    Children =
-                    {
-                        closeButton
-                    }
+                    Margin = new Thickness(0, 12, 0, 0),
+                    Children = { closeButton }
                 };
 
                 if(!string.IsNullOrWhiteSpace(releasePageUrl))
                 {
-                    Button changelogButton = new()
+                    Button githubButton = new()
                     {
-                        Content = "View changelog",
+                        Content = "View on GitHub",
                         MinWidth = 120,
                     };
-                    changelogButton.Click += (_, _) => OpenUrl(releasePageUrl!);
-                    buttonPanel.Children.Insert(0, changelogButton);
+                    githubButton.Click += (_, _) => OpenUrl(releasePageUrl!);
+                    buttonPanel.Children.Insert(0, githubButton);
                 }
 
-                Content = new Border
+                TextBlock headline = new()
                 {
-                    Padding = new Thickness(20),
-                    Child = new StackPanel
-                    {
-                        Spacing = 16,
-                        Children =
-                        {
-                            new TextBlock
-                            {
-                                Text = $"Update completed successfully: {completedVersion}",
-                                FontSize = 18,
-                                TextWrapping = Avalonia.Media.TextWrapping.Wrap,
-                            },
-                            new TextBlock
-                            {
-                                Text = "The application has been updated and restarted. You can review the changelog if you want.",
-                                TextWrapping = Avalonia.Media.TextWrapping.Wrap,
-                            },
-                            buttonPanel
-                        }
-                    }
+                    Text = $"What's new in {completedVersion}",
+                    FontSize = 18,
+                    TextWrapping = Avalonia.Media.TextWrapping.Wrap,
                 };
+
+                DockPanel layout = new()
+                {
+                    Margin = new Thickness(20),
+                    LastChildFill = true,
+                };
+
+                ScrollViewer scrollViewer = new()
+                {
+                    Content = _changelogText,
+                    Margin = new Thickness(0, 8, 0, 0),
+                };
+
+                DockPanel.SetDock(headline, Dock.Top);
+                DockPanel.SetDock(buttonPanel, Dock.Bottom);
+                layout.Children.Add(headline);
+                layout.Children.Add(buttonPanel);
+                layout.Children.Add(scrollViewer);
+
+                Content = layout;
+
+                _ = LoadChangelogAsync(completedVersion, releasePageUrl, changelogService);
+            }
+
+            private async Task LoadChangelogAsync(string version, string? releasePageUrl, IChangelogService changelogService)
+            {
+                try
+                {
+                    string? markdown = await changelogService.GetChangelogSectionAsync(version, releasePageUrl);
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        _changelogText.Text = markdown ?? $"No changelog found for version {version}.";
+                    });
+                }
+                catch
+                {
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        _changelogText.Text = $"Could not load changelog for version {version}.";
+                    });
+                }
             }
 
             private static void OpenUrl(string url)
             {
-                ProcessStartInfo startInfo = new()
-                {
-                    FileName = url,
-                    UseShellExecute = true,
-                };
-
-                Process.Start(startInfo);
+                Process.Start(new ProcessStartInfo { FileName = url, UseShellExecute = true });
             }
         }
     }

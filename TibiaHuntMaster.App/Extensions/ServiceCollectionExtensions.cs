@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using TibiaHuntMaster.App.Services;
+using TibiaHuntMaster.App.Services.Changelog;
 using TibiaHuntMaster.App.Services.Diagnostics;
 using TibiaHuntMaster.App.Services.Map;
 using TibiaHuntMaster.App.Services.Navigation;
@@ -26,7 +27,10 @@ using TibiaHuntMaster.Infrastructure.Services.System;
 using TibiaHuntMaster.Infrastructure.Services.TibiaData;
 using TibiaHuntMaster.Infrastructure.Services.TibiaPal;
 using TibiaHuntMaster.Updater.Core.Abstractions;
+using TibiaHuntMaster.Updater.Core.Services.Download;
+using TibiaHuntMaster.Updater.Core.Services.Packages;
 using TibiaHuntMaster.Updater.Core.Services.Planning;
+using TibiaHuntMaster.Updater.Core.Services.Versioning;
 
 namespace TibiaHuntMaster.App.Extensions
 {
@@ -50,14 +54,19 @@ namespace TibiaHuntMaster.App.Extensions
                 builder.AddFilter("System.Net.Http.HttpClient", LogLevel.Warning);
             });
 
-            // 2. Datenbank-Factory registrieren
-            services.AddSingleton<IUpdatePlanner, UpdatePlanner>();
+            // 2. Updater Services registrieren
+            services.AddSingleton<IVersionComparer, VersionComparer>();
+            services.AddSingleton<IChecksumVerifier, ChecksumVerifier>();
+            services.AddHttpClient<IReleaseFeedClient, GitHubReleaseFeedClient>();
+            services.AddHttpClient<IUpdatePackageDownloader, UpdatePackageDownloader>();
+            services.AddTransient<IUpdatePlanner, UpdatePlanner>();
             services.AddDbContextFactory<AppDbContext>(options =>
             options.UseSqlite($"Data Source={appDataPaths.DatabasePath}"));
 
             // 3. HTTP Clients registrieren
             services.AddHttpClient<TibiaDataClient>();
             services.AddHttpClient<TibiaPalClient>();
+            services.AddHttpClient<IChangelogService, ChangelogService>();
             services.AddContentInfrastructure();
 
             // 4. Core Services registrieren

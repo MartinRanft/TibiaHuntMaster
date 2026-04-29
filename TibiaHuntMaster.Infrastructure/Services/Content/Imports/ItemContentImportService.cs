@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Net;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -174,9 +175,19 @@ namespace TibiaHuntMaster.Infrastructure.Services.Content.Imports
 
             await Parallel.ForEachAsync(itemIds, options, async (itemId, token) =>
             {
-                ItemDetailsResponse details = await itemsClient.GetItemDetailsAsync(itemId, token);
-                itemDetails.Add(details);
-                ReportDetailProgress(total, Interlocked.Increment(ref processed));
+                try
+                {
+                    ItemDetailsResponse details = await itemsClient.GetItemDetailsAsync(itemId, token);
+                    itemDetails.Add(details);
+                }
+                catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+                {
+                    // Item no longer exists in the content API — skip silently
+                }
+                finally
+                {
+                    ReportDetailProgress(total, Interlocked.Increment(ref processed));
+                }
             });
 
             return itemDetails.OrderBy(x => x.Id).ToList();
