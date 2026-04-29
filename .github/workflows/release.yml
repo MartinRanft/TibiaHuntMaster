@@ -53,7 +53,7 @@ jobs:
         run: dotnet restore
 
       - name: Run Tests
-        run: dotnet test TibiaHuntMaster.sln --no-restore --verbosity normal
+        run: dotnet test TibiaHuntMaster.sln --no-restore --verbosity normal --filter "Category!=Online"
 
   build-windows:
     name: Build Windows (win-x64)
