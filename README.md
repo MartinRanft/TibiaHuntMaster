@@ -2,64 +2,96 @@
 
 # TibiaHuntMaster 🐉
 
-**Track your progress. Optimize your hunts. Reach your goals.**
+**Your hunts. Your data. Your machine.**
+
+A free, native desktop tracker for Tibia hunters — everything you need in one place, without the cloud.
 
 ![First Start](pictures/first_start.png)
-
-A powerful desktop companion for Tibia players that automatically captures, analyzes, and tracks your hunting sessions—helping you level smarter, not harder.
 
 [![.NET](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
 [![Verify](https://github.com/MartinRanft/TibiaHuntMaster/actions/workflows/verify.yml/badge.svg)](https://github.com/MartinRanft/TibiaHuntMaster/actions/workflows/verify.yml)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey)](https://github.com/MartinRanft/TibiaHuntMaster/releases)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-[Features](#-features) • [Screenshots](#-screenshots) • [Getting Started](#-getting-started) • [How It Works](#-how-it-works) • [Privacy](#-privacy--data)
+[Download](#-download) • [Why TibiaHuntMaster](#-why-tibiahuntmaster) • [Features](#-features) • [Screenshots](#-screenshots) • [Roadmap](#-roadmap)
 
 </div>
 
 ---
 
+## ⬇️ Download
+
+Pick your platform — no account, no signup, ready in under a minute.
+
+| Platform | Download |
+|---|---|
+| 🪟 **Windows 10/11** | [**TibiaHuntMaster-Setup.exe**](https://github.com/MartinRanft/TibiaHuntMaster/releases/latest/download/TibiaHuntMaster-Setup.exe) |
+| 🐧 **Linux** (AppImage, x64) | [**TibiaHuntMaster-linux-x64.AppImage**](https://github.com/MartinRanft/TibiaHuntMaster/releases/latest/download/TibiaHuntMaster-linux-x64.AppImage) |
+| 🍎 **macOS** (Apple Silicon) | [**TibiaHuntMaster-osx-arm64.dmg**](https://github.com/MartinRanft/TibiaHuntMaster/releases/latest/download/TibiaHuntMaster-osx-arm64.dmg) |
+| 🍎 **macOS** (Intel) | [**TibiaHuntMaster-osx-x64.dmg**](https://github.com/MartinRanft/TibiaHuntMaster/releases/latest/download/TibiaHuntMaster-osx-x64.dmg) |
+
+> Looking for older versions or release notes? [See all releases on GitHub →](https://github.com/MartinRanft/TibiaHuntMaster/releases)
+
+---
+
 ## 🎯 Why TibiaHuntMaster?
 
-Stop manually tracking your hunts in spreadsheets. TibiaHuntMaster automatically imports your Tibia session data via clipboard, analyzes every detail, and helps you optimize your gameplay with actionable insights.
+Already using a Tibia tracker? Here's what makes us different:
 
-### ✨ Features
+### 🔒 Your data, your machine
+No login. No cloud. No telemetry. Your sessions live in a local SQLite database — you own the file, you back it up, you control who sees it. The app even works offline after the one-time content sync.
 
-#### 📋 **Effortless Session Tracking**
-- **One-click import** – Copy session data from Tibia, paste automatically detected
-- **Detailed analytics** – XP/h, profit, damage, healing, creature kills, loot breakdown
-- **Solo & team hunts** – Full support for party sessions with individual contributions
-- **100% local storage** – SQLite database, your data never leaves your machine
+### 🪟 Native desktop, not a browser tab
+TibiaHuntMaster is a real Windows/Linux/macOS app. No tab management, no logout timeouts, no waiting for a webpage to load every time. Open it next to Tibia, paste your session, get back to playing.
 
-#### 🎯 **Goal System**
+### 🧰 Five tools in one place
+Stop juggling browser tabs. Hunt analysis, goal tracking, hunting place explorer, imbuement calculator, and economy tracking — all in a single window with one consistent interface.
+
+### 📈 Goals that learn from your history
+Most tools either track sessions OR estimate level times. We do both. Set a level goal, and your projected ETA updates automatically based on the rolling average of your real hunts. The more you play, the smarter the predictions.
+
+### 🆓 Free and open source
+MIT-licensed. No premium tier, no paywall, no ads. Inspect the source, fork it, contribute. [Source on GitHub →](https://github.com/MartinRanft/TibiaHuntMaster)
+
+---
+
+## ✨ Features
+
+#### 📋 Effortless Session Tracking
+- **One-click import** — copy session data from Tibia, auto-detected from the clipboard
+- **Detailed analytics** — XP/h, profit, damage, healing, creature kills, loot breakdown
+- **Solo & team hunts** — full support for party sessions with individual contributions
+- **100% local storage** — SQLite database, your data never leaves your machine
+
+#### 🎯 Goal System
 - Set level or gold milestones
 - Track progress automatically after each hunt
-- Visual progress bars and ETA calculations
+- Visual progress bars and ETA calculations based on YOUR history
 - Multiple concurrent goals supported
 
 ![Goal Adding](pictures/Goal_Adding.png)
 
-#### 📊 **Advanced Analytics**
-- **Hunt History** – Filter by date, location, goal, or hunt type
-- **Economy Tracking** – Monitor depot value, sales, and profit rhythm
-- **Performance Comparison** – Identify your most profitable spawns and times
+#### 📊 Advanced Analytics
+- **Hunt History** — filter by date, location, goal, or hunt type
+- **Economy Tracking** — monitor depot value, sales, and profit rhythm
+- **Performance Comparison** — identify your most profitable spawns and times
 
 ![Economics](pictures/Economics.png)
 
-#### 🗺️ **Interactive Tibia Map**
-- Browse all hunting spawns with creature markers
+#### 🗺️ Interactive Tibia Map
+- Browse 386+ hunting spawns with creature markers
 - Search for specific monsters or locations
 - Visualize spawn density and recommended levels
 - Integrated with ByteWizards content data and TibiaPal recommendations
 
 ![Tibia Map](pictures/Tibia_Map.png)
 
-#### 🧪 **Smart Hunt Recommendations**
+#### 🧪 Smart Hunt Recommendations
 - Vocation-based spawn suggestions
 - Level-appropriate filtering
 - Detailed creature information and loot tables
 
-#### ⚔️ **Imbuement Calculator**
+#### ⚔️ Imbuement Calculator
 - Manage imbuement profiles
 - Track material costs and availability
 - Plan your budget before committing
@@ -90,30 +122,36 @@ Explore 386+ hunting locations with vocation-specific recommendations and stats.
 
 ---
 
+## 🗺️ Roadmap
+
+We're building features that *no other Tibia tracker currently covers*. Up next:
+
+- **Personal hunt benchmarking** — "Your last 5 sessions at Cobra Bastion are 12% below your 30-day average. Try Asura Palace?"
+- **Weekly insights dashboard** — auto-generated summary: best spawn, total profit, time played, level progress
+- **Bestiary-aware hunt suggestions** — "You need 47 more Cyclops for charm progress — here's where they spawn"
+
+> Have an idea? [Open an issue](https://github.com/MartinRanft/TibiaHuntMaster/issues/new) — feature requests are welcome.
+
+---
+
 ## 🚀 Getting Started
 
 ### Requirements
 - **Operating System:** Windows, Linux, or macOS
-- **.NET 10 Runtime** ([download here](https://dotnet.microsoft.com/download/dotnet/10.0))
-- **Internet connection** (optional, for creature/item data sync during first run)
+- **.NET 10 Runtime** ([download here](https://dotnet.microsoft.com/download/dotnet/10.0)) — bundled with installer on Windows
+- **Internet connection** — only for the first run (content data sync)
 
 > **Note:** macOS builds are provided but currently untested. Windows and Linux are fully tested via CI/CD. If you encounter issues on macOS, please [report them](https://github.com/MartinRanft/TibiaHuntMaster/issues).
 
-### Installation
-
-1. Download the latest release for your platform
-2. Extract and run `TibiaHuntMaster`
-3. The app will automatically initialize the database and download game data
-
-![Character Selection](pictures/Select_Charakter_Empty.png)
-
 ### First Hunt
 
-1. **Add your character** – Use TibiaData lookup or manual entry
-2. **Hunt in Tibia** – Play normally and generate session data
-3. **Copy session log** – Select all text in your session window (Ctrl+A) and copy (Ctrl+C)
-4. **Auto-import** – TibiaHuntMaster detects the clipboard and parses your hunt
-5. **Save & analyze** – Review the results and save to history
+1. **Add your character** — use TibiaData lookup or manual entry
+2. **Hunt in Tibia** — play normally and generate session data
+3. **Copy session log** — select all text in the session window (Ctrl+A) and copy (Ctrl+C)
+4. **Auto-import** — TibiaHuntMaster detects the clipboard and parses your hunt
+5. **Save & analyze** — review the results and save to history
+
+![Character Selection](pictures/Select_Charakter_Empty.png)
 
 ---
 
@@ -129,28 +167,12 @@ graph LR
     F --> G[Save to Database]
 ```
 
-1. **Clipboard Monitoring** – Detects Tibia session data format automatically
-2. **Intelligent Parsing** – Extracts XP, loot, damage, healing, creatures, and items
-3. **XP Calculation** – Handles premium bonuses, events (Double XP, Rapid Respawn), and boost modifiers
-4. **Validation** – Warns about potential data inconsistencies or missing information
-5. **Goal Tracking** – Automatically updates progress for all active goals
-6. **Historical Storage** – Stores sessions with full metadata for future analysis
-
----
-
-## 💡 Use Cases
-
-### For Power Levelers
-Track XP/h across different spawns and times to identify optimal hunting conditions.
-
-### For Profit Hunters
-Monitor loot vs. supplies to find consistent gold-making routes. Use the Economy view to track depot value over time.
-
-### For Achievement Hunters
-Set level or gold goals and watch your progress update automatically.
-
-### For Team Players
-Import team hunts and review damage dealt, supplies used, and loot distribution per player.
+1. **Clipboard Monitoring** — detects Tibia session data format automatically
+2. **Intelligent Parsing** — extracts XP, loot, damage, healing, creatures, and items
+3. **XP Calculation** — handles premium bonuses, events (Double XP, Rapid Respawn), and boost modifiers
+4. **Validation** — warns about potential data inconsistencies or missing information
+5. **Goal Tracking** — automatically updates progress for all active goals
+6. **Historical Storage** — stores sessions with full metadata for future analysis
 
 ---
 
@@ -180,14 +202,14 @@ The app optionally downloads public game data (creatures, items, spawns) during 
 <details>
 <summary><strong>Slow or failing imports?</strong></summary>
 
-- Check your internet connection—initial setup downloads 6000+ items and creatures
+- Check your internet connection — initial setup downloads 6000+ items and creatures
 - Subsequent imports work offline using cached data
 </details>
 
 <details>
 <summary><strong>Missing goals or features?</strong></summary>
 
-- Save at least one hunt first—Overview and History populate after the first session
+- Save at least one hunt first — Overview and History populate after the first session
 - Goals must be manually created in the Dashboard
 </details>
 
@@ -254,7 +276,7 @@ See the [LICENSE](LICENSE) file for full details.
 ## 🙏 Credits
 
 - **Tibia** is a registered trademark of CipSoft GmbH
-- Tibia game assets (sprites, images, icons) © CipSoft GmbH - used with permission under Fansite policy
+- Tibia game assets (sprites, images, icons) © CipSoft GmbH — used with permission under Fansite policy
 - Content data delivered via the [ByteWizards API](https://tibiadata.bytewizards.de/), based on TibiaWiki data
 - Hunting spot recommendations sourced from [TibiaPal](https://www.tibiapal.com/)
 - Character lookup via [TibiaData API](https://tibiadata.com/)

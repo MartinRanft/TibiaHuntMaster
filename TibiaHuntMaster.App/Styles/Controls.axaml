@@ -5,6 +5,11 @@
     <!-- GLOBAL STYLES -->
     <!-- ============================================ -->
 
+    <!-- Default Window Style — ensures popup windows follow app theme, not system theme -->
+    <Style Selector="Window">
+        <Setter Property="Background" Value="{DynamicResource BrushBackground}" />
+    </Style>
+
     <!-- Default TextBlock Style -->
     <Style Selector="TextBlock">
         <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />

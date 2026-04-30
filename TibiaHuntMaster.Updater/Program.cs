@@ -24,10 +24,15 @@ namespace TibiaHuntMaster.Updater
             
             if(OperatingSystem.IsWindows())
             {
+                // Remove the Zone.Identifier ADS so SmartScreen does not block the
+                // installer — equivalent to right-click → Properties → Unblock.
+                // Safe because the checksum was already verified before download completed.
+                try { File.Delete(arguments.Package + ":Zone.Identifier"); } catch { }
+
                 using Process installer = new();
                 installer.StartInfo.FileName = arguments.Package;
                 installer.StartInfo.Arguments = "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART";
-                installer.StartInfo.UseShellExecute = false;
+                installer.StartInfo.UseShellExecute = true;
                 installer.Start();
                 await installer.WaitForExitAsync();
             }
