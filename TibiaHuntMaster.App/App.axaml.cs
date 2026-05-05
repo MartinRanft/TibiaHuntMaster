@@ -414,9 +414,23 @@ namespace TibiaHuntMaster.App
 
             try
             {
+                // On Windows the installer will overwrite the updater exe while it runs.
+                // Copy the single-file updater to a temp directory so the original is
+                // not locked and Inno Setup can replace it cleanly.
+                string launchPath = updaterPath;
+                if (OperatingSystem.IsWindows())
+                {
+                    string tempDir = Path.Combine(
+                        Path.GetTempPath(),
+                        $"TibiaHuntMaster-Updater-{Guid.NewGuid():N}");
+                    Directory.CreateDirectory(tempDir);
+                    launchPath = Path.Combine(tempDir, Path.GetFileName(updaterPath));
+                    File.Copy(updaterPath, launchPath, overwrite: true);
+                }
+
                 ProcessStartInfo startInfo = new()
                 {
-                    FileName = updaterPath,
+                    FileName = launchPath,
                     UseShellExecute = false,
                     WorkingDirectory = AppContext.BaseDirectory,
                 };

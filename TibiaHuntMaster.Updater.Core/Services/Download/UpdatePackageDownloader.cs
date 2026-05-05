@@ -13,7 +13,17 @@ namespace TibiaHuntMaster.Updater.Core.Services.Download
             string tempFilePath = $"{targetFilePath}.download";
 
             if (File.Exists(tempFilePath))
-                File.Delete(tempFilePath);
+            {
+                try
+                {
+                    File.Delete(tempFilePath);
+                }
+                catch (IOException)
+                {
+                    // Previous temp file is locked (e.g. AV scan); fall back to a unique name.
+                    tempFilePath = $"{targetFilePath}.{Guid.NewGuid():N}.download";
+                }
+            }
 
             using HttpResponseMessage response = await httpClient.GetAsync(
                 packageUri, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
