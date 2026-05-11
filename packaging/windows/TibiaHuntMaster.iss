@@ -11,6 +11,9 @@
 #ifndef MainExecutable
   #define MainExecutable "TibiaHuntMaster.App.exe"
 #endif
+#ifndef SetupIcon
+  #define SetupIcon "..\..\TibiaHuntMaster.App\Assets\logo.ico"
+#endif
 
 [Setup]
 AppId={{0FD6E535-5FA4-43A0-89D0-75B18BBA4A50}
@@ -22,6 +25,7 @@ DefaultGroupName={#AppName}
 UninstallDisplayIcon={app}\{#MainExecutable}
 OutputDir={#OutputDir}
 OutputBaseFilename=TibiaHuntMaster-Setup
+SetupIconFile={#SetupIcon}
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 PrivilegesRequired=lowest
