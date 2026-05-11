@@ -528,6 +528,7 @@ namespace TibiaHuntMaster.App
                     Content = "Update now",
                     MinWidth = 120,
                 };
+                updateButton.Classes.Add("Primary");
                 updateButton.Click += (_, _) => CloseWithResult(true);
 
                 StackPanel buttonPanel = new()
@@ -692,6 +693,7 @@ namespace TibiaHuntMaster.App
                     MinWidth = 100,
                     HorizontalAlignment = HorizontalAlignment.Right,
                 };
+                okButton.Classes.Add("Primary");
                 okButton.Click += (_, _) => Close();
 
                 Content = new Border
@@ -748,6 +750,7 @@ namespace TibiaHuntMaster.App
                     Content = "Continue",
                     MinWidth = 100,
                 };
+                closeButton.Classes.Add("Primary");
                 closeButton.Click += (_, _) => Close();
 
                 StackPanel buttonPanel = new()

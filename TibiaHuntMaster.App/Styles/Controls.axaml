@@ -27,9 +27,26 @@
         <Setter Property="BorderThickness" Value="2" />
     </Style>
 
+    <!-- Default Button - ensure class-less buttons render with readable theme colors
+         (e.g. code-instantiated buttons in update prompt windows) -->
+    <Style Selector="Button">
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceElevated}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
+        <Setter Property="Padding" Value="{StaticResource PaddingButton}" />
+    </Style>
+
     <!-- Default Button Hover - prevent white background -->
     <Style Selector="Button:pointerover /template/ ContentPresenter">
         <Setter Property="Background" Value="{DynamicResource BrushSurfaceHover}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <!-- Default Button Pressed -->
+    <Style Selector="Button:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource BrushSurface}" />
         <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
     </Style>
 
