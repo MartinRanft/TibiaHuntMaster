@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Markup.Xaml.Styling;
+using Avalonia.Styling;
 
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -97,6 +98,13 @@ namespace TibiaHuntMaster.App.Services
                     updated++;
                 }
             }
+
+            // Align Avalonia's built-in FluentTheme variant with the app theme so the
+            // default-styled controls (TextBox, ComboBox, AutoCompleteBox, DatePicker, ...)
+            // pick the matching light/dark resources. Without this, Windows with a light
+            // OS theme renders the inputs with a white background and black text even when
+            // the app is set to Dark.
+            app.RequestedThemeVariant = theme == AppTheme.Dark ? ThemeVariant.Dark : ThemeVariant.Light;
 
             _logger.LogDebug("Applied theme {Theme} from {ThemeUri}; updated {UpdatedResourceCount} resources", theme, themeUri, updated);
 
